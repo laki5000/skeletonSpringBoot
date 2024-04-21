@@ -21,6 +21,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>3.2.5</version>
 		</dependency>
 
 		<!-- MySQL Driver -->
@@ -34,23 +35,66 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<version>3.2.5</version>
 		</dependency>
 
 		<!-- Spring Boot Starter Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<version>3.2.5</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Spring Boot DevTools -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<version>3.2.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.32</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- Spring Boot Maven Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<!-- Spotless Plugin -->
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>2.17.0</version>
+				<configuration>
+					<java>
+						<includes>
+							<include>src/main/java/**/*.java</include> <!-- Check application code -->
+							<include>src/test/java/**/*.java</include> <!-- Check application tests code -->
+						</includes>
+						<trimTrailingWhitespace /> <!-- Remove trailing whitespaces -->
+						<endWithNewline /> <!-- Ensure file ends with newline -->
+						<indent>
+							<spaces>true</spaces> <!-- Use spaces for indentation -->
+							<spacesPerTab>4</spacesPerTab> <!-- Use 4 spaces per tab -->
+						</indent>
+						<eclipse>
+							<file>${project.basedir}/.eclipseformat.xml</file> <!-- Path to your Eclipse formatter configuration file -->
+							<version>4.21.0</version> <!-- Version of the Eclipse Java Formatter -->
+						</eclipse>
+					</java>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
