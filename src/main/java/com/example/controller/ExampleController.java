@@ -32,6 +32,15 @@ public class ExampleController extends BaseControllerForExceptionHandling {
     }
 
     /**
+     * Constructor.
+     *
+     * @param exampleService the example service
+     */
+    public ExampleController(ExampleService exampleService) {
+        this.exampleService = exampleService;
+    }
+
+    /**
      * Example method that returns an example string.
      *
      * @return An example string.
