@@ -10,5 +10,6 @@ class ProjectApplicationTests {
 
     @Test
     void contextLoads() {
+        fail("Teszt sikertelen állítás miatt.");
     }
 }
