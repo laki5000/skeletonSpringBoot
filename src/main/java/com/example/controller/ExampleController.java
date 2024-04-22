@@ -3,7 +3,6 @@ package com.example.controller;
 import com.example.service.ExampleService;
 import com.example.utils.BaseControllerForExceptionHandling;
 import com.example.utils.BaseResponse;
-import com.example.utils.LoggerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

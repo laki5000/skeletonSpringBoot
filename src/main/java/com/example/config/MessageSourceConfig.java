@@ -1,5 +1,6 @@
 package com.example.config;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,28 +13,55 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
-
+/**
+ * Configuration class for setting up message sources and locale resolution.
+ */
+@Log4j2
 @Configuration
 public class MessageSourceConfig implements WebMvcConfigurer {
 
+    /**
+     * Message source bean for loading messages from properties files.
+     *
+     * @return MessageSource bean
+     */
     @Bean
     public MessageSource messageSource() {
+        log.info("Creating message source bean");
+
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+
         messageSource.setBasename("classpath:messages");
         messageSource.setDefaultEncoding("UTF-8");
+
+        log.info("Message source bean created");
+
         return messageSource;
     }
 
+    /**
+     * Locale resolver bean for resolving locale from session.
+     *
+     * @return LocaleResolver bean
+     */
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver resolver = new SessionLocaleResolver();
+
         resolver.setDefaultLocale(Locale.ENGLISH);
+
         return resolver;
     }
 
+    /**
+     * Add locale change interceptor to the registry.
+     *
+     * @param registry InterceptorRegistry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
     }
