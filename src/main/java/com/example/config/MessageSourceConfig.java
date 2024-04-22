@@ -1,6 +1,7 @@
 package com.example.config;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,8 @@ import java.util.Locale;
 @Log4j2
 @Configuration
 public class MessageSourceConfig implements WebMvcConfigurer {
+    @Value("${spring.mvc.locale}")
+    private String languageTag;
 
     /**
      * Message source bean for loading messages from properties files.
@@ -50,7 +53,7 @@ public class MessageSourceConfig implements WebMvcConfigurer {
 
         SessionLocaleResolver resolver = new SessionLocaleResolver();
 
-        resolver.setDefaultLocale(Locale.ENGLISH);
+        resolver.setDefaultLocale(Locale.forLanguageTag(languageTag));
 
         log.info("Locale resolver bean created");
 
