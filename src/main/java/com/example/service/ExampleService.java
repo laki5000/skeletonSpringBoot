@@ -1,19 +1,23 @@
 package com.example.service;
 
 import com.example.utils.LoggerService;
+import com.example.utils.MessageService;
 import org.springframework.stereotype.Service;
 
 /** Example service class. */
 @Service
 public class ExampleService {
     private final LoggerService loggerService;
+    private final MessageService messageService;
 
     /**
      * Constructor.
      *
+     * @param messageService the message service
      * @param loggerService the logger service
      */
-    public ExampleService(LoggerService loggerService) {
+    public ExampleService(MessageService messageService, LoggerService loggerService) {
+        this.messageService = messageService;
         this.loggerService = loggerService;
     }
 
@@ -25,7 +29,7 @@ public class ExampleService {
     public String getExample() {
         loggerService.logInfo(ExampleService.class, "Example log message.");
 
-        return "Example response.";
+        return messageService.getMessage("example.message");
     }
 
     /**
