@@ -14,7 +14,7 @@ public class ExampleService {
      * Constructor.
      *
      * @param messageService the message service
-     * @param loggerService the logger service
+     * @param loggerService  the logger service
      */
     public ExampleService(MessageService messageService, LoggerService loggerService) {
         this.messageService = messageService;
