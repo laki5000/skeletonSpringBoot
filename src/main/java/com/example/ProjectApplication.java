@@ -9,7 +9,7 @@ public class ProjectApplication {
     /**
      * Main method of the application.
      *
-     * @param args The arguments of the application.
+     * @param args the arguments of the application
      */
     public static void main(String[] args) {
         SpringApplication.run(ProjectApplication.class, args);
