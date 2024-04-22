@@ -12,7 +12,7 @@ public class LoggerService {
     /**
      * Logs an info message.
      *
-     * @param clazz the class that calls the method
+     * @param clazz   the class that calls the method
      * @param message the message to log
      */
     public void logInfo(Class<?> clazz, String message) {
@@ -23,7 +23,7 @@ public class LoggerService {
     /**
      * Logs an error message.
      *
-     * @param clazz the class that calls the method
+     * @param clazz   the class that calls the method
      * @param message the message to log
      */
     public void logError(Class<?> clazz, String message) {
