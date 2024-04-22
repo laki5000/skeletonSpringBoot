@@ -11,4 +11,11 @@ public class Controller {
     public final String getEndpoint() {
         return "GET request handled at: ${api.basePath}/endpoint";
     }
+
+    public void nullPointerExceptionExample() {
+        String str = null;
+        if (str.equals("example")) { // NullPointerException-ra fog hibát dobni
+            System.out.println("Do something");
+        }
+    }
 }
