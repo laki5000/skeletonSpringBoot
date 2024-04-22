@@ -46,9 +46,13 @@ public class MessageSourceConfig implements WebMvcConfigurer {
      */
     @Bean
     public LocaleResolver localeResolver() {
+        log.info("Creating locale resolver bean");
+
         SessionLocaleResolver resolver = new SessionLocaleResolver();
 
         resolver.setDefaultLocale(Locale.ENGLISH);
+
+        log.info("Locale resolver bean created");
 
         return resolver;
     }
@@ -60,9 +64,13 @@ public class MessageSourceConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        log.info("Adding locale change interceptor to the registry");
+
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
 
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
+
+        log.info("Locale change interceptor added to the registry");
     }
 }

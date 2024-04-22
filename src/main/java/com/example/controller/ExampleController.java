@@ -1,14 +1,16 @@
 package com.example.controller;
 
 import com.example.service.ExampleService;
-import com.example.utils.BaseControllerForExceptionHandling;
-import com.example.utils.BaseResponse;
+import com.example.utils.controller.BaseControllerForExceptionHandling;
+import com.example.utils.dto.response.BaseResponse;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /** Example controller class. */
+@Log4j2
 @RestController
 @RequestMapping("${api.base.path}")
 public class ExampleController extends BaseControllerForExceptionHandling {
@@ -17,11 +19,9 @@ public class ExampleController extends BaseControllerForExceptionHandling {
     /**
      * Constructor.
      *
-     * @param loggerService  the logger service
      * @param exampleService the example service
      */
-    public ExampleController(LoggerService loggerService, ExampleService exampleService) {
-        super(loggerService);
+    public ExampleController(ExampleService exampleService) {
         this.exampleService = exampleService;
     }
 
@@ -50,11 +50,11 @@ public class ExampleController extends BaseControllerForExceptionHandling {
      */
     @GetMapping("/example")
     public ResponseEntity<?> getExample() {
-        super.getLoggerService().logInfo(ExampleController.class, "Getting example.");
+        log.info("Getting example");
 
         String example = exampleService.getExample();
 
-        super.getLoggerService().logInfo(ExampleController.class, "Got example: " + example);
+        log.info("Got example: {}", example);
 
         return ResponseEntity.ok(new BaseResponse(example));
     }
@@ -66,11 +66,11 @@ public class ExampleController extends BaseControllerForExceptionHandling {
      */
     @GetMapping("/exception")
     public ResponseEntity<?> makeException() {
-        super.getLoggerService().logInfo(ExampleController.class, "Making exception.");
+        log.info("Making exception");
 
         exampleService.makeException();
 
-        super.getLoggerService().logInfo(ExampleController.class, "This will never be shown.");
+        log.info("Exception made");
 
         return ResponseEntity.ok("This will never be shown.");
     }
