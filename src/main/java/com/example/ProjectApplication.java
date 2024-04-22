@@ -1,11 +1,16 @@
-package com.project;
+package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/** Main class of the application. */
 @SpringBootApplication
 public class ProjectApplication {
-
+    /**
+     * Main method of the application.
+     *
+     * @param args The arguments of the application.
+     */
     public static void main(String[] args) {
         SpringApplication.run(ProjectApplication.class, args);
     }
