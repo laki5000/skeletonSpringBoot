@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.base.path}")
 public class Controller {
     @GetMapping("/endpoint")
-    public final String getEndpoint() {{
+    public final String getEndpoint() {
         return "GET request handled at: ${api.basePath}/endpoint";
     }
 }
