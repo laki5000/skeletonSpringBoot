@@ -18,7 +18,7 @@ public class ExampleController extends BaseControllerForExceptionHandling {
     /**
      * Constructor.
      *
-     * @param loggerService the logger service
+     * @param loggerService  the logger service
      * @param exampleService the example service
      */
     public ExampleController(LoggerService loggerService, ExampleService exampleService) {
