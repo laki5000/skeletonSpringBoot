@@ -23,6 +23,15 @@ public class ExampleController extends BaseControllerForExceptionHandling {
     }
 
     /**
+     * Constructor.
+     *
+     * @param exampleService the example service
+     */
+    public ExampleController(ExampleService exampleService) {
+        this.exampleService = exampleService;
+    }
+
+    /**
      * Example method that returns an example string.
      *
      * @return An example string.
@@ -30,17 +39,5 @@ public class ExampleController extends BaseControllerForExceptionHandling {
     @GetMapping("/example")
     public ResponseEntity<?> getExample() {
         return ResponseEntity.ok(exampleService.getExample());
-    }
-
-    /**
-     * Example method that throws an exception.
-     *
-     * @return An example string.
-     */
-    @GetMapping("/exception")
-    public ResponseEntity<?> makeException() {
-        exampleService.makeException();
-
-        return ResponseEntity.ok("This will never be shown.");
     }
 }
