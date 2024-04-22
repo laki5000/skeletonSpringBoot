@@ -59,21 +59,4 @@ public class MessageSourceConfig implements WebMvcConfigurer {
 
         return resolver;
     }
-
-    /**
-     * Add locale change interceptor to the registry.
-     *
-     * @param registry InterceptorRegistry
-     */
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        log.info("Adding locale change interceptor to the registry");
-
-        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-
-        localeChangeInterceptor.setParamName("lang");
-        registry.addInterceptor(localeChangeInterceptor);
-
-        log.info("Locale change interceptor added to the registry");
-    }
 }
