@@ -1,23 +1,22 @@
 package com.example.service;
 
-import com.example.utils.MessageService;
+import com.example.utils.service.MessageService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 /** Example service class. */
+@Log4j2
 @Service
 public class ExampleService {
-    private final LoggerService loggerService;
     private final MessageService messageService;
 
     /**
      * Constructor.
      *
      * @param messageService the message service
-     * @param loggerService  the logger service
      */
-    public ExampleService(MessageService messageService, LoggerService loggerService) {
+    public ExampleService(MessageService messageService) {
         this.messageService = messageService;
-        this.loggerService = loggerService;
     }
 
     /**
@@ -26,16 +25,20 @@ public class ExampleService {
      * @return An example string.
      */
     public String getExample() {
-        loggerService.logInfo(ExampleService.class, "Example log message.");
+        log.info("Getting example");
 
-        return messageService.getMessage("example.message");
+        String example = messageService.getMessage("example.message");
+
+        log.info("Got example: {}", example);
+
+        return example;
     }
 
     /**
      * Example method that throws an exception.
      */
     public void makeException() {
-        loggerService.logInfo(ExampleService.class, "Example error throwing.");
+        log.info("Making exception");
 
         throw new RuntimeException("This is an example exception");
     }

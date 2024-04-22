@@ -1,25 +1,31 @@
-package com.example.utils;
+package com.example.utils.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
 
+@Log4j2
 @Service
 public class MessageService {
-    private final LoggerService loggerService;
     private final MessageSource messageSource;
 
     @Value("${spring.mvc.locale}")
     private String languageTag;
 
-    public MessageService(MessageSource messageSource, LoggerService loggerService) {
+    public MessageService(MessageSource messageSource) {
         this.messageSource = messageSource;
-        this.loggerService = loggerService;
     }
 
     public String getMessage(String key) {
-        return messageSource.getMessage(key, null, Locale.forLanguageTag(languageTag));
+        log.info("Getting message for key: {}", key);
+
+        String message = messageSource.getMessage(key, null, Locale.forLanguageTag(languageTag));
+
+        log.info("Got message: {}", message);
+
+        return message;
     }
 }
