@@ -12,9 +12,6 @@ import java.util.Locale;
 public class MessageService {
     private final MessageSource messageSource;
 
-    @Value("${spring.mvc.locale}")
-    private String languageTag;
-
     public MessageService(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
@@ -22,7 +19,7 @@ public class MessageService {
     public String getMessage(String key) {
         log.info("Getting message for key: {}", key);
 
-        String message = messageSource.getMessage(key, null, Locale.forLanguageTag(languageTag));
+        String message = messageSource.getMessage(key, null, Locale.getDefault());
 
         log.info("Got message: {}", message);
 
