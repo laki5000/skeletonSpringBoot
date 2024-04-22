@@ -11,6 +11,13 @@ public class ExampleService {
      * @return An example string.
      */
     public String getExample() {
+        return "Example response.";
+    }
+
+    /**
+     * Example method that throws an exception.
+     */
+    public void makeException() {
         throw new RuntimeException("This is an example exception");
     }
 }
