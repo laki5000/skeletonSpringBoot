@@ -17,7 +17,7 @@ public class ErrorResponse extends BaseResponse {
      * Constructor.
      *
      * @param errorCode the error code
-     * @param message the error message
+     * @param message   the error message
      */
     public ErrorResponse(Integer errorCode, String message) {
         super(message);
