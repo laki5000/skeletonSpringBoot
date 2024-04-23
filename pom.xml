@@ -68,6 +68,13 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.17.1</version>
 		</dependency>
+
+		<!-- Spring-WebMVC -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>6.1.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
