@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 public abstract class BaseServiceForCRUD<T> {
     private final MessageService messageService;
+
     protected abstract JpaRepository<T, Long> getRepository();
 
     /**
