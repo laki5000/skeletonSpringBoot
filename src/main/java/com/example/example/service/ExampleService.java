@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.example.service;
 
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;

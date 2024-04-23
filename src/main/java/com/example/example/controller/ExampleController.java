@@ -1,6 +1,6 @@
-package com.example.controller;
+package com.example.example.controller;
 
-import com.example.service.ExampleService;
+import com.example.example.service.ExampleService;
 import com.example.utils.controller.BaseControllerForExceptionHandling;
 import com.example.utils.dto.response.BaseResponse;
 import com.example.utils.service.MessageService;
