@@ -1,7 +1,6 @@
 package com.example.utils.service;
 
-import com.example.user.dto.request.UserCreateRequest;
-import com.example.user.model.User;
+import com.example.exception.MyConflictException;
 import com.example.utils.mapper.BaseMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,15 +31,21 @@ public abstract class BaseServiceForCRUD<T, RQ> {
      * @return the created entity
      */
     @Transactional
-    public T create(RQ entity, String createdBy) {
+    public T create(RQ entity) {
         log.info("Creating {}", entity.getClass().getSimpleName());
 
-        T createdEntity = getRepository().save(mapper.toEntity(entity, createdBy));
+        String message = validate(entity);
+
+        if (message != null) {
+            throw new MyConflictException(messageService.getMessage(message));
+        }
+
+        T createdEntity = getRepository().save(mapper.toEntity(entity));
 
         log.info("{} created", entity.getClass().getSimpleName());
 
         return createdEntity;
     }
 
-    public abstract User create(UserCreateRequest entity);
+    protected abstract String validate(RQ entity);
 }

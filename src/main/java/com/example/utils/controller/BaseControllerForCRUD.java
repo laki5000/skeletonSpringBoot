@@ -41,6 +41,6 @@ public abstract class BaseControllerForCRUD<T, RQ> extends BaseControllerForExce
 
         log.info("{} created", className);
 
-        return ResponseEntity.ok(new SuccessResponse(className + getMessageService().getMessage("base.controller.create.success"), createdEntity));
+        return ResponseEntity.ok(new SuccessResponse(className + getMessageService().getMessage("create.success"), createdEntity));
     }
 }
