@@ -39,9 +39,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest> {
     }
 
     @Override
-    public User create(UserCreateRequest entity) {
-        String createdBy = entity.username();
-
-        return super.create(entity, createdBy);
+    protected String validate(UserCreateRequest entity) {
+        return userRepository.existsByUsername(entity.username()) ? "conflict.username.exists" : null;
     }
 }

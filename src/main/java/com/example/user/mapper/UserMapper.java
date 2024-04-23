@@ -7,9 +7,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
-public interface UserMapper extends BaseMapper<User, UserCreateRequest>{
+public interface UserMapper extends BaseMapper<User, UserCreateRequest> {
     @Mapping(target = "username", source = "dto.username")
     @Mapping(target = "password", source = "dto.password")
-    @Mapping(target = "createdBy", source = "createdBy")
-    User toEntity(UserCreateRequest dto, String createdBy);
+    @Mapping(target = "createdBy", source = "dto.username")
+    User toEntity(UserCreateRequest dto);
 }
