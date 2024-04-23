@@ -3,6 +3,7 @@ package com.example.utils.controller;
 import com.example.utils.dto.response.ErrorResponse;
 import com.example.utils.service.MessageService;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
