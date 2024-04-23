@@ -27,7 +27,7 @@ public class ExampleService {
     public String getExample() {
         log.info("Getting example");
 
-        String example = messageService.getMessage("example.message");
+        String example = messageService.getMessage("example.service.message01");
 
         log.info("Got example: {}", example);
 
@@ -40,6 +40,6 @@ public class ExampleService {
     public void makeException() {
         log.info("Making exception");
 
-        throw new RuntimeException("This is an example exception");
+        throw new RuntimeException(messageService.getMessage("example.service.exception01"));
     }
 }

@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.service.ExampleService;
 import com.example.utils.controller.BaseControllerForExceptionHandling;
 import com.example.utils.dto.response.BaseResponse;
+import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +20,11 @@ public class ExampleController extends BaseControllerForExceptionHandling {
     /**
      * Constructor.
      *
+     * @param messageService the message service
      * @param exampleService the example service
      */
-    public ExampleController(ExampleService exampleService) {
+    public ExampleController(MessageService messageService, ExampleService exampleService) {
+        super(messageService);
         this.exampleService = exampleService;
     }
 
@@ -54,6 +57,6 @@ public class ExampleController extends BaseControllerForExceptionHandling {
 
         log.info("Exception made");
 
-        return ResponseEntity.ok("This will never be shown.");
+        return ResponseEntity.ok(new BaseResponse(super.getMessageService().getMessage("example.controller.response01")));
     }
 }
