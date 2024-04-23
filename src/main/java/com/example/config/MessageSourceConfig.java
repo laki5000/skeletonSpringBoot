@@ -50,7 +50,6 @@ public class MessageSourceConfig implements WebMvcConfigurer {
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 
         localeResolver.setDefaultLocale(Locale.getDefault());
-        localeResolver.setCookieName("lang");
 
         log.info("Created locale resolver bean");
 
