@@ -6,6 +6,7 @@ import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /** Base controller for CRUD operations. */
@@ -38,6 +39,26 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
         log.info("{} created", className);
 
         return ResponseEntity
-                .ok(new SuccessResponse(className + getMessageService().getMessage("create.success"), createdEntity));
+                .ok(new SuccessResponse(className + " " + getMessageService().getMessage("create.success"), createdEntity));
+    }
+
+    /**
+     * Update an entity.
+     *
+     * @param update the entity to update
+     * @return the updated entity
+     */
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody URQ update) {
+        String className = getService().getTClassName();
+
+        log.info("Updating {}", className);
+
+        GRP updatedEntity = getService().update(update);
+
+        log.info("{} updated", className);
+
+        return ResponseEntity
+                .ok(new SuccessResponse(className + " " + getMessageService().getMessage("update.success"), updatedEntity));
     }
 }

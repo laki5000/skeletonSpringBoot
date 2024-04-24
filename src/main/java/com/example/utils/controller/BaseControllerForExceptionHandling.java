@@ -1,6 +1,7 @@
 package com.example.utils.controller;
 
 import com.example.exception.MyConflictException;
+import com.example.exception.MyNotFoundException;
 import com.example.utils.dto.response.ErrorResponse;
 import com.example.utils.service.MessageService;
 import lombok.Getter;
@@ -45,6 +46,17 @@ public abstract class BaseControllerForExceptionHandling {
     @ExceptionHandler(MyConflictException.class)
     protected ResponseEntity<?> handleMyConflictException(Exception ex) {
         return handleException(ex, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Handle MyNotFoundException.
+     *
+     * @param ex the exception
+     * @return the response entity
+     */
+    @ExceptionHandler(MyNotFoundException.class)
+    protected ResponseEntity<?> handleMyNotFoundException(Exception ex) {
+        return handleException(ex, HttpStatus.NOT_FOUND);
     }
 
     /**
