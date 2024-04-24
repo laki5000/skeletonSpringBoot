@@ -24,7 +24,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      * @param userRepository the user repository
      */
     public UserService(MessageService messageService, UserRepository userRepository, UserMapper userMapper) {
-        super(messageService, userMapper);
+        super(messageService, userMapper, User.class);
         this.userRepository = userRepository;
     }
 

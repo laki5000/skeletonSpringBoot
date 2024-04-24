@@ -37,7 +37,7 @@ public class UserController extends BaseControllerForCRUD<User, UserCreateReques
      * @param userService the user service
      */
     public UserController(MessageService messageService, UserService userService) {
-        super(messageService, User.class);
+        super(messageService);
         this.userService = userService;
     }
 }

@@ -12,17 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Log4j2
 public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseControllerForExceptionHandling {
     protected abstract BaseServiceForCRUD<T, CRQ, URQ, GRP> getService();
-
-    private final String tClassName;
-
     /**
      * Constructor.
      *
      * @param messageService the message service
      */
-    public BaseControllerForCRUD(MessageService messageService, Class<T> entityType) {
+    public BaseControllerForCRUD(MessageService messageService) {
         super(messageService);
-        this.tClassName = entityType.getSimpleName();
     }
 
     /**
@@ -33,7 +29,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
      */
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CRQ entity) {
-        String className = tClassName + " ";
+        String className = getService().getTClassName();
 
         log.info("Creating {}", className);
 
