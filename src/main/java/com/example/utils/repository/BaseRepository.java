@@ -1,5 +1,6 @@
 package com.example.utils.repository;
 
+import com.example.exception.MyInvalidDateFormatException;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,10 +11,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Base repository interface for CRUD operations.
@@ -67,10 +68,18 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
                     continue;
                 }
 
-                if (root.get(key).getJavaType() == String.class) {
-                    predicates.add(criteriaBuilder.like(root.get(key), value + "%"));
-                } else {
-                    predicates.add(criteriaBuilder.equal(root.get(key), value));
+                System.out.println(root.get(key).getJavaType().getSimpleName());
+
+                switch (root.get(key).getJavaType().getSimpleName()) {
+                    case "String":
+                        predicates.add(criteriaBuilder.like(root.get(key), value + "%"));
+                        break;
+                    case "Date":
+
+                        break;
+                    default:
+                        predicates.add(criteriaBuilder.equal(root.get(key), value));
+                        break;
                 }
             }
 
