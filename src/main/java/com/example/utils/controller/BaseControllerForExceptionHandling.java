@@ -25,16 +25,35 @@ public abstract class BaseControllerForExceptionHandling {
         this.messageService = messageService;
     }
 
+    /**
+     * Handle generic exception.
+     *
+     * @param ex the exception
+     * @return the response entity
+     */
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> handleGenericException(Exception ex) {
         return handleException(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Handle MyConflictException.
+     *
+     * @param ex the exception
+     * @return the response entity
+     */
     @ExceptionHandler(MyConflictException.class)
     protected ResponseEntity<?> handleMyConflictException(Exception ex) {
         return handleException(ex, HttpStatus.CONFLICT);
     }
 
+    /**
+     * Handle exceptions.
+     *
+     * @param ex         the exception
+     * @param statusCode the status code
+     * @return the response entity
+     */
     protected ResponseEntity<?> handleException(Exception ex, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 

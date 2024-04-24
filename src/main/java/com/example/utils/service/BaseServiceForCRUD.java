@@ -47,5 +47,11 @@ public abstract class BaseServiceForCRUD<T, RQ> {
         return createdEntity;
     }
 
+    /**
+     * Validate an entity.
+     *
+     * @param entity the entity to validate
+     * @return the error message or null if the entity is valid
+     */
     protected abstract String validate(RQ entity);
 }
