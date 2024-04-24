@@ -81,7 +81,7 @@ public abstract class BaseControllerForExceptionHandling {
     protected ResponseEntity<?> handleException(Exception ex, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), messageService.getMessage("exception.error") + ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), messageService.getMessage("exception.error") + " " + ex.getMessage());
 
         log.error("Returning error response: {}", errorResponse);
 

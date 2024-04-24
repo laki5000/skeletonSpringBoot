@@ -1,8 +1,5 @@
 package com.example.utils.service;
 
-import com.example.exception.MyConflictException;
-import com.example.exception.MyNotFoundException;
-import com.example.exception.MyNotModifiedException;
 import com.example.utils.mapper.BaseMapper;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -42,11 +39,7 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
     public GRP create(CRQ entity) {
         log.info("Creating {}", tClassName);
 
-        String message = validateCreate(entity);
-
-        if (message != null) {
-            throw new MyConflictException(messageService.getMessage(message));
-        }
+        validateCreate(entity);
 
         T createdEntity = getRepository().save(mapper.toEntity(entity));
         GRP createdResponse = mapper.toGetResponse(createdEntity);
@@ -68,17 +61,9 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
 
         log.info("Updating {} with id: {}", tClassName, id);
 
-        Object validationResult = validateUpdate(update);
+        T validationResult = validateUpdate(update);
 
-        if (validationResult instanceof String) {
-            throw new MyNotFoundException(messageService.getMessage(validationResult.toString()));
-        }
-
-        Object updateMessage = doUpdate(clazz.cast(validationResult), update);
-
-        if (updateMessage instanceof String) {
-            throw new MyNotModifiedException(messageService.getMessage(updateMessage.toString()));
-        }
+        doUpdate(clazz.cast(validationResult), update);
 
         GRP createdResponse = mapper.toGetResponse(clazz.cast(validationResult));
 
@@ -87,21 +72,38 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
         return createdResponse;
     }
 
-    /**
-     * Validate an entity.
-     *
-     * @param entity the entity to validate
-     * @return the error message or null if the entity is valid
-     */
-    protected abstract String validateCreate(CRQ entity);
+    @Transactional
+    public void delete(Long id) {
+        log.info("Deleting {} with id: {}", tClassName, id);
+
+        validateDelete(id);
+
+        getRepository().deleteById(id);
+
+        log.info("{} deleted with id: {}", tClassName, id);
+    }
 
     /**
      * Validate an entity.
      *
      * @param entity the entity to validate
-     * @return If the return value is a String, it indicates an error occurred during validation. If it's a T object, it means everything is okay.
      */
-    protected abstract Object validateUpdate(URQ entity);
+    protected abstract void validateCreate(CRQ entity);
+
+    /**
+     * Validate an entity.
+     *
+     * @param entity the entity to validate
+     * @return the updated entity
+     */
+    protected abstract T validateUpdate(URQ entity);
+
+    /**
+     * Validate the delete request.
+     *
+     * @param id the id to delete
+     */
+    protected abstract void validateDelete(Long id);
 
     /**
      * Get the id from the update request.
@@ -116,7 +118,6 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
      *
      * @param entity the entity to update
      * @param update the update request
-     * @return If the return value is a String, it indicates an error occurred during validation. If it's a null, it means everything is okay.
      */
-    protected abstract Object doUpdate(T entity, URQ update);
+    protected abstract void doUpdate(T entity, URQ update);
 }
