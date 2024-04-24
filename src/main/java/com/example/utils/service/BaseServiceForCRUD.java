@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 /** Base service class for CRUD operations. */
 @Log4j2
-public abstract class BaseServiceForCRUD<T, RQ> {
+public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
     private final MessageService messageService;
-    private final BaseMapper<T, RQ> mapper;
+    private final BaseMapper<T, CRQ, URQ, GRP> mapper;
 
     protected abstract JpaRepository<T, Long> getRepository();
 
@@ -19,7 +19,7 @@ public abstract class BaseServiceForCRUD<T, RQ> {
      *
      * @param messageService the message service
      */
-    public BaseServiceForCRUD(MessageService messageService, BaseMapper<T, RQ> mapper) {
+    public BaseServiceForCRUD(MessageService messageService, BaseMapper<T, CRQ, URQ, GRP> mapper) {
         this.messageService = messageService;
         this.mapper = mapper;
     }
@@ -31,20 +31,21 @@ public abstract class BaseServiceForCRUD<T, RQ> {
      * @return the created entity
      */
     @Transactional
-    public T create(RQ entity) {
+    public GRP create(CRQ entity) {
         log.info("Creating {}", entity.getClass().getSimpleName());
 
-        String message = validate(entity);
+        String message = validateCreate(entity);
 
         if (message != null) {
             throw new MyConflictException(messageService.getMessage(message));
         }
 
         T createdEntity = getRepository().save(mapper.toEntity(entity));
+        GRP createdResponse = mapper.toGetResponse(createdEntity);
 
         log.info("{} created", entity.getClass().getSimpleName());
 
-        return createdEntity;
+        return createdResponse;
     }
 
     /**
@@ -53,5 +54,5 @@ public abstract class BaseServiceForCRUD<T, RQ> {
      * @param entity the entity to validate
      * @return the error message or null if the entity is valid
      */
-    protected abstract String validate(RQ entity);
+    protected abstract String validateCreate(CRQ entity);
 }

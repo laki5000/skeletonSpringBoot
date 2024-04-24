@@ -1,6 +1,8 @@
 package com.example.user.service;
 
 import com.example.user.dto.request.UserCreateRequest;
+import com.example.user.dto.request.UserUpdateRequest;
+import com.example.user.dto.response.UserGetResponse;
 import com.example.user.mapper.UserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 /** A service class for managing users. */
 @Log4j2
 @Service
-public class UserService extends BaseServiceForCRUD<User, UserCreateRequest> {
+public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
     private final UserRepository userRepository;
 
     /**
@@ -39,7 +41,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest> {
     }
 
     @Override
-    protected String validate(UserCreateRequest entity) {
+    protected String validateCreate(UserCreateRequest entity) {
         return userRepository.existsByUsername(entity.username()) ? "conflict.username.exists" : null;
     }
 }

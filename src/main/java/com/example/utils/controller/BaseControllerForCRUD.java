@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 /** Base controller for CRUD operations. */
 @Log4j2
-public abstract class BaseControllerForCRUD<T, RQ> extends BaseControllerForExceptionHandling {
-    protected abstract BaseServiceForCRUD<T, RQ> getService();
+public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseControllerForExceptionHandling {
+    protected abstract BaseServiceForCRUD<T, CRQ, URQ, GRP> getService();
 
     private final String tClassName;
 
@@ -32,15 +32,16 @@ public abstract class BaseControllerForCRUD<T, RQ> extends BaseControllerForExce
      * @return the created entity
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody RQ entity) {
+    public ResponseEntity<?> create(@RequestBody CRQ entity) {
         String className = tClassName + " ";
 
         log.info("Creating {}", className);
 
-        T createdEntity = getService().create(entity);
+        GRP createdEntity = getService().create(entity);
 
         log.info("{} created", className);
 
-        return ResponseEntity.ok(new SuccessResponse(className + getMessageService().getMessage("create.success"), createdEntity));
+        return ResponseEntity
+                .ok(new SuccessResponse(className + getMessageService().getMessage("create.success"), createdEntity));
     }
 }
