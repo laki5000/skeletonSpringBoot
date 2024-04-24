@@ -83,17 +83,13 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
     /**
      * Get entities.
      *
-     * @param page the page number
+     * @param page  the page number
      * @param limit the page size
      * @return page of entities
      */
     @GetMapping
     public ResponseEntity<?> get(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(required = false) Long id,
-            @RequestParam(defaultValue = "id") String orderBy,
-            @RequestParam(defaultValue = "ASC") String orderDirection) {
+                                 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int limit, @RequestParam(required = false) Long id, @RequestParam(defaultValue = "id") String orderBy, @RequestParam(defaultValue = "ASC") String orderDirection) {
         String className = getService().getTClassName();
 
         log.info("Getting {}", className);

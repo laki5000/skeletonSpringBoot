@@ -92,7 +92,7 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
     /**
      * Get entities.
      *
-     * @param page the page number
+     * @param page  the page number
      * @param limit the page size
      * @return page of entities
      */
