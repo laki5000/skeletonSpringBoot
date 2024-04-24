@@ -33,11 +33,7 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
      * @return page of entities
      */
     default Page<T> findAllWithCriteria(
-            int page,
-            int limit,
-            Long id,
-            String orderBy,
-            String orderDirection) {
+                                        int page, int limit, Long id, String orderBy, String orderDirection) {
         Pageable pageable = PageRequest.of(page, limit);
         Specification<T> spec = buildSpecification(id, orderBy, orderDirection);
 
