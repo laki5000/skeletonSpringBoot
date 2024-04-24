@@ -1,5 +1,6 @@
 package com.example.utils.service;
 
+import com.example.exception.MyInvalidDateFormatException;
 import com.example.utils.mapper.BaseMapper;
 import com.example.utils.repository.BaseRepository;
 import lombok.Getter;
@@ -98,14 +99,18 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
      * @return page of entities
      */
     public Page<GRP> get(Map<String, String> params) {
-        log.info("Getting {}s", tClassName);
+        try {
+            log.info("Getting {}s", tClassName);
 
-        Page<T> entities = getRepository().findAllWithCriteria(params);
-        Page<GRP> responses = entities.map(mapper::toGetResponse);
+            Page<T> entities = getRepository().findAllWithCriteria(params);
+            Page<GRP> responses = entities.map(mapper::toGetResponse);
 
-        log.info("Got {}s", tClassName);
+            log.info("Got {}s", tClassName);
 
-        return responses;
+            return responses;
+        } catch (MyInvalidDateFormatException e) {
+            throw new MyInvalidDateFormatException(messageService.getMessage("invalid.date.format") + " " + e.getMessage());
+        }
     }
 
     /**

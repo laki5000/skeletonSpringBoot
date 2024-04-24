@@ -1,6 +1,7 @@
 package com.example.utils.repository;
 
 import com.example.exception.MyInvalidDateFormatException;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
-import java.text.DateFormat;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -68,13 +69,18 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
                     continue;
                 }
 
-                System.out.println(root.get(key).getJavaType().getSimpleName());
-
                 switch (root.get(key).getJavaType().getSimpleName()) {
                     case "String":
                         predicates.add(criteriaBuilder.like(root.get(key), value + "%"));
                         break;
-                    case "Date":
+                    case "Timestamp":
+                        String regex = "\\d{4}-\\d{2}-\\d{2}";
+
+                        if (!value.matches(regex)) {
+                            throw new MyInvalidDateFormatException("expected format: yyyy-MM-dd, got: " + value);
+                        }
+
+                        predicates.add(criteriaBuilder.like(root.get(key).as(String.class), value + "%"));
 
                         break;
                     default:
