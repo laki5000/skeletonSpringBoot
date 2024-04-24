@@ -1,12 +1,12 @@
 package com.example.utils.controller;
 
 import com.example.exception.MyConflictException;
+import com.example.exception.MyInvalidDateFormatException;
 import com.example.exception.MyNotFoundException;
 import com.example.exception.MyNotModifiedException;
 import com.example.utils.dto.response.ErrorResponse;
 import com.example.utils.service.MessageService;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +69,17 @@ public abstract class BaseControllerForExceptionHandling {
     @ExceptionHandler(MyNotModifiedException.class)
     protected ResponseEntity<?> handleMyNotModifiedException(Exception ex) {
         return handleException(ex, HttpStatus.NOT_MODIFIED);
+    }
+
+    /**
+     * Handle MyInvalidDateFormatException.
+     *
+     * @param ex the exception
+     * @return the response entity
+     */
+    @ExceptionHandler(MyInvalidDateFormatException.class)
+    protected ResponseEntity<?> handleMyInvalidDateFormatException(Exception ex) {
+        return handleException(ex, HttpStatus.BAD_REQUEST);
     }
 
     /**
