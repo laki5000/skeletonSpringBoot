@@ -1,9 +1,10 @@
 package com.example.utils.service;
 
 import com.example.utils.mapper.BaseMapper;
+import com.example.utils.repository.BaseRepository;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Base service class for CRUD operations. */
@@ -15,7 +16,7 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
     private final Class<T> clazz;
     private final String tClassName;
 
-    protected abstract JpaRepository<T, Long> getRepository();
+    protected abstract BaseRepository<T, Long> getRepository();
 
     /**
      * Constructor.
@@ -72,6 +73,11 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
         return createdResponse;
     }
 
+    /**
+     * Delete an entity.
+     *
+     * @param id the id of the entity to delete
+     */
     @Transactional
     public void delete(Long id) {
         log.info("Deleting {} with id: {}", tClassName, id);
@@ -81,6 +87,24 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
         getRepository().deleteById(id);
 
         log.info("{} deleted with id: {}", tClassName, id);
+    }
+
+    /**
+     * Get entities.
+     *
+     * @param page the page number
+     * @param limit the page size
+     * @return page of entities
+     */
+    public Page<GRP> get(int page, int limit, Long id, String orderBy, String direction) {
+        log.info("Getting {}s", tClassName);
+
+        Page<T> entities = getRepository().findAllWithCriteria(page, limit, id, orderBy, direction);
+        Page<GRP> responses = entities.map(mapper::toGetResponse);
+
+        log.info("Got {}s", tClassName);
+
+        return responses;
     }
 
     /**
