@@ -5,6 +5,7 @@ import com.example.utils.dto.response.SuccessResponse;
 import com.example.utils.service.BaseServiceForCRUD;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,5 +78,30 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
         log.info("{} deleted", className);
 
         return ResponseEntity.ok(new BaseResponse(className + " " + getMessageService().getMessage("delete.success")));
+    }
+
+    /**
+     * Get entities.
+     *
+     * @param page the page number
+     * @param limit the page size
+     * @return page of entities
+     */
+    @GetMapping
+    public ResponseEntity<?> get(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) Long id,
+            @RequestParam(defaultValue = "id") String orderBy,
+            @RequestParam(defaultValue = "ASC") String orderDirection) {
+        String className = getService().getTClassName();
+
+        log.info("Getting {}", className);
+
+        Page<GRP> entities = getService().get(page, limit, id, orderBy, orderDirection);
+
+        log.info("Got {}", className);
+
+        return ResponseEntity.ok(entities);
     }
 }
