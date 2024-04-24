@@ -1,6 +1,8 @@
 package com.example.user.controller;
 
 import com.example.user.dto.request.UserCreateRequest;
+import com.example.user.dto.request.UserUpdateRequest;
+import com.example.user.dto.response.UserGetResponse;
 import com.example.user.model.User;
 import com.example.user.service.UserService;
 import com.example.utils.controller.BaseControllerForCRUD;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 @RestController
 @RequestMapping("${api.base.path}/users")
-public class UserController extends BaseControllerForCRUD<User, UserCreateRequest> {
+public class UserController extends BaseControllerForCRUD<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
     private final UserService userService;
 
     /**
@@ -23,7 +25,7 @@ public class UserController extends BaseControllerForCRUD<User, UserCreateReques
      * @return the user service
      */
     @Override
-    protected BaseServiceForCRUD<User, UserCreateRequest> getService() {
+    protected BaseServiceForCRUD<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> getService() {
         log.info("Getting user service");
 
         return userService;
