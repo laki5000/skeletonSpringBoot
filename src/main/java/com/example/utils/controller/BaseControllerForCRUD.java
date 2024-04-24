@@ -1,18 +1,18 @@
 package com.example.utils.controller;
 
+import com.example.utils.dto.response.BaseResponse;
 import com.example.utils.dto.response.SuccessResponse;
 import com.example.utils.service.BaseServiceForCRUD;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /** Base controller for CRUD operations. */
 @Log4j2
 public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseControllerForExceptionHandling {
     protected abstract BaseServiceForCRUD<T, CRQ, URQ, GRP> getService();
+
     /**
      * Constructor.
      *
@@ -38,8 +38,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
 
         log.info("{} created", className);
 
-        return ResponseEntity
-                .ok(new SuccessResponse(className + " " + getMessageService().getMessage("create.success"), createdEntity));
+        return ResponseEntity.ok(new SuccessResponse(className + " " + getMessageService().getMessage("create.success"), createdEntity));
     }
 
     /**
@@ -58,7 +57,25 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
 
         log.info("{} updated", className);
 
-        return ResponseEntity
-                .ok(new SuccessResponse(className + " " + getMessageService().getMessage("update.success"), updatedEntity));
+        return ResponseEntity.ok(new SuccessResponse(className + " " + getMessageService().getMessage("update.success"), updatedEntity));
+    }
+
+    /**
+     * Delete an entity.
+     *
+     * @param id the id of the entity to delete
+     * @return the response entity
+     */
+    @DeleteMapping
+    public ResponseEntity<?> delete(@RequestParam Long id) {
+        String className = getService().getTClassName();
+
+        log.info("Deleting {}", className);
+
+        getService().delete(id);
+
+        log.info("{} deleted", className);
+
+        return ResponseEntity.ok(new BaseResponse(className + " " + getMessageService().getMessage("delete.success")));
     }
 }

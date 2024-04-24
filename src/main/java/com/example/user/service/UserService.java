@@ -1,5 +1,8 @@
 package com.example.user.service;
 
+import com.example.exception.MyConflictException;
+import com.example.exception.MyNotFoundException;
+import com.example.exception.MyNotModifiedException;
 import com.example.user.dto.request.UserCreateRequest;
 import com.example.user.dto.request.UserUpdateRequest;
 import com.example.user.dto.response.UserGetResponse;
@@ -43,30 +46,53 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
     }
 
     /**
-     * Validate the user creation request.
+     * Validate the user create request.
      *
-     * @param entity the user creation request
-     * @return an error message if the request is invalid, null otherwise
+     * @param entity the user create request
      */
     @Override
-    protected String validateCreate(UserCreateRequest entity) {
-        return userRepository.existsByUsername(entity.username()) ? "conflict.username.exists" : null;
+    protected void validateCreate(UserCreateRequest entity) {
+        userRepository.existsByUsername(entity.username());
+
+        if (userRepository.existsByUsername(entity.username())) {
+            throw new MyConflictException(getMessageService().getMessage("conflict.username.exists"));
+        }
     }
 
     /**
      * Validate the user update request.
      *
-     * @param update the user update request
-     * @return an error message if the request is invalid, null otherwise
+     * @param update the entity to validate
+     * @return the updated user
      */
     @Override
-    protected Object validateUpdate(UserUpdateRequest update) {
-        Optional<User> userOptional = userRepository.findById(update.id());
+    protected User validateUpdate(UserUpdateRequest update) {
+        return validateById(update.id());
+    }
+
+    /**
+     * Validate the user delete request.
+     *
+     * @param id the user id
+     */
+    @Override
+    protected void validateDelete(Long id) {
+        validateById(id);
+    }
+
+    /**
+     * Validate the user by id.
+     *
+     * @param id the user id
+     * @return the user if the id is valid, an error message otherwise
+     */
+    private User validateById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
             return userOptional.get();
         } else {
-            return "not.found.user";
+            throw new MyNotFoundException(getMessageService().getMessage("not.found.user"));
         }
     }
 
@@ -88,7 +114,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      * @param update the user update request
      */
     @Override
-    protected Object doUpdate(User entity, UserUpdateRequest update) {
+    protected void doUpdate(User entity, UserUpdateRequest update) {
         boolean updated = false;
 
         if (!update.password().equals(entity.getPassword())) {
@@ -96,6 +122,8 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
             updated = true;
         }
 
-        return updated ? null : "not.modified";
+        if (!updated) {
+            throw new MyNotModifiedException(getMessageService().getMessage("not.modified"));
+        }
     }
 }
