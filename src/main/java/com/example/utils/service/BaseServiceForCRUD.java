@@ -7,6 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 /** Base service class for CRUD operations. */
 @Log4j2
 @Getter
@@ -92,14 +94,13 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
     /**
      * Get entities.
      *
-     * @param page  the page number
-     * @param limit the page size
+     * @param params the search parameters
      * @return page of entities
      */
-    public Page<GRP> get(int page, int limit, Long id, String orderBy, String direction) {
+    public Page<GRP> get(Map<String, String> params) {
         log.info("Getting {}s", tClassName);
 
-        Page<T> entities = getRepository().findAllWithCriteria(page, limit, id, orderBy, direction);
+        Page<T> entities = getRepository().findAllWithCriteria(params);
         Page<GRP> responses = entities.map(mapper::toGetResponse);
 
         log.info("Got {}s", tClassName);

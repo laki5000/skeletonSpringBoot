@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /** Base controller for CRUD operations. */
 @Log4j2
 public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseControllerForExceptionHandling {
@@ -83,18 +85,17 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
     /**
      * Get entities.
      *
-     * @param page  the page number
-     * @param limit the page size
+     * @param params the query parameters
      * @return page of entities
      */
     @GetMapping
     public ResponseEntity<?> get(
-                                 @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int limit, @RequestParam(required = false) Long id, @RequestParam(defaultValue = "id") String orderBy, @RequestParam(defaultValue = "ASC") String orderDirection) {
+            @RequestParam(required = false) Map<String, String> params) {
         String className = getService().getTClassName();
 
         log.info("Getting {}", className);
 
-        Page<GRP> entities = getService().get(page, limit, id, orderBy, orderDirection);
+        Page<GRP> entities = getService().get(params);
 
         log.info("Got {}", className);
 
