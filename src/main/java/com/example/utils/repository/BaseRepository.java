@@ -26,11 +26,11 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
     /**
      * Find all entities with criteria.
      *
-     * @param params         the search parameters
+     * @param params the search parameters
      * @return page of entities
      */
     default Page<T> findAllWithCriteria(
-            Map<String, String> params) {
+                                        Map<String, String> params) {
         int page = params.get("page") != null && !params.get("page").isEmpty() ? Integer.parseInt(params.get("page")) : 0;
         int limit = params.get("limit") != null && !params.get("page").isEmpty() ? Integer.parseInt(params.get("limit")) : 10;
         String orderBy = params.get("orderBy") != null && !params.get("orderBy").isEmpty() ? params.get("orderBy") : "id";
