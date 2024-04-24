@@ -66,7 +66,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
         if (userOptional.isPresent()) {
             return userOptional.get();
         } else {
-            return "notfound.user";
+            return "not.found.user";
         }
     }
 
@@ -79,5 +79,23 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
     @Override
     protected Long getIdFromUpdateRequest(UserUpdateRequest update) {
         return update.id();
+    }
+
+    /**
+     * Update the user.
+     *
+     * @param entity the user to update
+     * @param update the user update request
+     */
+    @Override
+    protected Object doUpdate(User entity, UserUpdateRequest update) {
+        boolean updated = false;
+
+        if (!update.password().equals(entity.getPassword())) {
+            entity.setPassword(update.password());
+            updated = true;
+        }
+
+        return updated ? null : "not.modified";
     }
 }
