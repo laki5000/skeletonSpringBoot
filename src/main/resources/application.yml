@@ -1,0 +1,16 @@
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/elakatos
+        username: user
+        password: userpw
+    jackson:
+        date-format: "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+
+driver-class-name: com.mysql.cj.jdbc.Driver
+
+jpa:
+    hibernate:
+        ddl-auto: update
+    open-in-view: false
+
+

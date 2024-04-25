@@ -6,7 +6,6 @@ import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.utils.dto.response.ErrorResponse;
 import com.example.utils.service.MessageService;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,7 +92,8 @@ public abstract class GlobalExceptionHandler {
     protected ResponseEntity<?> handleException(Exception ex, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), messageService.getMessage("exception.error") + " " + ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(),
+                messageService.getMessage("error.default_message") + " " + ex.getMessage());
 
         log.error("Returning error response: {}", errorResponse);
 
