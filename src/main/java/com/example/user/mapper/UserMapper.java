@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /** Mapper for user entities. */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper extends BaseMapper<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
     /**
      * Maps a user create request to a user entity.
@@ -17,9 +17,7 @@ public interface UserMapper extends BaseMapper<User, UserCreateRequest, UserUpda
      * @param dto the user create request
      * @return the user entity
      */
-    @Mapping(target = "username", source = "dto.username")
-    @Mapping(target = "password", source = "dto.password")
-    @Mapping(target = "createdBy", source = "dto.username")
+    @Mapping(target = "createdBy", source = "username")
     User toEntity(UserCreateRequest dto);
 
     /**

@@ -4,6 +4,7 @@ import com.example.utils.dto.response.BaseResponse;
 import com.example.utils.dto.response.SuccessResponse;
 import com.example.utils.service.BaseServiceForCRUD;
 import com.example.utils.service.MessageService;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,9 @@ import java.util.Map;
 
 /** Base controller for CRUD operations. */
 @Log4j2
-public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseControllerForExceptionHandling {
+@Getter
+public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> {
+    private final MessageService messageService;
     protected abstract BaseServiceForCRUD<T, CRQ, URQ, GRP> getService();
 
     /**
@@ -22,7 +25,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
      * @param messageService the message service
      */
     public BaseControllerForCRUD(MessageService messageService) {
-        super(messageService);
+        this.messageService = messageService;
     }
 
     /**
@@ -41,7 +44,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
 
         log.info("{} created", className);
 
-        return ResponseEntity.ok(new SuccessResponse(className + " " + getMessageService().getMessage("create.success"), createdEntity));
+        return ResponseEntity.ok(new SuccessResponse(className + " " + messageService.getMessage("create.success"), createdEntity));
     }
 
     /**
@@ -60,7 +63,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
 
         log.info("{} updated", className);
 
-        return ResponseEntity.ok(new SuccessResponse(className + " " + getMessageService().getMessage("update.success"), updatedEntity));
+        return ResponseEntity.ok(new SuccessResponse(className + " " + messageService.getMessage("update.success"), updatedEntity));
     }
 
     /**
@@ -79,7 +82,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> extends BaseContro
 
         log.info("{} deleted", className);
 
-        return ResponseEntity.ok(new BaseResponse(className + " " + getMessageService().getMessage("delete.success")));
+        return ResponseEntity.ok(new BaseResponse(className + " " + messageService.getMessage("delete.success")));
     }
 
     /**

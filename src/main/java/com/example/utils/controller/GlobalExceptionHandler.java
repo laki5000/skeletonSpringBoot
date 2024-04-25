@@ -1,21 +1,22 @@
 package com.example.utils.controller;
 
-import com.example.exception.MyConflictException;
-import com.example.exception.MyInvalidDateFormatException;
-import com.example.exception.MyNotFoundException;
-import com.example.exception.MyNotModifiedException;
+import com.example.exception.ConflictException;
+import com.example.exception.InvalidDateFormatException;
+import com.example.exception.NotFoundException;
+import com.example.exception.NotModifiedException;
 import com.example.utils.dto.response.ErrorResponse;
 import com.example.utils.service.MessageService;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /** Base controller for exception handling. */
 @Log4j2
-@Getter
-public abstract class BaseControllerForExceptionHandling {
+@ControllerAdvice
+public abstract class GlobalExceptionHandler {
     private final MessageService messageService;
 
     /**
@@ -23,7 +24,7 @@ public abstract class BaseControllerForExceptionHandling {
      *
      * @param messageService the message service
      */
-    public BaseControllerForExceptionHandling(MessageService messageService) {
+    public GlobalExceptionHandler(MessageService messageService) {
         this.messageService = messageService;
     }
 
@@ -44,7 +45,7 @@ public abstract class BaseControllerForExceptionHandling {
      * @param ex the exception
      * @return the response entity
      */
-    @ExceptionHandler(MyConflictException.class)
+    @ExceptionHandler(ConflictException.class)
     protected ResponseEntity<?> handleMyConflictException(Exception ex) {
         return handleException(ex, HttpStatus.CONFLICT);
     }
@@ -55,7 +56,7 @@ public abstract class BaseControllerForExceptionHandling {
      * @param ex the exception
      * @return the response entity
      */
-    @ExceptionHandler(MyNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     protected ResponseEntity<?> handleMyNotFoundException(Exception ex) {
         return handleException(ex, HttpStatus.NOT_FOUND);
     }
@@ -66,7 +67,7 @@ public abstract class BaseControllerForExceptionHandling {
      * @param ex the exception
      * @return the response entity
      */
-    @ExceptionHandler(MyNotModifiedException.class)
+    @ExceptionHandler(NotModifiedException.class)
     protected ResponseEntity<?> handleMyNotModifiedException(Exception ex) {
         return handleException(ex, HttpStatus.NOT_MODIFIED);
     }
@@ -77,7 +78,7 @@ public abstract class BaseControllerForExceptionHandling {
      * @param ex the exception
      * @return the response entity
      */
-    @ExceptionHandler(MyInvalidDateFormatException.class)
+    @ExceptionHandler(InvalidDateFormatException.class)
     protected ResponseEntity<?> handleMyInvalidDateFormatException(Exception ex) {
         return handleException(ex, HttpStatus.BAD_REQUEST);
     }

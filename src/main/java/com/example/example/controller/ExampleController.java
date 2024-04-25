@@ -1,7 +1,7 @@
 package com.example.example.controller;
 
 import com.example.example.service.ExampleService;
-import com.example.utils.controller.BaseControllerForExceptionHandling;
+import com.example.utils.controller.GlobalExceptionHandler;
 import com.example.utils.dto.response.BaseResponse;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 @RestController
 @RequestMapping("${api.base.path}")
-public class ExampleController extends BaseControllerForExceptionHandling {
+public class ExampleController extends GlobalExceptionHandler {
+    private final MessageService messageService;
     private final ExampleService exampleService;
 
     /**
@@ -25,6 +26,7 @@ public class ExampleController extends BaseControllerForExceptionHandling {
      */
     public ExampleController(MessageService messageService, ExampleService exampleService) {
         super(messageService);
+        this.messageService = messageService;
         this.exampleService = exampleService;
     }
 
@@ -75,6 +77,6 @@ public class ExampleController extends BaseControllerForExceptionHandling {
 
         log.info("Exception made");
 
-        return ResponseEntity.ok(new BaseResponse(super.getMessageService().getMessage("example.controller.response01")));
+        return ResponseEntity.ok(new BaseResponse(messageService.getMessage("example.controller.response01")));
     }
 }
