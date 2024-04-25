@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 /** REST controller for managing users. */
 @Log4j2
 @RestController
-@RequestMapping("${api.base.path}/users")
+@RequestMapping("api/v1/users")
 public class UserController extends BaseControllerForCRUD<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
     private final UserService userService;
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 /** Example controller class. */
 @Log4j2
 @RestController
-@RequestMapping("${api.base.path}")
+@RequestMapping("api/v1/example")
 public class ExampleController extends GlobalExceptionHandler {
     private final MessageService messageService;
     private final ExampleService exampleService;

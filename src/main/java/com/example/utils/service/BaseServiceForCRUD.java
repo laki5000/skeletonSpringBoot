@@ -109,7 +109,8 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
 
             return responses;
         } catch (InvalidDateFormatException e) {
-            throw new InvalidDateFormatException(messageService.getMessage("invalid.date.format") + " " + e.getMessage());
+            throw new InvalidDateFormatException(
+                    messageService.getMessage("error.invalid.date_format") + " " + e.getMessage());
         }
     }
 

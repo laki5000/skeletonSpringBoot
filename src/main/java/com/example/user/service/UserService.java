@@ -55,7 +55,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
         userRepository.existsByUsername(entity.getUsername());
 
         if (userRepository.existsByUsername(entity.getUsername())) {
-            throw new ConflictException(getMessageService().getMessage("conflict.username.exists"));
+            throw new ConflictException(getMessageService().getMessage("error.conflict.username_exists"));
         }
     }
 
@@ -92,7 +92,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
         if (userOptional.isPresent()) {
             return userOptional.get();
         } else {
-            throw new NotFoundException(getMessageService().getMessage("not.found.user"));
+            throw new NotFoundException(getMessageService().getMessage("error.not_found.user"));
         }
     }
 
@@ -123,7 +123,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
         }
 
         if (!updated) {
-            throw new NotModifiedException(getMessageService().getMessage("not.modified"));
+            throw new NotModifiedException(getMessageService().getMessage("error.not_modified.default_message"));
         }
     }
 }

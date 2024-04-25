@@ -30,7 +30,7 @@ public class MessageSourceConfig implements WebMvcConfigurer {
 
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 
-        messageSource.setBasename("classpath:messages");
+        messageSource.setBasename("classpath:translations/messages");
         messageSource.setDefaultEncoding("UTF-8");
 
         log.info("Created message source bean");
