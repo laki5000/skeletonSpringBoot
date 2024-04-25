@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 /** Base controller for exception handling. */
 @Log4j2
 @ControllerAdvice
-public abstract class GlobalExceptionHandler {
+public class GlobalExceptionHandler {
     private final MessageService messageService;
 
     /**
@@ -39,7 +39,7 @@ public abstract class GlobalExceptionHandler {
     }
 
     /**
-     * Handle MyConflictException.
+     * Handle ConflictException.
      *
      * @param ex the exception
      * @return the response entity
@@ -50,7 +50,7 @@ public abstract class GlobalExceptionHandler {
     }
 
     /**
-     * Handle MyNotFoundException.
+     * Handle NotFoundException.
      *
      * @param ex the exception
      * @return the response entity
@@ -61,7 +61,7 @@ public abstract class GlobalExceptionHandler {
     }
 
     /**
-     * Handle MyNotModifiedException.
+     * Handle NotModifiedException.
      *
      * @param ex the exception
      * @return the response entity
@@ -72,7 +72,7 @@ public abstract class GlobalExceptionHandler {
     }
 
     /**
-     * Handle MyInvalidDateFormatException.
+     * Handle InvalidDateFormatException.
      *
      * @param ex the exception
      * @return the response entity
