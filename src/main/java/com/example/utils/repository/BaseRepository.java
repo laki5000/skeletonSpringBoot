@@ -69,7 +69,7 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
                     case "String":
                         predicates.add(criteriaBuilder.like(root.get(key), value + "%"));
                         break;
-                    case "Timestamp":
+                    case "Instant":
                         String regex = "\\d{4}-\\d{2}-\\d{2}";
 
                         if (!value.matches(regex)) {

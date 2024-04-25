@@ -45,8 +45,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> {
 
         log.info("{} created", className);
 
-        return ResponseEntity
-                .ok(new SuccessResponse(className + " " + messageService.getMessage("success.create"), createdEntity));
+        return ResponseEntity.ok(new SuccessResponse(className + " " + messageService.getMessage("success.create"), createdEntity));
     }
 
     /**
@@ -65,8 +64,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> {
 
         log.info("{} updated", className);
 
-        return ResponseEntity
-                .ok(new SuccessResponse(className + " " + messageService.getMessage("success.update"), updatedEntity));
+        return ResponseEntity.ok(new SuccessResponse(className + " " + messageService.getMessage("success.update"), updatedEntity));
     }
 
     /**
@@ -96,7 +94,7 @@ public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> {
      */
     @GetMapping
     public ResponseEntity<?> get(
-            @RequestParam(required = false) Map<String, String> params) {
+                                 @RequestParam(required = false) Map<String, String> params) {
         String className = getService().getTClassName();
 
         log.info("Getting {}", className);

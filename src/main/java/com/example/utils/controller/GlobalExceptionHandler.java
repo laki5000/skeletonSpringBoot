@@ -92,8 +92,7 @@ public abstract class GlobalExceptionHandler {
     protected ResponseEntity<?> handleException(Exception ex, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(),
-                messageService.getMessage("error.default_message") + " " + ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), messageService.getMessage("error.default_message") + " " + ex.getMessage());
 
         log.error("Returning error response: {}", errorResponse);
 

@@ -37,8 +37,7 @@ public class MessageService {
     public String getMessage(String key) {
         log.info("Getting message for key: {}", key);
 
-        HttpServletRequest request = ((ServletRequestAttributes) Objects
-                .requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
         Locale currentLocale = localeResolver.resolveLocale(request);
 
