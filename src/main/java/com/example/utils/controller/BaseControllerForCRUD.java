@@ -14,7 +14,6 @@ import java.util.Map;
 
 /** Base controller for CRUD operations. */
 @Log4j2
-@Getter
 public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> {
     private final MessageService messageService;
 
