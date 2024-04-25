@@ -1,8 +1,8 @@
 package com.example.user.service;
 
-import com.example.exception.MyConflictException;
-import com.example.exception.MyNotFoundException;
-import com.example.exception.MyNotModifiedException;
+import com.example.exception.ConflictException;
+import com.example.exception.NotFoundException;
+import com.example.exception.NotModifiedException;
 import com.example.user.dto.request.UserCreateRequest;
 import com.example.user.dto.request.UserUpdateRequest;
 import com.example.user.dto.response.UserGetResponse;
@@ -52,10 +52,10 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected void validateCreate(UserCreateRequest entity) {
-        userRepository.existsByUsername(entity.username());
+        userRepository.existsByUsername(entity.getUsername());
 
-        if (userRepository.existsByUsername(entity.username())) {
-            throw new MyConflictException(getMessageService().getMessage("conflict.username.exists"));
+        if (userRepository.existsByUsername(entity.getUsername())) {
+            throw new ConflictException(getMessageService().getMessage("conflict.username.exists"));
         }
     }
 
@@ -67,7 +67,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected User validateUpdate(UserUpdateRequest update) {
-        return validateById(update.id());
+        return validateById(update.getId());
     }
 
     /**
@@ -92,7 +92,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
         if (userOptional.isPresent()) {
             return userOptional.get();
         } else {
-            throw new MyNotFoundException(getMessageService().getMessage("not.found.user"));
+            throw new NotFoundException(getMessageService().getMessage("not.found.user"));
         }
     }
 
@@ -104,7 +104,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected Long getIdFromUpdateRequest(UserUpdateRequest update) {
-        return update.id();
+        return update.getId();
     }
 
     /**
@@ -117,13 +117,13 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
     protected void doUpdate(User entity, UserUpdateRequest update) {
         boolean updated = false;
 
-        if (!update.password().equals(entity.getPassword())) {
-            entity.setPassword(update.password());
+        if (!update.getPassword().equals(entity.getPassword())) {
+            entity.setPassword(update.getPassword());
             updated = true;
         }
 
         if (!updated) {
-            throw new MyNotModifiedException(getMessageService().getMessage("not.modified"));
+            throw new NotModifiedException(getMessageService().getMessage("not.modified"));
         }
     }
 }

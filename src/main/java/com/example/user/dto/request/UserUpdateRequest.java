@@ -1,5 +1,10 @@
 package com.example.user.dto.request;
 
+import lombok.Getter;
+
 /** Dto class for update a user. */
-public record UserUpdateRequest(Long id, String password) {
+@Getter
+public class UserUpdateRequest {
+    private Long id;
+    private String password;
 }
