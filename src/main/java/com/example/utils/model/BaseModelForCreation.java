@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.Instant;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 /** A base model for creation. */
 @MappedSuperclass
@@ -15,28 +18,17 @@ public abstract class BaseModelForCreation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createdAt;
+    private Instant createdAt;
 
     @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @UpdateTimestamp
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private Instant updatedAt;
 
     @Column(name = "updated_by")
     private String updatedBy;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-        this.updatedAt = this.createdAt;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
-    }
 }
