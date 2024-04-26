@@ -50,7 +50,6 @@ public class MessageServiceTest {
         //Assert
         assertEquals(expectedMessage, message, "Incorrect message returned");
 
-        //Additional verification
         verify(localeResolver, times(1)).resolveLocale(request);
         verify(messageSource, times(1)).getMessage(validKey, null, locale);
     }
@@ -66,7 +65,6 @@ public class MessageServiceTest {
         //Assert
         assertNull(message, "Message should be null");
 
-        //Additional verification
         verify(localeResolver, times(1)).resolveLocale(request);
         verify(messageSource, times(1)).getMessage(invalidKey, null, locale);
     }

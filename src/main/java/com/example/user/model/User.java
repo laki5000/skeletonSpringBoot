@@ -7,6 +7,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 /** User entity. */
 @Entity
 @Table(name = "users")
@@ -18,4 +20,10 @@ public class User extends BaseModelForCreation {
 
     @Column(nullable = false)
     private String password;
+
+    public User(Long id, String username, String password, Instant createdAt, String createdBy, Instant updatedAt, String updatedBy) {
+        super(id, createdAt, createdBy, updatedAt, updatedBy);
+        this.username = username;
+        this.password = password;
+    }
 }
