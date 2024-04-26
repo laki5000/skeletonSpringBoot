@@ -1,6 +1,7 @@
 package com.example.utils.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @MappedSuperclass
 @Getter
 @Setter
+@AllArgsConstructor
 public abstract class BaseModelForCreation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
