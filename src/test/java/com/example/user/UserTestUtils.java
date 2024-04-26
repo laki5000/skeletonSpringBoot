@@ -11,8 +11,7 @@ public class UserTestUtils {
         return new UserCreateRequest(username, password);
     }
 
-    public static User getUser(Long id, String username, String password, Instant createdAt, String createdBy,
-                               Instant updatedAt, String updatedBy) {
+    public static User getUser(Long id, String username, String password, Instant createdAt, String createdBy, Instant updatedAt, String updatedBy) {
         return new User(id, username, password, createdAt, createdBy, updatedAt, updatedBy);
     }
 
