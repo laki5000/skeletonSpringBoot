@@ -1,6 +1,7 @@
 package com.example.user.service;
 
 import com.example.user.dto.request.UserCreateRequest;
+import com.example.user.dto.request.UserUpdateRequest;
 import com.example.user.dto.response.UserGetResponse;
 import com.example.user.mapper.UserMapper;
 import com.example.user.model.User;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static com.example.user.UserTestUtils.*;
 import static com.example.utils.constants.TestConstants.*;
@@ -25,12 +28,15 @@ public class UserServiceTest {
     private UserService userService;
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private UserMapper userMapper;
-
     @Mock
     private MessageService messageService;
+    private final UserCreateRequest cRequest = getUserCreateRequest(username, password);
+    private final UserUpdateRequest uRequest = getUserUpdateRequest(id, modifiedPassword);
+    private final User entity = getUser(id, username, password, null, username, null, null);
+    private final User uEntity = getUser(id, username, modifiedPassword, null, username, null, null);
+    private final UserGetResponse response = getUserGetResponse(1L, username, null, null, username, null);
 
     @BeforeEach
     public void setup() {
@@ -40,25 +46,56 @@ public class UserServiceTest {
     @Test
     public void testCreateUser() {
         // Arrange
-        UserCreateRequest request = getUserCreateRequest(username, password);
-        User entity = getUser(id, username, password, null, username, null, null);
-        UserGetResponse expectedResponse = getUserGetResponse(1L, username, null, null, username, null);
-
-        doNothing().when(userService).validateCreate(request);
-        when(userRepository.save(any())).thenReturn(entity);
-        when(userMapper.toEntity(request)).thenReturn(entity);
-        when(userMapper.toGetResponse(entity)).thenReturn(expectedResponse);
+        doNothing().when(userService).validateCreate(cRequest);
+        when(userRepository.save(entity)).thenReturn(entity);
+        when(userMapper.toEntity(cRequest)).thenReturn(entity);
+        when(userMapper.toGetResponse(entity)).thenReturn(response);
 
         // Act
-        UserGetResponse response = userService.create(request);
+        UserGetResponse result = userService.create(cRequest);
 
         // Assert
-        assertNotNull(response);
-        assertEquals(expectedResponse, response);
+        assertNotNull(result);
+        assertEquals(response, result);
 
-        verify(userService, times(1)).validateCreate(request);
-        verify(userRepository, times(1)).save(any());
-        verify(userMapper, times(1)).toEntity(request);
+        verify(userService, times(1)).validateCreate(cRequest);
+        verify(userRepository, times(1)).save(entity);
+        verify(userMapper, times(1)).toEntity(cRequest);
         verify(userMapper, times(1)).toGetResponse(entity);
+    }
+
+    @Test
+    public void testUpdateUser() {
+        // Arrange
+        when(userService.getIdFromUpdateRequest(uRequest)).thenReturn(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(entity));
+        doNothing().when(userService).doUpdate(entity, uRequest);
+        when(userMapper.toGetResponse(any())).thenReturn(response);
+
+        // Act
+        UserGetResponse result = userService.update(uRequest);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(response, result);
+
+        verify(userService, times(1)).getIdFromUpdateRequest(uRequest);
+        verify(userService, times(1)).validateUpdate(uRequest);
+        verify(userService, times(1)).doUpdate(entity, uRequest);
+        verify(userMapper, times(1)).toGetResponse(any());
+    }
+
+    @Test
+    public void testDeleteUser() {
+        // Arrange
+        doNothing().when(userService).validateDelete(id);
+        doNothing().when(userRepository).deleteById(id);
+
+        // Act
+        userService.delete(id);
+
+        // Assert
+        verify(userService, times(1)).validateDelete(id);
+        verify(userRepository, times(1)).deleteById(id);
     }
 }

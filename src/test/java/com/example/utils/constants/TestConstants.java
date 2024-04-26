@@ -10,4 +10,5 @@ public class TestConstants {
     public static final Long id = 1L;
     public static final String username = "username";
     public static final String password = "password";
+    public static final String modifiedPassword = "modifiedPassword";
 }
