@@ -35,7 +35,6 @@ public class UserServiceTest {
     private final UserCreateRequest cRequest = getUserCreateRequest(username, password);
     private final UserUpdateRequest uRequest = getUserUpdateRequest(id, modifiedPassword);
     private final User entity = getUser(id, username, password, null, username, null, null);
-    private final User uEntity = getUser(id, username, modifiedPassword, null, username, null, null);
     private final UserGetResponse response = getUserGetResponse(1L, username, null, null, username, null);
 
     @BeforeEach
