@@ -1,6 +1,5 @@
 package com.example.user.service;
 
-import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.user.dto.request.UserCreateRequest;
@@ -14,8 +13,6 @@ import com.example.utils.service.BaseServiceForCRUD;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 /** A service class for managing users. */
 @Log4j2
@@ -52,11 +49,11 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected void validateCreate(UserCreateRequest entity) {
-        userRepository.existsByUsername(entity.getUsername());
+        log.info("Validating user create request");
 
-        if (userRepository.existsByUsername(entity.getUsername())) {
-            throw new ConflictException(getMessageService().getMessage("error.conflict.username_exists"));
-        }
+        validateByUsername(entity.getUsername());
+
+        log.info("User create request is valid");
     }
 
     /**
@@ -67,7 +64,13 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected User validateUpdate(UserUpdateRequest update) {
-        return validateById(update.getId());
+        log.info("Validating user update request");
+
+        User user = validateById(update.getId());
+
+        log.info("User update request is valid");
+
+        return user;
     }
 
     /**
@@ -77,7 +80,11 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected void validateDelete(Long id) {
+        log.info("Validating user delete request");
+
         validateById(id);
+
+        log.info("User delete request is valid");
     }
 
     /**
@@ -87,13 +94,26 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      * @return the user if the id is valid, an error message otherwise
      */
     private User validateById(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
+        log.info("Validating user by id: {}", id);
 
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            throw new NotFoundException(getMessageService().getMessage("error.not_found.user"));
-        }
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
+        log.info("User found with id: {}", id);
+
+        return user;
+    }
+
+    /**
+     * Validate the user by username.
+     *
+     * @param username the username
+     */
+    private void validateByUsername(String username) {
+        log.info("Validating user by username: {}", username);
+
+        userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found with username: " + username));
+
+        log.info("User found with username: {}", username);
     }
 
     /**
@@ -104,7 +124,13 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected Long getIdFromUpdateRequest(UserUpdateRequest update) {
-        return update.getId();
+        log.info("Getting id from user update request");
+
+        Long id = update.getId();
+
+        log.info("Got id from user update request: {}", id);
+
+        return id;
     }
 
     /**
@@ -115,9 +141,13 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
      */
     @Override
     protected void doUpdate(User entity, UserUpdateRequest update) {
+        log.info("Updating user");
+
         boolean updated = false;
 
         if (!update.getPassword().equals(entity.getPassword())) {
+            log.info("Updating user password");
+
             entity.setPassword(update.getPassword());
             updated = true;
         }
@@ -125,5 +155,7 @@ public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, Use
         if (!updated) {
             throw new NotModifiedException(getMessageService().getMessage("error.not_modified.default_message"));
         }
+
+        log.info("Updated user");
     }
 }
