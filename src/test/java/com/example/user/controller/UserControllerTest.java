@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.TestConstants.*;
 import static com.example.TestUtils.convertDtoToJson;
@@ -28,11 +29,11 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.deleteAll();
         userRepository.save(entity);
     }
 
     @Test
+    @Transactional
     public void testCreate_ValidRequest_And_NonExistingUsername_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -42,9 +43,8 @@ public class UserControllerTest {
     }
 
     @Test
+    @Transactional
     public void testCreate_ValidRequest_And_ExistingUsername_ReturnsConflict() throws Exception {
-        userRepository.save(entity);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(convertDtoToJson(cRequest)))
@@ -53,6 +53,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @Transactional
     public void testCreate_InvalidRequest_ReturnsBadRequest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -62,6 +63,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @Transactional
     public void testUpdate_ValidRequest_And_ExistingId_ReturnsOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,15 +73,17 @@ public class UserControllerTest {
     }
 
     @Test
+    @Transactional
     public void testUpdate_ValidRequest_And_NonExistingId_ReturnsNotFound() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertDtoToJson(otherUsername)))
+                        .content(convertDtoToJson(otherURequest)))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andReturn();
     }
 
     @Test
+    @Transactional
     public void testUpdate_InvalidRequest_ReturnsBadRequest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
