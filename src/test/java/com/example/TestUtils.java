@@ -4,6 +4,7 @@ import com.example.user.dto.request.UserCreateRequest;
 import com.example.user.dto.request.UserUpdateRequest;
 import com.example.user.dto.response.UserGetResponse;
 import com.example.user.model.User;
+import org.json.simple.JSONObject;
 
 import java.time.Instant;
 
@@ -22,5 +23,30 @@ public class TestUtils {
 
     public static UserGetResponse getUserGetResponse(Long id, String username, Instant createdAt, Instant updatedAt, String createdBy, String updatedBy) {
         return new UserGetResponse(id, username, createdAt, updatedAt, createdBy, updatedBy);
+    }
+
+    public static String convertDtoToJson(Object dto) {
+        JSONObject jsonObject = new JSONObject();
+
+        switch (dto.getClass().getSimpleName()) {
+            case "UserCreateRequest":
+                UserCreateRequest userCreateRequest = (UserCreateRequest) dto;
+
+                jsonObject.put("username", userCreateRequest.getUsername());
+                jsonObject.put("password", userCreateRequest.getPassword());
+
+                break;
+            case "UserUpdateRequest":
+                UserUpdateRequest userUpdateRequest = (UserUpdateRequest) dto;
+
+                jsonObject.put("id", userUpdateRequest.getId());
+                jsonObject.put("password", userUpdateRequest.getPassword());
+
+                break;
+            default:
+                break;
+        }
+
+        return jsonObject.toJSONString();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.user.service;
 
+import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.user.dto.response.UserGetResponse;
@@ -135,13 +136,13 @@ public class UserServiceTest {
     @Test
     public void testValidateCreate() {
         // Given
-        doNothing().when(userService).validateByUsername(cRequest.getUsername());
+        doNothing().when(userService).existsByUsername(cRequest.getUsername());
 
         // When
         userService.validateCreate(cRequest);
 
         // Then
-        verify(userService, times(1)).validateByUsername(cRequest.getUsername());
+        verify(userService, times(1)).existsByUsername(cRequest.getUsername());
     }
 
     @Test
@@ -200,28 +201,28 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testValidateByUsername_WithValidUsername_ShouldDoNothing() {
+    public void testExistsByUsername_WithNonExistingUsername_ShouldDoNothing() {
         // Given
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(entity));
+        when(userRepository.existsByUsername(username)).thenReturn(false);
 
         // When
-        userService.validateByUsername(username);
+        userService.existsByUsername(username);
 
         // Then
-        verify(userRepository, times(1)).findByUsername(username);
+        verify(userRepository, times(1)).existsByUsername(username);
     }
 
     @Test
-    public void testValidateByUsername_WithInvalidUsername_ShouldThrowNotFoundException() {
+    public void testExistsByUsername_WithExistingUsername_ShouldThrowConflictException() {
         // Given
-        when(userRepository.findByUsername(invalidUsername)).thenReturn(Optional.empty());
+        when(userRepository.existsByUsername(invalidUsername)).thenReturn(true);
 
         // When
 
         // Then
-        assertThrows(NotFoundException.class, () -> userService.validateByUsername(invalidUsername));
+        assertThrows(ConflictException.class, () -> userService.existsByUsername(invalidUsername));
 
-        verify(userRepository, times(1)).findByUsername(invalidUsername);
+        verify(userRepository, times(1)).existsByUsername(invalidUsername);
     }
 
     @Test

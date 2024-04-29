@@ -1,5 +1,6 @@
 package com.example.user.service;
 
+import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.user.dto.request.UserCreateRequest;
@@ -51,7 +52,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
     protected void validateCreate(UserCreateRequest entity) {
         log.info("Validating user create request");
 
-        validateByUsername(entity.getUsername());
+        existsByUsername(entity.getUsername());
 
         log.info("User create request is valid");
     }
@@ -88,6 +89,21 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
     }
 
     /**
+     * Check if a user exists by username.
+     *
+     * @param username the username
+     */
+    public void existsByUsername(String username) {
+        log.info("Checking if user exists by username: {}", username);
+
+        if (userRepository.existsByUsername(username)) {
+            throw new ConflictException(getMessageService().getMessage("error.conflict.username_exists"));
+        }
+
+        log.info("User does not exist by username: {}", username);
+    }
+
+    /**
      * Validate the user by id.
      *
      * @param id the user id
@@ -96,25 +112,11 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
     public User validateById(Long id) {
         log.info("Validating user by id: {}", id);
 
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(getMessageService().getMessage("error.not_found.user")));
 
         log.info("User found with id: {}", id);
 
         return user;
-    }
-
-    /**
-     * Validate the user by username.
-     *
-     * @param username the username
-     */
-    public void validateByUsername(String username) {
-        log.info("Validating user by username: {}", username);
-
-        userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found with username: " + username));
-
-        log.info("User found with username: {}", username);
-
     }
 
     /**
