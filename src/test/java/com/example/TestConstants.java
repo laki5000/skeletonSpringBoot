@@ -1,4 +1,4 @@
-package com.example.utils.constants;
+package com.example;
 
 import com.example.user.dto.request.UserCreateRequest;
 import com.example.user.dto.request.UserUpdateRequest;
@@ -7,7 +7,7 @@ import com.example.user.model.User;
 
 import java.util.Locale;
 
-import static com.example.utils.constants.TestUtils.*;
+import static com.example.TestUtils.*;
 
 public class TestConstants {
     public static final String validKey = "test.valid.key";
