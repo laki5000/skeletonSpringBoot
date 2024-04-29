@@ -5,8 +5,8 @@ import com.example.user.dto.request.UserUpdateRequest;
 import com.example.user.dto.response.UserGetResponse;
 import com.example.user.model.User;
 import com.example.user.service.UserService;
-import com.example.utils.controller.BaseControllerForCRUD;
-import com.example.utils.service.BaseServiceForCRUD;
+import com.example.utils.controller.BaseController;
+import com.example.utils.service.BaseService;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 @RestController
 @RequestMapping("api/v1/users")
-public class UserController extends BaseControllerForCRUD<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
+public class UserController extends BaseController<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
     private final UserService userService;
 
     /**
@@ -25,7 +25,7 @@ public class UserController extends BaseControllerForCRUD<User, UserCreateReques
      * @return the user service
      */
     @Override
-    protected BaseServiceForCRUD<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> getService() {
+    protected BaseService<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> getService() {
         log.info("Getting user service");
 
         return userService;

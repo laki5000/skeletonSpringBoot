@@ -1,6 +1,6 @@
 package com.example.user.model;
 
-import com.example.utils.model.BaseModelForCreation;
+import com.example.utils.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,7 +14,7 @@ import java.time.Instant;
 @Table(name = "users")
 @Getter
 @Setter
-public class User extends BaseModelForCreation {
+public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String username;
 

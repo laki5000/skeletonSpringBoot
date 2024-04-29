@@ -2,9 +2,8 @@ package com.example.utils.controller;
 
 import com.example.utils.dto.response.BaseResponse;
 import com.example.utils.dto.response.SuccessResponse;
-import com.example.utils.service.BaseServiceForCRUD;
+import com.example.utils.service.BaseService;
 import com.example.utils.service.MessageService;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +13,17 @@ import java.util.Map;
 
 /** Base controller for CRUD operations. */
 @Log4j2
-public abstract class BaseControllerForCRUD<T, CRQ, URQ, GRP> {
+public abstract class BaseController<T, CRQ, URQ, GRP> {
     private final MessageService messageService;
 
-    protected abstract BaseServiceForCRUD<T, CRQ, URQ, GRP> getService();
+    protected abstract BaseService<T, CRQ, URQ, GRP> getService();
 
     /**
      * Constructor.
      *
      * @param messageService the message service
      */
-    public BaseControllerForCRUD(MessageService messageService) {
+    public BaseController(MessageService messageService) {
         this.messageService = messageService;
     }
 
