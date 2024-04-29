@@ -239,7 +239,7 @@ public class UserServiceTest {
     @Test
     public void testDoUpdate_PasswordChanged_ShouldSuccess() {
         // Given
-        User entityCopy = new User(entity);
+        User entityCopy = entity.copy();
 
         // When
         userService.doUpdate(entityCopy, uRequest);
