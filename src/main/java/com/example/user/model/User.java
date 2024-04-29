@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -14,6 +15,7 @@ import java.time.Instant;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
 public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String username;

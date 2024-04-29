@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserCreateRequest {
     @NotNull(message = "Username is required")
-    @Size(min = 3, max = 10, message = "Username must be between 3 and 10 characters")
+    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     private String username;
 
     @NotNull(message = "Password is required")
