@@ -1,4 +1,4 @@
-package com.example.user;
+package com.example.utils.constants;
 
 import com.example.user.dto.request.UserCreateRequest;
 import com.example.user.dto.request.UserUpdateRequest;
@@ -7,7 +7,7 @@ import com.example.user.model.User;
 
 import java.time.Instant;
 
-public class UserTestUtils {
+public class TestUtils {
     public static UserCreateRequest getUserCreateRequest(String username, String password) {
         return new UserCreateRequest(username, password);
     }

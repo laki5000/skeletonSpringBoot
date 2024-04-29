@@ -26,4 +26,10 @@ public class User extends BaseEntity {
         this.username = username;
         this.password = password;
     }
+
+    public User(User user) {
+        super(user.getId(), user.getCreatedAt(), user.getCreatedBy(), user.getUpdatedAt(), user.getUpdatedBy());
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+    }
 }
