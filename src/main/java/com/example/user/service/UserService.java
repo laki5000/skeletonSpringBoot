@@ -93,7 +93,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
      * @param id the user id
      * @return the user if the id is valid, an error message otherwise
      */
-    private User validateById(Long id) {
+    public User validateById(Long id) {
         log.info("Validating user by id: {}", id);
 
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
@@ -108,12 +108,13 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
      *
      * @param username the username
      */
-    private void validateByUsername(String username) {
+    public void validateByUsername(String username) {
         log.info("Validating user by username: {}", username);
 
         userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found with username: " + username));
 
         log.info("User found with username: {}", username);
+
     }
 
     /**
