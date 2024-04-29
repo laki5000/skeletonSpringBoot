@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /** REST controller for managing users. */
+@SuppressWarnings("EI_EXPOSE_REP2")
 @Log4j2
 @RestController
 @RequestMapping("api/v1/users")

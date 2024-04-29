@@ -9,8 +9,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Locale;
-import java.util.Objects;
 
+@SuppressWarnings("EI_EXPOSE_REP2")
 @Log4j2
 @Service
 public class MessageService {
