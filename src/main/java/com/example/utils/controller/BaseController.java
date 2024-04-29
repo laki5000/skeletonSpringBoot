@@ -4,6 +4,7 @@ import com.example.utils.dto.response.BaseResponse;
 import com.example.utils.dto.response.SuccessResponse;
 import com.example.utils.service.BaseService;
 import com.example.utils.service.MessageService;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public abstract class BaseController<T, CRQ, URQ, GRP> {
      * @return the created entity
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CRQ entity) {
+    public ResponseEntity<?> create(@Valid @RequestBody CRQ entity) {
         String className = getService().getTClassName();
 
         log.info("Creating {}", className);
@@ -53,7 +54,7 @@ public abstract class BaseController<T, CRQ, URQ, GRP> {
      * @return the updated entity
      */
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody URQ update) {
+    public ResponseEntity<?> update(@Valid @RequestBody URQ update) {
         String className = getService().getTClassName();
 
         log.info("Updating {}", className);
