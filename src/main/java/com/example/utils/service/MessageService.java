@@ -37,7 +37,15 @@ public class MessageService {
     public String getMessage(String key) {
         log.info("Getting message for key: {}", key);
 
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (attributes == null) {
+            log.error("ServletRequestAttributes is null. Cannot retrieve request.");
+
+            return null;
+        }
+
+        HttpServletRequest request = attributes.getRequest();
 
         Locale currentLocale = localeResolver.resolveLocale(request);
 

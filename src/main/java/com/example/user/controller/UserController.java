@@ -34,6 +34,7 @@ public class UserController extends BaseController<User, UserCreateRequest, User
     /**
      * Constructor.
      *
+     * @param messageService the message service
      * @param userService the user service
      */
     public UserController(MessageService messageService, UserService userService) {
