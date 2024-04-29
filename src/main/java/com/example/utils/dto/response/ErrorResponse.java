@@ -4,11 +4,7 @@ import lombok.Getter;
 
 /**
  * Error response class.
- *
- * Suppresses all warnings including "Field can be converted to a local variable"
- * and "Private field 'errorCode' is assigned but never accessed" warnings.
  */
-@SuppressWarnings("all")
 @Getter
 public class ErrorResponse extends BaseResponse {
     private final Integer errorCode;
