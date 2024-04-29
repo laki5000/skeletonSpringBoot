@@ -9,8 +9,13 @@ import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** Base controller for exception handling. */
 @Log4j2
@@ -34,8 +39,8 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<?> handleGenericException(Exception ex) {
-        return handleException(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> handleGenericException(Exception ex) {
+        return handleException(ex, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -45,8 +50,8 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(ConflictException.class)
-    protected ResponseEntity<?> handleMyConflictException(Exception ex) {
-        return handleException(ex, HttpStatus.CONFLICT);
+    public ResponseEntity<?> handleMyConflictException(Exception ex) {
+        return handleException(ex, ex.getMessage(), HttpStatus.CONFLICT);
     }
 
     /**
@@ -56,8 +61,8 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(NotFoundException.class)
-    protected ResponseEntity<?> handleMyNotFoundException(Exception ex) {
-        return handleException(ex, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> handleMyNotFoundException(Exception ex) {
+        return handleException(ex, ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -67,8 +72,8 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(NotModifiedException.class)
-    protected ResponseEntity<?> handleMyNotModifiedException(Exception ex) {
-        return handleException(ex, HttpStatus.NOT_MODIFIED);
+    public ResponseEntity<?> handleMyNotModifiedException(Exception ex) {
+        return handleException(ex, ex.getMessage(), HttpStatus.NOT_MODIFIED);
     }
 
     /**
@@ -78,8 +83,25 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(InvalidDateFormatException.class)
-    protected ResponseEntity<?> handleMyInvalidDateFormatException(Exception ex) {
-        return handleException(ex, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleMyInvalidDateFormatException(Exception ex) {
+        return handleException(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handle validation exceptions.
+     *
+     * @param ex the exception
+     * @return the response entity
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errorMessage = new StringBuilder();
+
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            errorMessage.append(error.getDefaultMessage()).append(", ");
+        });
+
+        return handleException(ex, errorMessage.toString(), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -89,10 +111,10 @@ public class GlobalExceptionHandler {
      * @param statusCode the status code
      * @return the response entity
      */
-    protected ResponseEntity<?> handleException(Exception ex, HttpStatus statusCode) {
+    public ResponseEntity<?> handleException(Exception ex, String errorMessage, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), messageService.getMessage("error.default_message") + " " + ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), messageService.getMessage("error.default_message") + " " + errorMessage);
 
         log.error("Returning error response: {}", errorResponse);
 
