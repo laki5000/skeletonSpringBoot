@@ -1,4 +1,4 @@
-package com.example.utils.constants;
+package com.example;
 
 import com.example.user.dto.request.UserCreateRequest;
 import com.example.user.dto.request.UserUpdateRequest;
