@@ -8,12 +8,13 @@ import com.example.user.service.UserService;
 import com.example.utils.controller.BaseController;
 import com.example.utils.service.BaseService;
 import com.example.utils.service.MessageService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /** REST controller for managing users. */
-@SuppressWarnings("EI_EXPOSE_REP2")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2"})
 @Log4j2
 @RestController
 @RequestMapping("api/v1/users")
@@ -36,7 +37,7 @@ public class UserController extends BaseController<User, UserCreateRequest, User
      * Constructor.
      *
      * @param messageService the message service
-     * @param userService the user service
+     * @param userService    the user service
      */
     public UserController(MessageService messageService, UserService userService) {
         super(messageService);

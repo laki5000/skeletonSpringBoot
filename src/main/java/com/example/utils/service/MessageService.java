@@ -1,5 +1,6 @@
 package com.example.utils.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
@@ -10,7 +11,7 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Locale;
 
-@SuppressWarnings("EI_EXPOSE_REP2")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2"})
 @Log4j2
 @Service
 public class MessageService {
