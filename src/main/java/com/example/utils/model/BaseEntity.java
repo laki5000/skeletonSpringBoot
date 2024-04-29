@@ -15,7 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @Setter
 @AllArgsConstructor
-public abstract class BaseModelForCreation {
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

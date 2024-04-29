@@ -13,7 +13,7 @@ import java.util.Map;
 /** Base service class for CRUD operations. */
 @Log4j2
 @Getter
-public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
+public abstract class BaseService<T, CRQ, URQ, GRP> {
     private final MessageService messageService;
     private final BaseMapper<T, CRQ, URQ, GRP> mapper;
     private final Class<T> clazz;
@@ -26,7 +26,7 @@ public abstract class BaseServiceForCRUD<T, CRQ, URQ, GRP> {
      *
      * @param messageService the message service
      */
-    public BaseServiceForCRUD(MessageService messageService, BaseMapper<T, CRQ, URQ, GRP> mapper, Class<T> entityType) {
+    public BaseService(MessageService messageService, BaseMapper<T, CRQ, URQ, GRP> mapper, Class<T> entityType) {
         this.messageService = messageService;
         this.mapper = mapper;
         this.clazz = entityType;

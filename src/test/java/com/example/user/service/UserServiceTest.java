@@ -43,7 +43,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testCreateUser() {
+    public void testCreate() {
         // Arrange
         doNothing().when(userService).validateCreate(cRequest);
         when(userRepository.save(entity)).thenReturn(entity);
@@ -64,7 +64,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateUser() {
+    public void testUpdate() {
         // Arrange
         when(userService.getIdFromUpdateRequest(uRequest)).thenReturn(1L);
         when(userRepository.findById(1L)).thenReturn(Optional.of(entity));
@@ -85,7 +85,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeleteUser() {
+    public void testDelete() {
         // Arrange
         doNothing().when(userService).validateDelete(id);
         doNothing().when(userRepository).deleteById(id);
@@ -97,4 +97,6 @@ public class UserServiceTest {
         verify(userService, times(1)).validateDelete(id);
         verify(userRepository, times(1)).deleteById(id);
     }
+
+
 }

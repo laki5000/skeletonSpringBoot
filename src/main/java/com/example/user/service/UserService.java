@@ -9,7 +9,7 @@ import com.example.user.mapper.UserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
 import com.example.utils.repository.BaseRepository;
-import com.example.utils.service.BaseServiceForCRUD;
+import com.example.utils.service.BaseService;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 /** A service class for managing users. */
 @Log4j2
 @Service
-public class UserService extends BaseServiceForCRUD<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
+public class UserService extends BaseService<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
     private final UserRepository userRepository;
 
     /**
