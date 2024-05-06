@@ -116,14 +116,12 @@ public class UserControllerIT {
     @Test
     @Transactional
     public void testGet_NullParams_ReturnsOk() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")).andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @Transactional
     public void testGet_WithParams_ReturnsOk() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users?username=" + USERNAME))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users?username=" + USERNAME)).andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
