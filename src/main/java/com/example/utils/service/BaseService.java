@@ -15,20 +15,20 @@ import java.util.Map;
 @Getter
 public abstract class BaseService<T, CreateRequest, UpdateRequest, GetResponse> {
     private final MessageService messageService;
+    private final BaseRepository<T, Long> repository;
     private final BaseMapper<T, CreateRequest, UpdateRequest, GetResponse> mapper;
     private final Class<T> entityType;
     private final String entityClassName;
-
-    protected abstract BaseRepository<T, Long> getRepository();
 
     /**
      * Constructor.
      *
      * @param messageService the message service
      */
-    public BaseService(MessageService messageService, BaseMapper<T, CreateRequest, UpdateRequest, GetResponse> mapper,
+    public BaseService(MessageService messageService, BaseRepository<T, Long> repository, BaseMapper<T, CreateRequest, UpdateRequest, GetResponse> mapper,
             Class<T> entityType) {
         this.messageService = messageService;
+        this.repository = repository;
         this.mapper = mapper;
         this.entityType = entityType;
         this.entityClassName = entityType.getSimpleName();
