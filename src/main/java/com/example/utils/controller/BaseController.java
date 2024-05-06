@@ -14,10 +14,10 @@ import java.util.Map;
 
 /** Base controller for CRUD operations. */
 @Log4j2
-public abstract class BaseController<T, CRQ, URQ, GRP> {
+public abstract class BaseController<T, CreateRequest, UpdateRequest, GetResponse> {
     private final MessageService messageService;
 
-    protected abstract BaseService<T, CRQ, URQ, GRP> getService();
+    protected abstract BaseService<T, CreateRequest, UpdateRequest, GetResponse> getService();
 
     /**
      * Constructor.
@@ -31,39 +31,41 @@ public abstract class BaseController<T, CRQ, URQ, GRP> {
     /**
      * Create a new entity.
      *
-     * @param entity the entity to create
+     * @param createRequest the entity to create
      * @return the created entity
      */
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody CRQ entity) {
-        String className = getService().getTClassName();
+    public ResponseEntity<?> create(@Valid @RequestBody CreateRequest createRequest) {
+        String className = getService().getEntityClassName();
 
         log.info("Creating {}", className);
 
-        GRP createdEntity = getService().create(entity);
+        GetResponse createdGetResponse = getService().create(createRequest);
 
         log.info("{} created", className);
 
-        return ResponseEntity.ok(new SuccessResponse(className + " " + messageService.getMessage("success.create"), createdEntity));
+        return ResponseEntity
+                .ok(new SuccessResponse(className + " " + messageService.getMessage("success.create"), createdGetResponse));
     }
 
     /**
      * Update an entity.
      *
-     * @param update the entity to update
+     * @param updateRequest the entity to update
      * @return the updated entity
      */
     @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody URQ update) {
-        String className = getService().getTClassName();
+    public ResponseEntity<?> update(@Valid @RequestBody UpdateRequest updateRequest) {
+        String className = getService().getEntityClassName();
 
         log.info("Updating {}", className);
 
-        GRP updatedEntity = getService().update(update);
+        GetResponse updatedGetResponse = getService().update(updateRequest);
 
         log.info("{} updated", className);
 
-        return ResponseEntity.ok(new SuccessResponse(className + " " + messageService.getMessage("success.update"), updatedEntity));
+        return ResponseEntity
+                .ok(new SuccessResponse(className + " " + messageService.getMessage("success.update"), updatedGetResponse));
     }
 
     /**
@@ -74,7 +76,7 @@ public abstract class BaseController<T, CRQ, URQ, GRP> {
      */
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestParam Long id) {
-        String className = getService().getTClassName();
+        String className = getService().getEntityClassName();
 
         log.info("Deleting {}", className);
 
@@ -93,15 +95,15 @@ public abstract class BaseController<T, CRQ, URQ, GRP> {
      */
     @GetMapping
     public ResponseEntity<?> get(
-                                 @RequestParam(required = false) Map<String, String> params) {
-        String className = getService().getTClassName();
+            @RequestParam(required = false) Map<String, String> params) {
+        String className = getService().getEntityClassName();
 
         log.info("Getting {}", className);
 
-        Page<GRP> entities = getService().get(params);
+        Page<GetResponse> pageGetResponse = getService().get(params);
 
         log.info("Got {}", className);
 
-        return ResponseEntity.ok(entities);
+        return ResponseEntity.ok(pageGetResponse);
     }
 }

@@ -13,11 +13,11 @@ import java.util.Map;
 /** Base service class for CRUD operations. */
 @Log4j2
 @Getter
-public abstract class BaseService<T, CRQ, URQ, GRP> {
+public abstract class BaseService<T, CreateRequest, UpdateRequest, GetResponse> {
     private final MessageService messageService;
-    private final BaseMapper<T, CRQ, URQ, GRP> mapper;
-    private final Class<T> clazz;
-    private final String tClassName;
+    private final BaseMapper<T, CreateRequest, UpdateRequest, GetResponse> mapper;
+    private final Class<T> entityType;
+    private final String entityClassName;
 
     protected abstract BaseRepository<T, Long> getRepository();
 
@@ -26,54 +26,55 @@ public abstract class BaseService<T, CRQ, URQ, GRP> {
      *
      * @param messageService the message service
      */
-    public BaseService(MessageService messageService, BaseMapper<T, CRQ, URQ, GRP> mapper, Class<T> entityType) {
+    public BaseService(MessageService messageService, BaseMapper<T, CreateRequest, UpdateRequest, GetResponse> mapper,
+            Class<T> entityType) {
         this.messageService = messageService;
         this.mapper = mapper;
-        this.clazz = entityType;
-        this.tClassName = entityType.getSimpleName();
+        this.entityType = entityType;
+        this.entityClassName = entityType.getSimpleName();
     }
 
     /**
      * Create a new entity.
      *
-     * @param entity the entity to create
+     * @param createRequest the entity to create
      * @return the created entity
      */
     @Transactional
-    public GRP create(CRQ entity) {
-        log.info("Creating {}", tClassName);
+    public GetResponse create(CreateRequest createRequest) {
+        log.info("Creating {}", entityClassName);
 
-        validateCreate(entity);
+        validateCreate(createRequest);
 
-        T createdEntity = getRepository().save(mapper.toEntity(entity));
-        GRP createdResponse = mapper.toGetResponse(createdEntity);
+        T createdEntity = getRepository().save(mapper.toEntity(createRequest));
+        GetResponse createdGetResponse = mapper.toGetResponse(createdEntity);
 
-        log.info("{} created", tClassName);
+        log.info("{} created", entityClassName);
 
-        return createdResponse;
+        return createdGetResponse;
     }
 
     /**
      * Update an entity.
      *
-     * @param update the entity to update
+     * @param updateRequest the entity to update
      * @return the updated entity
      */
     @Transactional
-    public GRP update(URQ update) {
-        Long id = getIdFromUpdateRequest(update);
+    public GetResponse update(UpdateRequest updateRequest) {
+        Long id = getIdFromUpdateRequest(updateRequest);
 
-        log.info("Updating {} with id: {}", tClassName, id);
+        log.info("Updating {} with id: {}", entityClassName, id);
 
-        T validationResult = validateUpdate(update);
+        T entity = validateUpdate(updateRequest);
 
-        doUpdate(clazz.cast(validationResult), update);
+        doUpdate(entityType.cast(entity), updateRequest);
 
-        GRP createdResponse = mapper.toGetResponse(clazz.cast(validationResult));
+        GetResponse updatedGetResponse = mapper.toGetResponse(entityType.cast(entity));
 
-        log.info("{} updated with id: {}", tClassName, id);
+        log.info("{} updated with id: {}", entityClassName, id);
 
-        return createdResponse;
+        return updatedGetResponse;
     }
 
     /**
@@ -83,13 +84,13 @@ public abstract class BaseService<T, CRQ, URQ, GRP> {
      */
     @Transactional
     public void delete(Long id) {
-        log.info("Deleting {} with id: {}", tClassName, id);
+        log.info("Deleting {} with id: {}", entityClassName, id);
 
         validateDelete(id);
 
         getRepository().deleteById(id);
 
-        log.info("{} deleted with id: {}", tClassName, id);
+        log.info("{} deleted with id: {}", entityClassName, id);
     }
 
     /**
@@ -98,16 +99,16 @@ public abstract class BaseService<T, CRQ, URQ, GRP> {
      * @param params the search parameters
      * @return page of entities
      */
-    public Page<GRP> get(Map<String, String> params) {
+    public Page<GetResponse> get(Map<String, String> params) {
         try {
-            log.info("Getting {}s", tClassName);
+            log.info("Getting {}s", entityClassName);
 
             Page<T> entities = getRepository().findAllWithCriteria(params);
-            Page<GRP> responses = entities.map(mapper::toGetResponse);
+            Page<GetResponse> pageGetResponse = entities.map(mapper::toGetResponse);
 
-            log.info("Got {}s", tClassName);
+            log.info("Got {}s", entityClassName);
 
-            return responses;
+            return pageGetResponse;
         } catch (InvalidDateFormatException e) {
             throw new InvalidDateFormatException(
                     messageService.getMessage("error.invalid.date_format") + " " + e.getMessage());
@@ -117,17 +118,17 @@ public abstract class BaseService<T, CRQ, URQ, GRP> {
     /**
      * Validate an entity.
      *
-     * @param entity the entity to validate
+     * @param createRequest the entity to validate
      */
-    protected abstract void validateCreate(CRQ entity);
+    protected abstract void validateCreate(CreateRequest createRequest);
 
     /**
      * Validate an entity.
      *
-     * @param entity the entity to validate
+     * @param updateRequest the entity to validate
      * @return the updated entity
      */
-    protected abstract T validateUpdate(URQ entity);
+    protected abstract T validateUpdate(UpdateRequest updateRequest);
 
     /**
      * Validate the delete request.
@@ -139,16 +140,16 @@ public abstract class BaseService<T, CRQ, URQ, GRP> {
     /**
      * Get the id from the update request.
      *
-     * @param entity the update request
+     * @param updateRequest the update request
      * @return the id
      */
-    protected abstract Long getIdFromUpdateRequest(URQ entity);
+    protected abstract Long getIdFromUpdateRequest(UpdateRequest updateRequest);
 
     /**
      * Update the entity.
      *
      * @param entity the entity to update
-     * @param update the update request
+     * @param updateRequest the update request
      */
-    protected abstract void doUpdate(T entity, URQ update);
+    protected abstract void doUpdate(T entity, UpdateRequest updateRequest);
 }
