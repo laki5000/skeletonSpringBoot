@@ -67,7 +67,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
     protected User validateUpdate(UserUpdateRequest update) {
         log.info("Validating user update request");
 
-        User user = validateById(update.getId());
+        User user = findById(update.getId());
 
         log.info("User update request is valid");
 
@@ -83,7 +83,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
     protected void validateDelete(Long id) {
         log.info("Validating user delete request");
 
-        validateById(id);
+        findById(id);
 
         log.info("User delete request is valid");
     }
@@ -109,7 +109,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
      * @param id the user id
      * @return the user if the id is valid, an error message otherwise
      */
-    public User validateById(Long id) {
+    public User findById(Long id) {
         log.info("Validating user by id: {}", id);
 
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(getMessageService().getMessage("error.not_found.user")));
