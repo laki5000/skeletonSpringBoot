@@ -44,9 +44,9 @@ public class UserServiceTest {
     @Test
     public void testCreate() {
         // Given
-        UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().username(username).password(password).build();
-        User user = User.builder().username(username).password(password).build();
-        UserGetResponseDTO userGetResponseDTO = new UserGetResponseDTO(id, username, null, null, null, null);
+        UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().username(USERNAME).password(PASSWORD).build();
+        User user = User.builder().username(USERNAME).password(PASSWORD).build();
+        UserGetResponseDTO userGetResponseDTO = new UserGetResponseDTO(ID, USERNAME, null, null, null, null);
 
         when(userRepository.existsByUsername(userCreateRequestDTO.getUsername())).thenReturn(false);
         when(userMapper.toEntity(userCreateRequestDTO)).thenReturn(user);
@@ -69,9 +69,9 @@ public class UserServiceTest {
     @Test
     public void testUpdate() {
         // Given
-        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(id).password(modifiedPassword).build();
-        User user = User.builder().id(id).username(username).password(password).build();
-        UserGetResponseDTO userGetResponseDTO = new UserGetResponseDTO(id, username, null, null, null, null);
+        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(ID).password(MODIFIED_PASSWORD).build();
+        User user = User.builder().id(ID).username(USERNAME).password(PASSWORD).build();
+        UserGetResponseDTO userGetResponseDTO = new UserGetResponseDTO(ID, USERNAME, null, null, null, null);
 
         when(userRepository.findById(userUpdateRequestDTO.getId())).thenReturn(Optional.of(user));
         when(userMapper.toGetResponse(any())).thenReturn(userGetResponseDTO);
@@ -90,7 +90,7 @@ public class UserServiceTest {
     @Test
     public void testDelete() {
         // Given
-        User user = User.builder().id(id).build();
+        User user = User.builder().id(ID).build();
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         doNothing().when(userRepository).deleteById(user.getId());
@@ -106,10 +106,10 @@ public class UserServiceTest {
     @Test
     public void testGet() {
         // Given
-        User user = User.builder().id(id).username(username).build();
+        User user = User.builder().id(ID).username(USERNAME).build();
         Map<String, String> params = new HashMap<>();
         Page<User> pageUser = new PageImpl<>(Collections.singletonList(user));
-        UserGetResponseDTO userGetResponseDTO = new UserGetResponseDTO(id, username, null, null, null, null);
+        UserGetResponseDTO userGetResponseDTO = new UserGetResponseDTO(ID, USERNAME, null, null, null, null);
 
         when(userRepository.findAllWithCriteria(params)).thenReturn(pageUser);
         when(userMapper.toGetResponse(user)).thenReturn(userGetResponseDTO);
@@ -129,7 +129,7 @@ public class UserServiceTest {
     @Test
     public void testValidateCreate() {
         // Given
-        UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().username(username).password(password).build();
+        UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().username(USERNAME).password(PASSWORD).build();
 
         when(userRepository.existsByUsername(userCreateRequestDTO.getUsername())).thenReturn(false);
 
@@ -143,8 +143,8 @@ public class UserServiceTest {
     @Test
     public void testValidateUpdate() {
         // Given
-        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(id).build();
-        User user = User.builder().id(id).build();
+        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(ID).build();
+        User user = User.builder().id(ID).build();
 
         when(userRepository.findById(userUpdateRequestDTO.getId())).thenReturn(Optional.of(user));
 
@@ -161,7 +161,7 @@ public class UserServiceTest {
     @Test
     public void testValidateDelete() {
         // Given
-        User user = User.builder().id(id).build();
+        User user = User.builder().id(ID).build();
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
@@ -175,7 +175,7 @@ public class UserServiceTest {
     @Test
     public void testFindById_WithValidId_ShouldReturnUser() {
         // Given
-        User user = User.builder().id(id).build();
+        User user = User.builder().id(ID).build();
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
@@ -192,41 +192,41 @@ public class UserServiceTest {
     @Test
     public void testFindById_WithInvalidId_ShouldThrowNotFoundException() {
         // Given
-        when(userRepository.findById(invalidId)).thenThrow(NotFoundException.class);
+        when(userRepository.findById(INVALID_ID)).thenThrow(NotFoundException.class);
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> userService.findById(invalidId));
+        assertThrows(NotFoundException.class, () -> userService.findById(INVALID_ID));
 
-        verify(userRepository, times(1)).findById(invalidId);
+        verify(userRepository, times(1)).findById(INVALID_ID);
     }
 
     @Test
     public void testExistsByUsername_WithNonExistingUsername_ShouldDoNothing() {
         // Given
-        when(userRepository.existsByUsername(username)).thenReturn(false);
+        when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
 
         // When
-        userService.existsByUsername(username);
+        userService.existsByUsername(USERNAME);
 
         // Then
-        verify(userRepository, times(1)).existsByUsername(username);
+        verify(userRepository, times(1)).existsByUsername(USERNAME);
     }
 
     @Test
     public void testExistsByUsername_WithExistingUsername_ShouldThrowConflictException() {
         // Given
-        when(userRepository.existsByUsername(username)).thenThrow(ConflictException.class);
+        when(userRepository.existsByUsername(USERNAME)).thenThrow(ConflictException.class);
 
         // When & Then
-        assertThrows(ConflictException.class, () -> userService.existsByUsername(username));
+        assertThrows(ConflictException.class, () -> userService.existsByUsername(USERNAME));
 
-        verify(userRepository, times(1)).existsByUsername(username);
+        verify(userRepository, times(1)).existsByUsername(USERNAME);
     }
 
     @Test
     public void testGetIdFromUpdateRequest() {
         // Given
-        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(id).build();
+        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(ID).build();
 
         // When
         Long result = userService.getIdFromUpdateRequest(userUpdateRequestDTO);
@@ -239,8 +239,8 @@ public class UserServiceTest {
     @Test
     public void testDoUpdate_PasswordChanged_ShouldSuccess() {
         // Given
-        User user = User.builder().id(id).username(username).password(password).build();
-        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(id).password(modifiedPassword).build();
+        User user = User.builder().id(ID).username(USERNAME).password(PASSWORD).build();
+        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(ID).password(MODIFIED_PASSWORD).build();
 
         // When
         userService.doUpdate(user, userUpdateRequestDTO);
@@ -252,8 +252,8 @@ public class UserServiceTest {
     @Test
     public void testDoUpdate_PasswordNotChanged_ShouldThrowNotModifiedException() {
         // Given
-        User user = User.builder().id(id).username(username).password(password).build();
-        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(id).password(password).build();
+        User user = User.builder().id(ID).username(USERNAME).password(PASSWORD).build();
+        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().id(ID).password(PASSWORD).build();
 
         // When & Then
         assertThrows(NotModifiedException.class, () -> userService.doUpdate(user, userUpdateRequestDTO));
