@@ -35,60 +35,36 @@ public class UserControllerTest {
     @Test
     @Transactional
     public void testCreate_ValidRequest_And_NonExistingUsername_ReturnsOk() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertDtoToJson(otherCRequest)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users").contentType(MediaType.APPLICATION_JSON).content(convertDtoToJson(otherCRequest))).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     }
 
     @Test
     @Transactional
     public void testCreate_ValidRequest_And_ExistingUsername_ReturnsConflict() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertDtoToJson(cRequest)))
-                .andExpect(MockMvcResultMatchers.status().isConflict())
-                .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users").contentType(MediaType.APPLICATION_JSON).content(convertDtoToJson(cRequest))).andExpect(MockMvcResultMatchers.status().isConflict()).andReturn();
     }
 
     @Test
     @Transactional
     public void testCreate_InvalidRequest_ReturnsBadRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertDtoToJson(invalidCRequest)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users").contentType(MediaType.APPLICATION_JSON).content(convertDtoToJson(invalidCRequest))).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     }
 
     @Test
     @Transactional
     public void testUpdate_ValidRequest_And_ExistingId_ReturnsOk() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertDtoToJson(uRequest)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users").contentType(MediaType.APPLICATION_JSON).content(convertDtoToJson(uRequest))).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
     }
 
     @Test
     @Transactional
     public void testUpdate_ValidRequest_And_NonExistingId_ReturnsNotFound() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertDtoToJson(otherURequest)))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users").contentType(MediaType.APPLICATION_JSON).content(convertDtoToJson(otherURequest))).andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
     }
 
     @Test
     @Transactional
     public void testUpdate_InvalidRequest_ReturnsBadRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(convertDtoToJson(invalidURequest)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andReturn();
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users").contentType(MediaType.APPLICATION_JSON).content(convertDtoToJson(invalidURequest))).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     }
 }

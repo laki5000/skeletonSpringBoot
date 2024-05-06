@@ -23,7 +23,7 @@ public class UserService extends BaseService<User, UserCreateRequestDTO, UserUpd
      *
      * @param messageService the message service
      * @param userRepository the user repository
-     * @param userMapper the user mapper
+     * @param userMapper     the user mapper
      */
     public UserService(MessageService messageService, UserRepository userRepository, UserMapper userMapper) {
         super(messageService, userRepository, userMapper, User.class);
