@@ -44,8 +44,7 @@ public abstract class BaseController<T, CreateRequest, UpdateRequest, GetRespons
 
         log.info("{} created", className);
 
-        return ResponseEntity
-                .ok(new SuccessResponseDTO(className + " " + messageService.getMessage("success.create"), createdGetResponse));
+        return ResponseEntity.ok(new SuccessResponseDTO(className + " " + messageService.getMessage("success.create"), createdGetResponse));
     }
 
     /**
@@ -64,8 +63,7 @@ public abstract class BaseController<T, CreateRequest, UpdateRequest, GetRespons
 
         log.info("{} updated", className);
 
-        return ResponseEntity
-                .ok(new SuccessResponseDTO(className + " " + messageService.getMessage("success.update"), updatedGetResponse));
+        return ResponseEntity.ok(new SuccessResponseDTO(className + " " + messageService.getMessage("success.update"), updatedGetResponse));
     }
 
     /**
@@ -95,7 +93,7 @@ public abstract class BaseController<T, CreateRequest, UpdateRequest, GetRespons
      */
     @GetMapping
     public ResponseEntity<?> get(
-            @RequestParam(required = false) Map<String, String> params) {
+                                 @RequestParam(required = false) Map<String, String> params) {
         String className = getService().getEntityClassName();
 
         log.info("Getting {}", className);

@@ -25,8 +25,7 @@ public abstract class BaseService<T, CreateRequest, UpdateRequest, GetResponse> 
      *
      * @param messageService the message service
      */
-    public BaseService(MessageService messageService, BaseRepository<T, Long> repository, BaseMapper<T, CreateRequest, UpdateRequest, GetResponse> mapper,
-            Class<T> entityType) {
+    public BaseService(MessageService messageService, BaseRepository<T, Long> repository, BaseMapper<T, CreateRequest, UpdateRequest, GetResponse> mapper, Class<T> entityType) {
         this.messageService = messageService;
         this.repository = repository;
         this.mapper = mapper;
@@ -148,7 +147,7 @@ public abstract class BaseService<T, CreateRequest, UpdateRequest, GetResponse> 
     /**
      * Update the entity.
      *
-     * @param entity the entity to update
+     * @param entity        the entity to update
      * @param updateRequest the update request
      */
     protected abstract void doUpdate(T entity, UpdateRequest updateRequest);

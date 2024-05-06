@@ -21,14 +21,6 @@ public class User extends BaseEntity {
     private String password;
 
     public User copy() {
-        return User.builder()
-                .id(this.getId())
-                .username(this.getUsername())
-                .password(this.getPassword())
-                .createdAt(this.getCreatedAt())
-                .createdBy(this.getCreatedBy())
-                .updatedAt(this.getUpdatedAt())
-                .updatedBy(this.getUpdatedBy())
-                .build();
+        return User.builder().id(this.getId()).username(this.getUsername()).password(this.getPassword()).createdAt(this.getCreatedAt()).createdBy(this.getCreatedBy()).updatedAt(this.getUpdatedAt()).updatedBy(this.getUpdatedBy()).build();
     }
 }
