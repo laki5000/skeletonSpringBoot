@@ -6,6 +6,6 @@ import lombok.Getter;
 /** Base response class. */
 @AllArgsConstructor
 @Getter
-public class BaseResponse {
+public class BaseResponseDTO {
     private String message;
 }

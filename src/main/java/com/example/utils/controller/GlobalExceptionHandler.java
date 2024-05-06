@@ -4,18 +4,14 @@ import com.example.exception.ConflictException;
 import com.example.exception.InvalidDateFormatException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
-import com.example.utils.dto.response.ErrorResponse;
+import com.example.utils.dto.response.ErrorResponseDTO;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /** Base controller for exception handling. */
 @Log4j2
@@ -114,7 +110,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleException(Exception ex, String errorMessage, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 
-        ErrorResponse errorResponse = new ErrorResponse(statusCode.value(), messageService.getMessage("error.default_message") + " " + errorMessage);
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(statusCode.value(), messageService.getMessage("error.default_message") + " " + errorMessage);
 
         log.error("Returning error response: {}", errorResponse);
 

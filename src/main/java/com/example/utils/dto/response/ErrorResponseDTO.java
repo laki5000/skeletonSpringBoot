@@ -6,7 +6,7 @@ import lombok.Getter;
  * Error response class.
  */
 @Getter
-public class ErrorResponse extends BaseResponse {
+public class ErrorResponseDTO extends BaseResponseDTO {
     private final Integer errorCode;
 
     /**
@@ -15,7 +15,7 @@ public class ErrorResponse extends BaseResponse {
      * @param errorCode the error code
      * @param message   the error message
      */
-    public ErrorResponse(Integer errorCode, String message) {
+    public ErrorResponseDTO(Integer errorCode, String message) {
         super(message);
         this.errorCode = errorCode;
     }

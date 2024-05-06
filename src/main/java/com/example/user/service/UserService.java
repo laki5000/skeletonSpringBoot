@@ -3,9 +3,9 @@ package com.example.user.service;
 import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
-import com.example.user.dto.request.UserCreateRequest;
-import com.example.user.dto.request.UserUpdateRequest;
-import com.example.user.dto.response.UserGetResponse;
+import com.example.user.dto.request.UserCreateRequestDTO;
+import com.example.user.dto.request.UserUpdateRequestDTO;
+import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.mapper.UserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 /** A service class for managing users. */
 @Log4j2
 @Service
-public class UserService extends BaseService<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
+public class UserService extends BaseService<User, UserCreateRequestDTO, UserUpdateRequestDTO, UserGetResponseDTO> {
     /**
      * Constructor.
      *
@@ -35,7 +35,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
      * @param entity the user create request
      */
     @Override
-    protected void validateCreate(UserCreateRequest entity) {
+    protected void validateCreate(UserCreateRequestDTO entity) {
         log.info("Validating user create request");
 
         existsByUsername(entity.getUsername());
@@ -50,7 +50,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
      * @return the updated user
      */
     @Override
-    protected User validateUpdate(UserUpdateRequest update) {
+    protected User validateUpdate(UserUpdateRequestDTO update) {
         log.info("Validating user update request");
 
         User user = findById(update.getId());
@@ -112,7 +112,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
      * @return the id
      */
     @Override
-    protected Long getIdFromUpdateRequest(UserUpdateRequest update) {
+    protected Long getIdFromUpdateRequest(UserUpdateRequestDTO update) {
         log.info("Getting id from user update request");
 
         Long id = update.getId();
@@ -129,7 +129,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
      * @param update the user update request
      */
     @Override
-    protected void doUpdate(User entity, UserUpdateRequest update) {
+    protected void doUpdate(User entity, UserUpdateRequestDTO update) {
         log.info("Updating user");
 
         boolean updated = false;

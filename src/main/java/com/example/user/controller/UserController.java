@@ -1,8 +1,8 @@
 package com.example.user.controller;
 
-import com.example.user.dto.request.UserCreateRequest;
-import com.example.user.dto.request.UserUpdateRequest;
-import com.example.user.dto.response.UserGetResponse;
+import com.example.user.dto.request.UserCreateRequestDTO;
+import com.example.user.dto.request.UserUpdateRequestDTO;
+import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.model.User;
 import com.example.user.service.UserService;
 import com.example.utils.controller.BaseController;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 @RestController
 @RequestMapping("api/v1/users")
-public class UserController extends BaseController<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
+public class UserController extends BaseController<User, UserCreateRequestDTO, UserUpdateRequestDTO, UserGetResponseDTO> {
     private final UserService userService;
 
     /**
@@ -27,7 +27,7 @@ public class UserController extends BaseController<User, UserCreateRequest, User
      * @return the user service
      */
     @Override
-    protected BaseService<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> getService() {
+    protected BaseService<User, UserCreateRequestDTO, UserUpdateRequestDTO, UserGetResponseDTO> getService() {
         log.info("Getting user service");
 
         return userService;

@@ -1,7 +1,7 @@
 package com.example.utils.controller;
 
-import com.example.utils.dto.response.BaseResponse;
-import com.example.utils.dto.response.SuccessResponse;
+import com.example.utils.dto.response.BaseResponseDTO;
+import com.example.utils.dto.response.SuccessResponseDTO;
 import com.example.utils.service.BaseService;
 import com.example.utils.service.MessageService;
 import jakarta.validation.Valid;
@@ -45,7 +45,7 @@ public abstract class BaseController<T, CreateRequest, UpdateRequest, GetRespons
         log.info("{} created", className);
 
         return ResponseEntity
-                .ok(new SuccessResponse(className + " " + messageService.getMessage("success.create"), createdGetResponse));
+                .ok(new SuccessResponseDTO(className + " " + messageService.getMessage("success.create"), createdGetResponse));
     }
 
     /**
@@ -65,7 +65,7 @@ public abstract class BaseController<T, CreateRequest, UpdateRequest, GetRespons
         log.info("{} updated", className);
 
         return ResponseEntity
-                .ok(new SuccessResponse(className + " " + messageService.getMessage("success.update"), updatedGetResponse));
+                .ok(new SuccessResponseDTO(className + " " + messageService.getMessage("success.update"), updatedGetResponse));
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class BaseController<T, CreateRequest, UpdateRequest, GetRespons
 
         log.info("{} deleted", className);
 
-        return ResponseEntity.ok(new BaseResponse(className + " " + messageService.getMessage("success.delete")));
+        return ResponseEntity.ok(new BaseResponseDTO(className + " " + messageService.getMessage("success.delete")));
     }
 
     /**

@@ -6,12 +6,13 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/** Dto class for update a user. */
+/** Dto class for creating a user. */
 @Getter
 @AllArgsConstructor
-public class UserUpdateRequest {
-    @NotNull(message = "Id is required")
-    private Long id;
+public class UserCreateRequestDTO {
+    @NotNull(message = "Username is required")
+    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
+    private String username;
 
     @NotNull(message = "Password is required")
     @Size(min = 8, max = 64, message = "Password must be between 3 and 64 characters")
