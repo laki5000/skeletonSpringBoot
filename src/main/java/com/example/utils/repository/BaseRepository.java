@@ -96,4 +96,12 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
+    /**
+     * Check if an entity exists by username.
+     *
+     * @param username the username
+     * @return true if the entity exists, false otherwise
+     */
+    boolean existsByUsername(String username);
 }

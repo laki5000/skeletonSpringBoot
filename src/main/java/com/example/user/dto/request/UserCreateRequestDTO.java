@@ -4,12 +4,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 /** Dto class for creating a user. */
-@Getter
-@AllArgsConstructor
-public class UserCreateRequest {
+@Data
+@Builder
+public class UserCreateRequestDTO {
     @NotNull(message = "Username is required")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     private String username;

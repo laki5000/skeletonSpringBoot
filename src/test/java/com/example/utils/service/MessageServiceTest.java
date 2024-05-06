@@ -34,38 +34,38 @@ public class MessageServiceTest {
         ServletRequestAttributes requestAttributesMock = mock(ServletRequestAttributes.class);
         RequestContextHolder.setRequestAttributes(requestAttributesMock);
 
-        when(localeResolver.resolveLocale(request)).thenReturn(locale);
+        when(localeResolver.resolveLocale(request)).thenReturn(LOCALE);
         when(requestAttributesMock.getRequest()).thenReturn(request);
-        when(localeResolver.resolveLocale(request)).thenReturn(locale);
+        when(localeResolver.resolveLocale(request)).thenReturn(LOCALE);
     }
 
     @Test
     public void getMessage_ValidKey_ReturnsExpectedMessage() {
-        //Arrange
-        when(messageSource.getMessage(validKey, null, locale)).thenReturn(expectedMessage);
+        // Given
+        when(messageSource.getMessage(VALID_KEY, null, LOCALE)).thenReturn(EXPECTED_MESSAGE);
 
-        //Act
-        String message = messageService.getMessage(validKey);
+        // When
+        String message = messageService.getMessage(VALID_KEY);
 
-        //Assert
-        assertEquals(expectedMessage, message, "Incorrect message returned");
+        // Then
+        assertEquals(EXPECTED_MESSAGE, message, "Incorrect message returned");
 
         verify(localeResolver, times(1)).resolveLocale(request);
-        verify(messageSource, times(1)).getMessage(validKey, null, locale);
+        verify(messageSource, times(1)).getMessage(VALID_KEY, null, LOCALE);
     }
 
     @Test
     public void getMessage_InvalidKey_ReturnsNull() {
-        //Arrange
-        when(messageSource.getMessage(invalidKey, null, locale)).thenReturn(null);
+        // Given
+        when(messageSource.getMessage(INVALID_KEY, null, LOCALE)).thenReturn(null);
 
-        //Act
-        String message = messageService.getMessage(invalidKey);
+        // When
+        String message = messageService.getMessage(INVALID_KEY);
 
-        //Assert
+        // Then
         assertNull(message, "Message should be null");
 
         verify(localeResolver, times(1)).resolveLocale(request);
-        verify(messageSource, times(1)).getMessage(invalidKey, null, locale);
+        verify(messageSource, times(1)).getMessage(INVALID_KEY, null, LOCALE);
     }
 }
