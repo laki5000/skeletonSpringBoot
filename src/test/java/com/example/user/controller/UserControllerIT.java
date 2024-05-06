@@ -96,4 +96,34 @@ public class UserControllerIT {
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/users").contentType(MediaType.APPLICATION_JSON).content(convertDtoToJson(userUpdateRequestDTO))).andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     }
+
+    @Test
+    @Transactional
+    public void testDelete_ValidId_ReturnsOk() throws Exception {
+        User user = User.builder().username(USERNAME).password(PASSWORD).createdBy(USERNAME).build();
+
+        user = userRepository.save(user);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users?id=" + user.getId())).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+    }
+
+    @Test
+    @Transactional
+    public void testDelete_NonExistingId_ReturnsNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/users?id=" + ID)).andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
+    }
+
+    @Test
+    @Transactional
+    public void testGet_NullParams_ReturnsOk() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @Transactional
+    public void testGet_WithParams_ReturnsOk() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users?username=" + USERNAME))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
