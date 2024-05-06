@@ -9,14 +9,16 @@ public class TestUtils {
         JSONObject jsonObject = new JSONObject();
 
         switch (dto.getClass().getSimpleName()) {
-            case "UserCreateRequest":
+            case "UserCreateRequestDTO":
                 UserCreateRequestDTO userCreateRequest = (UserCreateRequestDTO) dto;
+
+                System.out.println(((UserCreateRequestDTO) dto).getUsername() + "AAAAAAAAAAAAAAAAAAAAAAA");
 
                 jsonObject.put("username", userCreateRequest.getUsername());
                 jsonObject.put("password", userCreateRequest.getPassword());
 
                 break;
-            case "UserUpdateRequest":
+            case "UserUpdateRequestDTO":
                 UserUpdateRequestDTO userUpdateRequest = (UserUpdateRequestDTO) dto;
 
                 jsonObject.put("id", userUpdateRequest.getId());
@@ -26,6 +28,7 @@ public class TestUtils {
             default:
                 break;
         }
+
 
         return jsonObject.toJSONString();
     }

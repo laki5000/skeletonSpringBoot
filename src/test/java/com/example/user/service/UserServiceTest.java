@@ -192,12 +192,12 @@ public class UserServiceTest {
     @Test
     public void testFindById_WithInvalidId_ShouldThrowNotFoundException() {
         // Given
-        when(userRepository.findById(INVALID_ID)).thenThrow(NotFoundException.class);
+        when(userRepository.findById(ID)).thenThrow(NotFoundException.class);
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> userService.findById(INVALID_ID));
+        assertThrows(NotFoundException.class, () -> userService.findById(ID));
 
-        verify(userRepository, times(1)).findById(INVALID_ID);
+        verify(userRepository, times(1)).findById(ID);
     }
 
     @Test
