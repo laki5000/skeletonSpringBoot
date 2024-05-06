@@ -41,13 +41,13 @@ public class MessageServiceTest {
 
     @Test
     public void getMessage_ValidKey_ReturnsExpectedMessage() {
-        //Arrange
+        // Given
         when(messageSource.getMessage(validKey, null, locale)).thenReturn(expectedMessage);
 
-        //Act
+        // When
         String message = messageService.getMessage(validKey);
 
-        //Assert
+        // Then
         assertEquals(expectedMessage, message, "Incorrect message returned");
 
         verify(localeResolver, times(1)).resolveLocale(request);
@@ -56,13 +56,13 @@ public class MessageServiceTest {
 
     @Test
     public void getMessage_InvalidKey_ReturnsNull() {
-        //Arrange
+        // Given
         when(messageSource.getMessage(invalidKey, null, locale)).thenReturn(null);
 
-        //Act
+        // When
         String message = messageService.getMessage(invalidKey);
 
-        //Assert
+        // Then
         assertNull(message, "Message should be null");
 
         verify(localeResolver, times(1)).resolveLocale(request);
