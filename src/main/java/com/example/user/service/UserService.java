@@ -9,7 +9,6 @@ import com.example.user.dto.response.UserGetResponse;
 import com.example.user.mapper.UserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
-import com.example.utils.repository.BaseRepository;
 import com.example.utils.service.BaseService;
 import com.example.utils.service.MessageService;
 import lombok.extern.log4j.Log4j2;
@@ -19,28 +18,15 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @Service
 public class UserService extends BaseService<User, UserCreateRequest, UserUpdateRequest, UserGetResponse> {
-    private final UserRepository userRepository;
-
     /**
      * Constructor.
      *
+     * @param messageService the message service
      * @param userRepository the user repository
+     * @param userMapper the user mapper
      */
     public UserService(MessageService messageService, UserRepository userRepository, UserMapper userMapper) {
-        super(messageService, userMapper, User.class);
-        this.userRepository = userRepository;
-    }
-
-    /**
-     * Get the user repository.
-     *
-     * @return the user repository
-     */
-    @Override
-    protected BaseRepository<User, Long> getRepository() {
-        log.info("Getting user repository");
-
-        return userRepository;
+        super(messageService, userRepository, userMapper, User.class);
     }
 
     /**
@@ -96,7 +82,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
     public void existsByUsername(String username) {
         log.info("Checking if user exists by username: {}", username);
 
-        if (userRepository.existsByUsername(username)) {
+        if (getRepository().existsByUsername(username)) {
             throw new ConflictException(getMessageService().getMessage("error.conflict.username_exists"));
         }
 
@@ -112,7 +98,7 @@ public class UserService extends BaseService<User, UserCreateRequest, UserUpdate
     public User findById(Long id) {
         log.info("Validating user by id: {}", id);
 
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(getMessageService().getMessage("error.not_found.user")));
+        User user = super.getRepository().findById(id).orElseThrow(() -> new NotFoundException(getMessageService().getMessage("error.not_found.user")));
 
         log.info("User found with id: {}", id);
 
