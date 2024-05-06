@@ -3,7 +3,7 @@ package com.example.user.service;
 import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
-import com.example.user.dto.response.UserGetResponse;
+import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.mapper.UserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
@@ -66,7 +66,7 @@ public class UserServiceTest {
         when(userMapper.toGetResponse(entity)).thenReturn(response);
 
         // When
-        UserGetResponse result = userService.create(cRequest);
+        UserGetResponseDTO result = userService.create(cRequest);
 
         // Then
         assertNotNull(result);
@@ -87,7 +87,7 @@ public class UserServiceTest {
         when(userMapper.toGetResponse(any())).thenReturn(response);
 
         // Then
-        UserGetResponse result = userService.update(uRequest);
+        UserGetResponseDTO result = userService.update(uRequest);
 
         // When
         assertNotNull(result);
@@ -122,7 +122,7 @@ public class UserServiceTest {
         when(userMapper.toGetResponse(entity)).thenReturn(response);
 
         // When
-        Page<UserGetResponse> result = userService.get(params);
+        Page<UserGetResponseDTO> result = userService.get(params);
 
         // Then
         assertNotNull(result);
