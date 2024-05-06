@@ -4,11 +4,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 /** Dto class for update a user. */
-@Getter
-@AllArgsConstructor
+@Data
+@Builder
 public class UserUpdateRequestDTO {
     @NotNull(message = "Id is required")
     private Long id;
