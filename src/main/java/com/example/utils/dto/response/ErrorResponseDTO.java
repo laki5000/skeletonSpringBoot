@@ -7,5 +7,5 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 public class ErrorResponseDTO extends BaseResponseDTO {
-  private Integer errorCode;
+    private Integer errorCode;
 }

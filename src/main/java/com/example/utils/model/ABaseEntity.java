@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,21 +13,22 @@ import org.hibernate.annotations.UpdateTimestamp;
 @MappedSuperclass
 @Getter
 @Setter
+@SuperBuilder
 public abstract class ABaseEntity {
-  @NotNull
-  @CreationTimestamp
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private Instant createdAt;
+    @NotNull
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
-  @NotNull
-  @Column(name = "created_by", nullable = false, updatable = false)
-  private String createdBy;
+    @NotNull
+    @Column(name = "created_by", nullable = false, updatable = false)
+    private String createdBy;
 
-  @NotNull
-  @UpdateTimestamp
-  @Column(name = "updated_at", nullable = false)
-  private Instant updatedAt;
+    @NotNull
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
-  @Column(name = "updated_by")
-  private String updatedBy;
+    @Column(name = "updated_by")
+    private String updatedBy;
 }

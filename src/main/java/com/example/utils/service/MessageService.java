@@ -15,30 +15,30 @@ import org.springframework.web.servlet.LocaleResolver;
 @RequiredArgsConstructor
 @Service
 public class MessageService implements IMessageService {
-  private final MessageSource messageSource;
-  private final LocaleResolver localeResolver;
+    private final MessageSource messageSource;
+    private final LocaleResolver localeResolver;
 
-  /**
-   * Gets a message for a key.
-   *
-   * @param key the key of the message.
-   * @return the message
-   */
-  public String getMessage(String key) {
-    log.info("Getting message for key: {}", key);
+    /**
+     * Gets a message for a key.
+     *
+     * @param key the key of the message
+     * @return the message
+     */
+    public String getMessage(String key) {
+        log.info("Getting message for key: {}", key);
 
-    ServletRequestAttributes attributes =
-        (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes attributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-    if (attributes == null) {
+        if (attributes == null) {
 
-      return null;
+            return null;
+        }
+
+        HttpServletRequest request = attributes.getRequest();
+
+        Locale currentLocale = localeResolver.resolveLocale(request);
+
+        return messageSource.getMessage(key, null, currentLocale);
     }
-
-    HttpServletRequest request = attributes.getRequest();
-
-    Locale currentLocale = localeResolver.resolveLocale(request);
-
-    return messageSource.getMessage(key, null, currentLocale);
-  }
 }

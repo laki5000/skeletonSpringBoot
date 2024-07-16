@@ -7,5 +7,5 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 public class SuccessResponseDTO extends BaseResponseDTO {
-  private Object data;
+    private Object data;
 }
