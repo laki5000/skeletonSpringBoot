@@ -4,7 +4,6 @@ import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.model.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 /** Mapper interface for user-related operations. */
 @Mapper(componentModel = "spring")

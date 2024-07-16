@@ -1,14 +1,14 @@
 package com.example.user.mapper;
 
+import static com.example.Constants.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.model.User;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-
-import static com.example.Constants.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** Unit tests for {@link IUserMapper}. */
 public class UserMapperTests {
@@ -45,7 +45,11 @@ public class UserMapperTests {
     @Test
     public void toEntity_Success() {
         // Given
-        UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().username(TEST_USERNAME).password(TEST_PASSWORD).build();
+        UserCreateRequestDTO userCreateRequestDTO =
+                UserCreateRequestDTO.builder()
+                        .username(TEST_USERNAME)
+                        .password(TEST_PASSWORD)
+                        .build();
 
         // When
         User result = userMapper.toEntity(userCreateRequestDTO, TEST_USERNAME2);

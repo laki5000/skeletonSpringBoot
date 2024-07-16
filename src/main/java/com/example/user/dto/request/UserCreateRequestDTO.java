@@ -3,7 +3,6 @@ package com.example.user.dto.request;
 import com.example.user.dto.OnlyPasswordDTO;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
