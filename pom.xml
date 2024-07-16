@@ -17,111 +17,99 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-		<!-- Spring Boot Starter Data JPA -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>3.2.5</version>
+			<version>3.3.1</version>
 		</dependency>
 
-		<!-- MySQL Driver -->
+		<!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
-			<version>8.2.0</version>
+			<version>9.0.0</version>
 		</dependency>
 
-		<!-- Spring Boot Starter Web -->
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>3.2.5</version>
-		</dependency>
-
-		<!-- Spring Boot Starter Test -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<version>3.2.5</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.2.224</version>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Spring Boot DevTools -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>3.3.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-			<version>3.2.5</version>
-			<scope>runtime</scope>
+			<version>3.3.1</version>
 		</dependency>
 
-		<!-- Lombok -->
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.32</version>
+			<version>1.18.34</version>
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Apache Log4j Core -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.17.1</version>
-		</dependency>
-
-		<!-- Spring-WebMVC -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>6.1.6</version>
+			<version>6.1.11</version>
 		</dependency>
 
-		<!-- MapStruct -->
+		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.5.Final</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
 			<version>1.5.5.Final</version>
-			<scope>provided</scope>
 		</dependency>
 
-		<!-- Mockito -->
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.11.0</version>
+			<version>5.12.0</version>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Spotbugs Annotations -->
+		<!-- https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations -->
 		<dependency>
 			<groupId>com.github.spotbugs</groupId>
 			<artifactId>spotbugs-annotations</artifactId>
-			<version>4.8.3</version>
+			<version>4.8.6</version>
 		</dependency>
 
-		<!-- Spring Boot Starter for Validation -->
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-
-		<!-- H2 Database -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- JSON Simple -->
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
+			<version>3.3.1</version>
 		</dependency>
 	</dependencies>
 
@@ -151,23 +139,21 @@
 			<plugin>
 				<groupId>com.diffplug.spotless</groupId>
 				<artifactId>spotless-maven-plugin</artifactId>
-				<version>2.17.0</version>
+				<version>2.44.0.BETA1</version>
+				<executions>
+					<execution>
+						<id>spotless</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<java>
-						<includes>
-							<include>src/main/java/**/*.java</include> <!-- Check application code -->
-							<include>src/test/java/**/*.java</include> <!-- Check application tests code -->
-						</includes>
-						<trimTrailingWhitespace /> <!-- Remove trailing whitespaces -->
-						<endWithNewline /> <!-- Ensure file ends with newline -->
-						<indent>
-							<spaces>true</spaces> <!-- Use spaces for indentation -->
-							<spacesPerTab>4</spacesPerTab> <!-- Use 4 spaces per tab -->
-						</indent>
-						<eclipse>
-							<file>${project.basedir}/.eclipseformat.xml</file> <!-- Path to your Eclipse formatter configuration file -->
-							<version>4.21.0</version> <!-- Version of the Eclipse Java Formatter -->
-						</eclipse>
+						<googleJavaFormat>
+							<version>1.11.0</version>
+						</googleJavaFormat>
 					</java>
 				</configuration>
 			</plugin>

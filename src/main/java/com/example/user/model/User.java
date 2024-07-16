@@ -1,21 +1,28 @@
 package com.example.user.model;
 
 import com.example.utils.model.ABaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 /** Entity class for users. */
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
-@SuperBuilder
+@Getter
+@Setter
 public class User extends ABaseEntity {
-    @Column(nullable = false, unique = true)
-    private String username;
+  @NotNull
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    private String password;
+  @NotNull
+  @Size(min = 3, max = 20)
+  @Column(nullable = false, unique = true)
+  private String username;
+
+  @NotNull
+  @Column(nullable = false)
+  private String password;
 }

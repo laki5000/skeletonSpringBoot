@@ -19,92 +19,100 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RequiredArgsConstructor
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    private final IMessageService messageService;
+  private final IMessageService messageService;
 
-    /**
-     * Handle generic exception.
-     *
-     * @param ex the exception
-     * @return the response entity
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGenericException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  /**
+   * Handle generic exception.
+   *
+   * @param ex the Exception to handle
+   * @return the response entity
+   */
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<?> handleGenericException(Exception ex) {
+    return handleException(ex, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-    /**
-     * Handle ConflictException.
-     *
-     * @param ex the exception
-     * @return the response entity
-     */
-    @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<?> handleMyConflictException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.CONFLICT);
-    }
+  /**
+   * Handle ConflictException.
+   *
+   * @param ex the ConflictException to handle
+   * @return the response entity
+   */
+  @ExceptionHandler(ConflictException.class)
+  public ResponseEntity<?> handleMyConflictException(Exception ex) {
+    return handleException(ex, ex.getMessage(), HttpStatus.CONFLICT);
+  }
 
-    /**
-     * Handle NotFoundException.
-     *
-     * @param ex the exception
-     * @return the response entity
-     */
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleMyNotFoundException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
+  /**
+   * Handle NotFoundException.
+   *
+   * @param ex the NotFoundException to handle
+   * @return the response entity
+   */
+  @ExceptionHandler(NotFoundException.class)
+  public ResponseEntity<?> handleMyNotFoundException(Exception ex) {
+    return handleException(ex, ex.getMessage(), HttpStatus.NOT_FOUND);
+  }
 
-    /**
-     * Handle NotModifiedException.
-     *
-     * @param ex the exception
-     * @return the response entity
-     */
-    @ExceptionHandler(NotModifiedException.class)
-    public ResponseEntity<?> handleMyNotModifiedException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.NOT_MODIFIED);
-    }
+  /**
+   * Handle NotModifiedException.
+   *
+   * @param ex the NotModifiedException to handle
+   * @return the response entity
+   */
+  @ExceptionHandler(NotModifiedException.class)
+  public ResponseEntity<?> handleMyNotModifiedException(Exception ex) {
+    return handleException(ex, ex.getMessage(), HttpStatus.NOT_MODIFIED);
+  }
 
-    /**
-     * Handle InvalidDateFormatException.
-     *
-     * @param ex the exception
-     * @return the response entity
-     */
-    @ExceptionHandler(InvalidDateFormatException.class)
-    public ResponseEntity<?> handleMyInvalidDateFormatException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+  /**
+   * Handle InvalidDateFormatException.
+   *
+   * @param ex the InvalidDateFormatException to handle
+   * @return the response entity
+   */
+  @ExceptionHandler(InvalidDateFormatException.class)
+  public ResponseEntity<?> handleMyInvalidDateFormatException(Exception ex) {
+    return handleException(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
 
-    /**
-     * Handle validation exceptions.
-     *
-     * @param ex the exception
-     * @return the response entity
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        StringBuilder errorMessage = new StringBuilder();
+  /**
+   * Handle MethodArgumentNotValidException.
+   *
+   * @param ex MethodArgumentNotValidException to handle
+   * @return the response entity
+   */
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    StringBuilder errorMessage = new StringBuilder();
 
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            errorMessage.append(error.getDefaultMessage()).append(", ");
-        });
+    ex.getBindingResult()
+        .getAllErrors()
+        .forEach(
+            (error) -> {
+              errorMessage.append(error.getDefaultMessage()).append(", ");
+            });
 
-        return handleException(ex, errorMessage.toString(), HttpStatus.BAD_REQUEST);
-    }
+    return handleException(ex, errorMessage.toString(), HttpStatus.BAD_REQUEST);
+  }
 
-    /**
-     * Handle exceptions.
-     *
-     * @param ex         the exception
-     * @param statusCode the status code
-     * @return the response entity
-     */
-    public ResponseEntity<?> handleException(Exception ex, String errorMessage, HttpStatus statusCode) {
-        log.error("Handling exception", ex);
+  /**
+   * Handle Exceptions.
+   *
+   * @param ex the Exception to handle
+   * @param statusCode the status code to return
+   * @return the response entity
+   */
+  public ResponseEntity<?> handleException(
+      Exception ex, String errorMessage, HttpStatus statusCode) {
+    log.error("Handling exception", ex);
 
-        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder().errorCode(statusCode.value()).message(messageService.getMessage("error.default_message") + " " + errorMessage).build();
+    ErrorResponseDTO errorResponse =
+        ErrorResponseDTO.builder()
+            .errorCode(statusCode.value())
+            .message(messageService.getMessage("error.default_message") + " " + errorMessage)
+            .build();
 
-        return ResponseEntity.status(statusCode).body(errorResponse);
-    }
+    return ResponseEntity.status(statusCode).body(errorResponse);
+  }
 }
