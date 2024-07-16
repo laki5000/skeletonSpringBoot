@@ -5,7 +5,8 @@ import com.example.exception.InvalidDateFormatException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.utils.dto.response.ErrorResponseDTO;
-import com.example.utils.service.MessageService;
+import com.example.utils.service.IMessageService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +14,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-/** Base controller for exception handling. */
+/** Controller class for handling exceptions globally. */
 @Log4j2
+@RequiredArgsConstructor
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    private final MessageService messageService;
-
-    /**
-     * Constructor.
-     *
-     * @param messageService the message service
-     */
-    public GlobalExceptionHandler(MessageService messageService) {
-        this.messageService = messageService;
-    }
+    private final IMessageService messageService;
 
     /**
      * Handle generic exception.
@@ -110,9 +103,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleException(Exception ex, String errorMessage, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO(statusCode.value(), messageService.getMessage("error.default_message") + " " + errorMessage);
-
-        log.error("Returning error response: {}", errorResponse);
+        ErrorResponseDTO errorResponse = ErrorResponseDTO.builder().errorCode(statusCode.value()).message(messageService.getMessage("error.default_message") + " " + errorMessage).build();
 
         return ResponseEntity.status(statusCode).body(errorResponse);
     }

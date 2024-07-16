@@ -26,14 +26,5 @@ services:
     ports:
       - 8025:80
 
-  spring-boot-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8080"
-    depends_on:
-      - db
-
 volumes:
   dbdata:

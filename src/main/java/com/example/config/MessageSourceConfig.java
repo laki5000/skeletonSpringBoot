@@ -33,8 +33,6 @@ public class MessageSourceConfig implements WebMvcConfigurer {
         messageSource.setBasename("classpath:translations/messages");
         messageSource.setDefaultEncoding("UTF-8");
 
-        log.info("Created message source bean");
-
         return messageSource;
     }
 
@@ -50,8 +48,6 @@ public class MessageSourceConfig implements WebMvcConfigurer {
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 
         localeResolver.setDefaultLocale(Locale.getDefault());
-
-        log.info("Created locale resolver bean");
 
         return localeResolver;
     }
@@ -69,7 +65,5 @@ public class MessageSourceConfig implements WebMvcConfigurer {
 
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
-
-        log.info("Added locale change interceptor to registry");
     }
 }

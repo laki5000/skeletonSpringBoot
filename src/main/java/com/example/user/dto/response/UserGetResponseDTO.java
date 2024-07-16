@@ -1,10 +1,18 @@
 package com.example.user.dto.response;
 
+import lombok.Getter;
+
 import java.time.Instant;
 
 /**
- * Dto class for getting a user.
+ * DTO class for returning user data.
  */
-public record UserGetResponseDTO(Long id, String username, Instant createdAt, Instant updatedAt, String createdBy,
-                                 String updatedBy) {
+@Getter
+public class UserGetResponseDTO {
+    private Long id;
+    private String username;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private String createdBy;
+    private String updatedBy;
 }

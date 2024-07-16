@@ -2,6 +2,7 @@ package com.example.utils.service;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -11,23 +12,13 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Locale;
 
-@SuppressFBWarnings(value = {"EI_EXPOSE_REP2"})
+/** Service class for getting messages. */
 @Log4j2
+@RequiredArgsConstructor
 @Service
-public class MessageService {
+public class MessageService implements IMessageService {
     private final MessageSource messageSource;
     private final LocaleResolver localeResolver;
-
-    /**
-     * Constructor.
-     *
-     * @param messageSource  The message source.
-     * @param localeResolver The locale resolver.
-     */
-    public MessageService(MessageSource messageSource, LocaleResolver localeResolver) {
-        this.messageSource = messageSource;
-        this.localeResolver = localeResolver;
-    }
 
     /**
      * Get a message for a key.
@@ -41,7 +32,6 @@ public class MessageService {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
         if (attributes == null) {
-            log.error("ServletRequestAttributes is null. Cannot retrieve request.");
 
             return null;
         }
@@ -50,10 +40,6 @@ public class MessageService {
 
         Locale currentLocale = localeResolver.resolveLocale(request);
 
-        String message = messageSource.getMessage(key, null, currentLocale);
-
-        log.info("Got message: {}", message);
-
-        return message;
+        return messageSource.getMessage(key, null, currentLocale);
     }
 }

@@ -14,13 +14,13 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Base repository interface for CRUD operations.
+ * Base repository interface.
  *
  * @param <T>  the entity type
  * @param <ID> the ID type
  */
 @NoRepositoryBean
-public interface BaseRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+public interface IBaseRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
     /**
      * Find all entities with criteria.
      *
@@ -96,12 +96,4 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
-
-    /**
-     * Check if an entity exists by username.
-     *
-     * @param username the username
-     * @return true if the entity exists, false otherwise
-     */
-    boolean existsByUsername(String username);
 }

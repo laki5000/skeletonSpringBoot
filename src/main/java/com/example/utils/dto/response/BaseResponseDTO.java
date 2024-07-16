@@ -1,11 +1,11 @@
 package com.example.utils.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-/** Base response class. */
-@AllArgsConstructor
+/** DTO class for the base response. */
 @Getter
+@SuperBuilder
 public class BaseResponseDTO {
     private String message;
 }
