@@ -15,12 +15,8 @@ public class MessageServiceTest {
   @Mock private LocaleResolver localeResolver;
 
   @Test
-  public void getMessage_Success() {
-
-  }
+  public void getMessage_Success() {}
 
   @Test
-  public void getMessage_InvalidKey() {
-
-  }
+  public void getMessage_InvalidKey() {}
 }
