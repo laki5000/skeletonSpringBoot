@@ -58,6 +58,7 @@ public class UserMapperTests {
         assertEquals(TEST_USERNAME, result.getUsername());
         assertEquals(TEST_PASSWORD, result.getPassword());
         assertEquals(TEST_USERNAME2, result.getCreatedBy());
+
         assertNull(result.getId());
         assertNull(result.getCreatedAt());
         assertNull(result.getUpdatedAt());

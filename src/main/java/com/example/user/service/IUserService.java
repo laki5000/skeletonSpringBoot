@@ -42,11 +42,11 @@ public interface IUserService {
     Page<UserGetResponseDTO> get(Map<String, String> params);
 
     /**
-     * Validates the username.
+     * Ensures that a username is unique.
      *
      * @param username the username to validate
      */
-    void validateUsername(String username);
+    void ensureUsernameIsUnique(String username);
 
     /**
      * Checks if a user exists by username.

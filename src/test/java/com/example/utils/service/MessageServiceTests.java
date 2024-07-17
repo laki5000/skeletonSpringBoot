@@ -39,9 +39,8 @@ public class MessageServiceTests {
     @Test
     public void getMessage_Success() {
         // Given
-        when(localeResolver.resolveLocale(eq(request))).thenReturn(TEST_LOCALE);
-        when(messageSource.getMessage(eq(TEST_KEY), isNull(), eq(TEST_LOCALE)))
-                .thenReturn(TEST_MESSAGE);
+        when(localeResolver.resolveLocale(request)).thenReturn(TEST_LOCALE);
+        when(messageSource.getMessage(TEST_KEY, null, TEST_LOCALE)).thenReturn(TEST_MESSAGE);
 
         // When
         String result = messageService.getMessage(TEST_KEY);
@@ -50,12 +49,12 @@ public class MessageServiceTests {
         assertEquals(TEST_MESSAGE, result);
     }
 
-    /** Tests the unsuccessful retrieval of a message with an invalid key. */
+    /** Tests the unsuccessful retrieval of a message due to an invalid key. */
     @Test
     public void getMessage_InvalidKey() {
         // Given
-        when(localeResolver.resolveLocale(eq(request))).thenReturn(TEST_LOCALE);
-        when(messageSource.getMessage(eq(TEST_KEY), isNull(), eq(TEST_LOCALE))).thenReturn(null);
+        when(localeResolver.resolveLocale(request)).thenReturn(TEST_LOCALE);
+        when(messageSource.getMessage(TEST_KEY, null, TEST_LOCALE)).thenReturn(null);
 
         // When
         String result = messageService.getMessage(TEST_KEY);

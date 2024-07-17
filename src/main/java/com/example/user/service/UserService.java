@@ -36,7 +36,7 @@ public class UserService implements IUserService {
     public UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
         log.info("Creating user");
 
-        validateUsername(userCreateRequestDTO.getUsername());
+        ensureUsernameIsUnique(userCreateRequestDTO.getUsername());
 
         return userMapper.toGetResponseDTO(
                 userRepository.save(userMapper.toEntity(userCreateRequestDTO, "unknown")));
@@ -95,12 +95,12 @@ public class UserService implements IUserService {
     }
 
     /**
-     * Validates the username.
+     * Ensures that a username is unique.
      *
      * @param username the username to validate
      * @throws ConflictException if the username already exists
      */
-    public void validateUsername(String username) {
+    public void ensureUsernameIsUnique(String username) {
         log.info("Validating username: {}", username);
 
         if (existsByUsername(username)) {
