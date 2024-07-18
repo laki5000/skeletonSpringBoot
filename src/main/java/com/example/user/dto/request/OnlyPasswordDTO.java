@@ -1,4 +1,4 @@
-package com.example.user.dto;
+package com.example.user.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -16,5 +16,5 @@ public class OnlyPasswordDTO {
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
             message =
                     "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
-    private String password;
+    private final String password;
 }

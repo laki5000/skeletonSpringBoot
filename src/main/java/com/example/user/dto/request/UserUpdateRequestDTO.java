@@ -1,6 +1,5 @@
 package com.example.user.dto.request;
 
-import com.example.user.dto.OnlyPasswordDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -10,5 +9,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class UserUpdateRequestDTO extends OnlyPasswordDTO {
     @NotNull(message = "Id is required")
-    private Long id;
+    private final Long id;
 }
