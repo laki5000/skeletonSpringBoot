@@ -1,5 +1,6 @@
 package com.example.utils.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.LocaleResolver;
 @Log4j2
 @RequiredArgsConstructor
 @Service
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "False positive - no mutable fields exposed")
 public class MessageService implements IMessageService {
     private final MessageSource messageSource;
     private final LocaleResolver localeResolver;

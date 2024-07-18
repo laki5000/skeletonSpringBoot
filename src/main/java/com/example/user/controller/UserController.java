@@ -6,6 +6,8 @@ import com.example.user.service.IUserService;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import com.example.utils.service.IMessageService;
 import java.util.Map;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "False positive - no mutable fields exposed")
 public class UserController {
     private final IMessageService messageService;
     private final IUserService userService;
