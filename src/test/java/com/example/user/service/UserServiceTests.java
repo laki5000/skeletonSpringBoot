@@ -81,7 +81,7 @@ public class UserServiceTests {
         verify(userMapper).toGetResponseDTO(user);
     }
 
-    /** Tests the unsuccessful update of a user due to no modifications. */
+    /** Tests the unsuccessful update of a user due to not modified. */
     @Test
     void update_NotModified() {
         // Given
@@ -148,9 +148,9 @@ public class UserServiceTests {
         verify(userRepository).existsByUsername(TEST_USERNAME);
     }
 
-    /** Tests the unsuccessful validation of a non-unique username. */
+    /** Tests the unsuccessful validation of a unique username due to conflict. */
     @Test
-    void ensureUsernameIsUnique_Conflict() {
+    void ensureUsernameIsUnique_UsernameExists() {
         // Given
         when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(true);
 
