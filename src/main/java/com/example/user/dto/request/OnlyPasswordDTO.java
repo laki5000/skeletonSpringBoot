@@ -1,5 +1,7 @@
 package com.example.user.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -17,4 +19,9 @@ public class OnlyPasswordDTO {
             message =
                     "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
     private final String password;
+
+    @JsonCreator
+    public OnlyPasswordDTO(@JsonProperty("password") String password) {
+        this.password = password;
+    }
 }

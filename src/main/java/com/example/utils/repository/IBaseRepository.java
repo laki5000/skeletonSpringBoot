@@ -49,6 +49,7 @@ public interface IBaseRepository<T, ID extends Serializable>
         params.remove("limit");
         params.remove("orderBy");
         params.remove("orderDirection");
+        params.remove("password");
 
         Pageable pageable = PageRequest.of(page, limit);
         Specification<T> spec = buildSpecification(params, orderBy, orderDirection);

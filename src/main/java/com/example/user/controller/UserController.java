@@ -3,9 +3,11 @@ package com.example.user.controller;
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.request.UserUpdateRequestDTO;
 import com.example.user.service.IUserService;
+import com.example.utils.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import com.example.utils.service.IMessageService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,7 +33,7 @@ public class UserController {
      * @return the response entity
      */
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody UserCreateRequestDTO userCreateRequestDTO) {
+    public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequestDTO userCreateRequestDTO) {
         log.info("Creating user");
 
         return ResponseEntity.status(201)
@@ -49,7 +51,7 @@ public class UserController {
      * @return the response entity
      */
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
+    public ResponseEntity<?> update(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         log.info("Updating user");
 
         return ResponseEntity.ok(
@@ -72,7 +74,7 @@ public class UserController {
         userService.delete(id);
 
         return ResponseEntity.ok(
-                SuccessResponseDTO.builder()
+                BaseResponseDTO.builder()
                         .message(messageService.getMessage("success.user.deleted"))
                         .build());
     }
