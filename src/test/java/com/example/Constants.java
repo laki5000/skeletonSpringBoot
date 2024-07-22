@@ -11,9 +11,10 @@ public class Constants {
     public static final String TEST_MESSAGE = "Test message";
     public static final String TEST_USERNAME = "test";
     public static final String TEST_USERNAME2 = "test.2";
-    public static final String TEST_PASSWORD = "test_pw";
-    public static final String TEST_PASSWORD2 = "test_pw2";
+    public static final String TEST_PASSWORD = "T3stP@ssw0rd";
+    public static final String TEST_PASSWORD2 = "T3stP@ssw0rd2";
     public static final String TEST_VALUE = "test value";
+    public static final String USER_API_URL = "/api/v1/users";
     public static final long TEST_ID = 1L;
     public static final Instant TEST_INSTANT =
             LocalDate.of(2024, 7, 16).atStartOfDay(ZoneId.systemDefault()).toInstant();
