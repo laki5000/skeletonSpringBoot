@@ -18,7 +18,7 @@ Skeleton Spring Boot is a starter project designed to help you quickly set up a 
 
     ```bash
     git clone <repository-url>
-    cd skeleton-spring-boot
+    cd skeletonSpringBoot
     ```
 
 2. **Build the project**
