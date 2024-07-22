@@ -2,8 +2,10 @@
 
 ## Project Description
 
-Skeleton Spring Boot is a starter project designed to help you quickly set up a new Spring Boot application. It includes a basic CRUD (Create, Read, Update, Delete) functionality and various useful dependencies to save you time from setting up from scratch.
 
+Skeleton Spring Boot is a starter project designed to help you quickly set up a new Spring Boot application. It includes basic CRUD (Create, Read, Update, Delete) functionality and various useful dependencies to save you time from setting up from scratch.
+
+The project also contains global exception handling with custom exceptions, a base repository interface for flexible data access, and a message service to support internationalization (i18n).
 ## Installation
 
 ### Prerequisites
@@ -195,10 +197,6 @@ To import the collection into Postman:
 2. Go to the "Import" option.
 3. Select the `User.postman_collection.json` file from the repository.
 4. Import and use the pre-configured requests to test the API endpoints.
-
-## Application Overview
-
-Not finished yet :(
 
 ## Contact
 
