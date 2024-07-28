@@ -67,7 +67,7 @@ public class UserService implements IUserService {
 
         user.setUpdatedBy("unknown");
 
-        return userMapper.toGetResponseDTO(user);
+        return userMapper.toGetResponseDTO(userRepository.saveAndFlush(user));
     }
 
     /**

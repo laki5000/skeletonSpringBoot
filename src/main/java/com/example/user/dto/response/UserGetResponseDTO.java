@@ -8,10 +8,10 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserGetResponseDTO {
-    private final Long id;
-    private final String username;
-    private final Instant createdAt;
-    private final Instant updatedAt;
-    private final String createdBy;
-    private final String updatedBy;
+    private Long id;
+    private String username;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private String createdBy;
+    private String updatedBy;
 }

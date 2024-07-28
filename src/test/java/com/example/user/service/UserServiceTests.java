@@ -70,6 +70,7 @@ public class UserServiceTests {
 
         when(userRepository.findById(TEST_ID)).thenReturn(java.util.Optional.of(user));
         when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
+        when(userRepository.saveAndFlush(user)).thenReturn(user);
 
         // When
         UserGetResponseDTO result = userService.update(userUpdateRequestDTO);
@@ -79,6 +80,7 @@ public class UserServiceTests {
 
         verify(userRepository).findById(TEST_ID);
         verify(userMapper).toGetResponseDTO(user);
+        verify(userRepository).saveAndFlush(user);
     }
 
     /** Tests the unsuccessful update of a user due to not modified. */
