@@ -116,8 +116,11 @@ Once the application is running, you can access it at `http://localhost:8080`.
 - **Delete a user**
 
     ```http
-    DELETE /api/v1/users?id=1
+    DELETE /api/v1/users
     ```
+    
+  **Query Parameters**:
+   - `id` (optional): Filter by id
 
   **Response**:
     ```json
