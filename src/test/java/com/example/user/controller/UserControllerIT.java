@@ -328,24 +328,26 @@ public class UserControllerIT extends ABaseIT {
             int limit,
             String orderBy,
             String orderDirection) {
-        return USER_API_URL + "?id=" + id
-         + "&username="
-         + username
-         + "&createdAt="
-         + createdAt.toString()
-         + "&updatedAt="
-         + updatedAt
-         + "&createdBy="
-         + createdBy
-         + "&updatedBy="
-         + updatedBy
-         + "&page="
-         + page
-         + "&limit="
-         + limit
-         + "&orderBy="
-         + orderBy
-         + "&orderDirection="
-         + orderDirection;
+        return USER_API_URL
+                + "?id="
+                + id
+                + "&username="
+                + username
+                + "&createdAt="
+                + createdAt.toString()
+                + "&updatedAt="
+                + updatedAt
+                + "&createdBy="
+                + createdBy
+                + "&updatedBy="
+                + updatedBy
+                + "&page="
+                + page
+                + "&limit="
+                + limit
+                + "&orderBy="
+                + orderBy
+                + "&orderDirection="
+                + orderDirection;
     }
 }

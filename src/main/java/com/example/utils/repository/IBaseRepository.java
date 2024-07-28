@@ -3,6 +3,7 @@ package com.example.utils.repository;
 import com.example.exception.InvalidDateFormatException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -10,8 +11,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import jakarta.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +34,8 @@ public interface IBaseRepository<T, ID extends Serializable>
     String DATE_TIME_WITH_MILLIS_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z";
 
     DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    DateTimeFormatter DATE_TIME_WITH_MILLIS_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    DateTimeFormatter DATE_TIME_WITH_MILLIS_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
 
     /**
      * Find all entities with criteria.
@@ -49,7 +49,8 @@ public interface IBaseRepository<T, ID extends Serializable>
         String orderBy = params.getOrDefault("orderBy", "id");
         String orderDirection = params.getOrDefault("orderDirection", "asc");
 
-        params.keySet().removeAll(Arrays.asList("page", "limit", "orderBy", "orderDirection", "password"));
+        params.keySet()
+                .removeAll(Arrays.asList("page", "limit", "orderBy", "orderDirection", "password"));
 
         Pageable pageable = PageRequest.of(page, limit);
         Specification<T> spec = buildSpecification(params, orderBy, orderDirection);
@@ -66,7 +67,8 @@ public interface IBaseRepository<T, ID extends Serializable>
      * @return the specification
      * @throws InvalidDateFormatException if the date format is invalid
      */
-    default Specification<T> buildSpecification(Map<String, String> params, String orderBy, String orderDirection) {
+    default Specification<T> buildSpecification(
+            Map<String, String> params, String orderBy, String orderDirection) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -110,16 +112,22 @@ public interface IBaseRepository<T, ID extends Serializable>
      * @return a predicate for the date
      * @throws InvalidDateFormatException if the date format is invalid
      */
-    private Predicate handleDatePredicate(Root<T> root, CriteriaBuilder criteriaBuilder, String key, String value) throws InvalidDateFormatException {
-        if (!value.matches(DATE_REGEX) && !value.matches(DATE_TIME_REGEX) && !value.matches(DATE_TIME_WITH_MILLIS_REGEX)) {
+    private Predicate handleDatePredicate(
+            Root<T> root, CriteriaBuilder criteriaBuilder, String key, String value)
+            throws InvalidDateFormatException {
+        if (!value.matches(DATE_REGEX)
+                && !value.matches(DATE_TIME_REGEX)
+                && !value.matches(DATE_TIME_WITH_MILLIS_REGEX)) {
             throw new InvalidDateFormatException(
-                    "expected formats: yyyy-MM-dd, yyyy-MM-ddTHH:mm:ss, yyyy-MM-ddTHH:mm:ss.SSSSSSZ, received: " + value);
+                    "expected formats: yyyy-MM-dd, yyyy-MM-ddTHH:mm:ss, yyyy-MM-ddTHH:mm:ss.SSSSSSZ, received: "
+                            + value);
         }
 
         String formattedValue = value;
         if (value.matches(DATE_TIME_WITH_MILLIS_REGEX)) {
             ZonedDateTime zonedDateTime = ZonedDateTime.parse(value);
-            LocalDateTime localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
+            LocalDateTime localDateTime =
+                    zonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
             formattedValue = localDateTime.format(DATE_TIME_WITH_MILLIS_FORMATTER);
         } else if (value.matches(DATE_TIME_REGEX)) {
             LocalDateTime localDateTime = LocalDateTime.parse(value);

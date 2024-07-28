@@ -150,7 +150,7 @@
 				</configuration>
 			</plugin>
 
-
+			<!-- Maven Failsafe Plugin -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
