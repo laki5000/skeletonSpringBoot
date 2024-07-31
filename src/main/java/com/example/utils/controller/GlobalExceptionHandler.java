@@ -90,8 +90,7 @@ public class GlobalExceptionHandler {
 
         ex.getBindingResult()
                 .getAllErrors()
-                .forEach(
-                        (error) -> errorMessage.append(error.getDefaultMessage()).append(", "));
+                .forEach((error) -> errorMessage.append(error.getDefaultMessage()).append(", "));
 
         return handleException(ex, errorMessage.toString(), HttpStatus.BAD_REQUEST);
     }
