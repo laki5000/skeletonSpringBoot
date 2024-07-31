@@ -1,6 +1,8 @@
 package com.example.utils.repository;
 
 import com.example.exception.InvalidDateFormatException;
+import com.example.utils.service.IMessageService;
+import com.example.utils.service.MessageService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
@@ -11,6 +13,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +32,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface IBaseRepository<T, ID extends Serializable>
         extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
-
     String DATE_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     String DATE_TIME_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}";
     String DATE_TIME_WITH_MILLIS_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z";
@@ -49,8 +52,8 @@ public interface IBaseRepository<T, ID extends Serializable>
         String orderBy = params.getOrDefault("orderBy", "id");
         String orderDirection = params.getOrDefault("orderDirection", "asc");
 
-        params.keySet()
-                .removeAll(Arrays.asList("page", "limit", "orderBy", "orderDirection", "password"));
+        Arrays.asList("page", "limit", "orderBy", "orderDirection", "password")
+                .forEach(params.keySet()::remove);
 
         Pageable pageable = PageRequest.of(page, limit);
         Specification<T> spec = buildSpecification(params, orderBy, orderDirection);

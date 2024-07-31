@@ -120,7 +120,7 @@ Once the application is running, you can access it at `http://localhost:8080`.
     ```
     
   **Query Parameters**:
-   - `id` (optional): Filter by id
+   - `id` (mandatory): Filter by id
 
   **Response**:
     ```json

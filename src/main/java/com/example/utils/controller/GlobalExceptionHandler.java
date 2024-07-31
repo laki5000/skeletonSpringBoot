@@ -11,14 +11,16 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /** Controller class for handling exceptions globally. */
 @Log4j2
 @RequiredArgsConstructor
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final String ERROR_DEFAULT_MESSAGE = "error.default_message";
+
     private final IMessageService messageService;
 
     /**
@@ -89,9 +91,7 @@ public class GlobalExceptionHandler {
         ex.getBindingResult()
                 .getAllErrors()
                 .forEach(
-                        (error) -> {
-                            errorMessage.append(error.getDefaultMessage()).append(", ");
-                        });
+                        (error) -> errorMessage.append(error.getDefaultMessage()).append(", "));
 
         return handleException(ex, errorMessage.toString(), HttpStatus.BAD_REQUEST);
     }
@@ -111,7 +111,7 @@ public class GlobalExceptionHandler {
                 ErrorResponseDTO.builder()
                         .errorCode(statusCode.value())
                         .message(
-                                messageService.getMessage("error.default_message")
+                                messageService.getMessage(ERROR_DEFAULT_MESSAGE)
                                         + " "
                                         + errorMessage)
                         .build();

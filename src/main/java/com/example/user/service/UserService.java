@@ -22,6 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class UserService implements IUserService {
+    private static final String UNKNOWN_USER = "unknown";
+    private static final String ERROR_USER_NOT_MODIFIED = "error.user.not_modified";
+    private static final String ERROR_USER_NOT_FOUND = "error.user.not_found";
+    private static final String ERROR_USER_USERNAME_EXISTS = "error.user.username_exists";
+
     private final IMessageService messageService;
     private final IUserRepository userRepository;
     private final IUserMapper userMapper;
@@ -39,7 +44,7 @@ public class UserService implements IUserService {
         ensureUsernameIsUnique(userCreateRequestDTO.getUsername());
 
         return userMapper.toGetResponseDTO(
-                userRepository.save(userMapper.toEntity(userCreateRequestDTO, "unknown")));
+                userRepository.save(userMapper.toEntity(userCreateRequestDTO, UNKNOWN_USER)));
     }
 
     /**
@@ -62,10 +67,10 @@ public class UserService implements IUserService {
             updated = true;
         }
         if (!updated) {
-            throw new NotModifiedException(messageService.getMessage("error.user.not_modified"));
+            throw new NotModifiedException(messageService.getMessage(ERROR_USER_NOT_MODIFIED));
         }
 
-        user.setUpdatedBy("unknown");
+        user.setUpdatedBy(UNKNOWN_USER);
 
         return userMapper.toGetResponseDTO(userRepository.saveAndFlush(user));
     }
@@ -101,10 +106,10 @@ public class UserService implements IUserService {
      * @throws ConflictException if the username already exists
      */
     public void ensureUsernameIsUnique(String username) {
-        log.info("Validating username: {}", username);
+        log.debug("Validating username: {}", username);
 
         if (existsByUsername(username)) {
-            throw new ConflictException(messageService.getMessage("error.user.username_exists"));
+            throw new ConflictException(messageService.getMessage(ERROR_USER_USERNAME_EXISTS));
         }
     }
 
@@ -115,7 +120,7 @@ public class UserService implements IUserService {
      * @return true if the user exists, false otherwise
      */
     public boolean existsByUsername(String username) {
-        log.info("Checking if user exists by username: {}", username);
+        log.debug("Checking if user exists by username: {}", username);
 
         return userRepository.existsByUsername(username);
     }
@@ -128,13 +133,13 @@ public class UserService implements IUserService {
      * @throws NotFoundException if the user is not found
      */
     public User getById(Long id) {
-        log.info("Getting user by ID: {}", id);
+        log.debug("Getting user by ID: {}", id);
 
         return userRepository
                 .findById(id)
                 .orElseThrow(
                         () ->
                                 new NotFoundException(
-                                        messageService.getMessage("error.user.not_found")));
+                                        messageService.getMessage(ERROR_USER_NOT_FOUND)));
     }
 }

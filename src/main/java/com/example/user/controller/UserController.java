@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.*;
         value = "EI_EXPOSE_REP2",
         justification = "False positive - no mutable fields exposed")
 public class UserController {
+    private static final String SUCCESS_USER_CREATED = "success.user.created";
+    private static final String SUCCESS_USER_UPDATED = "success.user.updated";
+    private static final String SUCCESS_USER_DELETED = "success.user.deleted";
+    private static final String SUCCESS_USER_GET = "success.user.get";
+
     private final IMessageService messageService;
     private final IUserService userService;
 
@@ -39,7 +44,7 @@ public class UserController {
         return ResponseEntity.status(201)
                 .body(
                         SuccessResponseDTO.builder()
-                                .message(messageService.getMessage("success.user.created"))
+                                .message(messageService.getMessage(SUCCESS_USER_CREATED))
                                 .data(userService.create(userCreateRequestDTO))
                                 .build());
     }
@@ -56,7 +61,7 @@ public class UserController {
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
-                        .message(messageService.getMessage("success.user.updated"))
+                        .message(messageService.getMessage(SUCCESS_USER_UPDATED))
                         .data(userService.update(userUpdateRequestDTO))
                         .build());
     }
@@ -75,7 +80,7 @@ public class UserController {
 
         return ResponseEntity.ok(
                 BaseResponseDTO.builder()
-                        .message(messageService.getMessage("success.user.deleted"))
+                        .message(messageService.getMessage(SUCCESS_USER_DELETED))
                         .build());
     }
 
@@ -91,7 +96,7 @@ public class UserController {
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
-                        .message(messageService.getMessage("success.user.get"))
+                        .message(messageService.getMessage(SUCCESS_USER_GET))
                         .data(userService.get(params))
                         .build());
     }
