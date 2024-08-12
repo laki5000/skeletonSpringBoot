@@ -14,6 +14,7 @@ import com.example.utils.dto.response.ErrorResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,8 +30,8 @@ public class UserControllerIT extends BaseIT {
         userRepository.deleteAll();
     }
 
-    /** Tests the successful creation of a user. */
     @Test
+    @DisplayName("Tests the successful creation of a user")
     void create_Success() throws Exception {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =
@@ -71,8 +72,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(user.getUpdatedAt(), userGetResponseDTO.getUpdatedAt());
     }
 
-    /** Tests the unsuccessful creation of a user due to the username already existing. */
     @Test
+    @DisplayName("Tests the unsuccessful creation of a user due to the username already existing")
     void create_UsernameExists() throws Exception {
         // Given
         userRepository.save(
@@ -99,8 +100,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(409, errorResponseDTO.getErrorCode());
     }
 
-    /** Tests the unsuccessful creation of a user due to an invalid request. */
     @Test
+    @DisplayName("Tests the unsuccessful creation of a user due to an invalid request")
     void create_InvalidRequest() throws Exception {
         // Given
         UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().build();
@@ -116,8 +117,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(400, errorResponseDTO.getErrorCode());
     }
 
-    /** Tests the successful update of a user. */
     @Test
+    @DisplayName("Tests the successful update of a user")
     void update_Success() throws Exception {
         // Given
         User user =
@@ -162,8 +163,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(user.getUpdatedAt(), userGetResponseDTO.getUpdatedAt());
     }
 
-    /** Tests the unsuccessful update of a user due to the user not being found. */
     @Test
+    @DisplayName("Tests the unsuccessful update of a user due to the user not being found")
     void update_UserNotFound() throws Exception {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
@@ -180,8 +181,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(404, errorResponseDTO.getErrorCode());
     }
 
-    /** Tests the unsuccessful update of a user due to not modified. */
     @Test
+    @DisplayName("Tests the unsuccessful update of a user due to not modified")
     void update_NotModified() throws Exception {
         // Given
         User user =
@@ -205,8 +206,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(304, errorResponseDTO.getErrorCode());
     }
 
-    /** Tests the unsuccessful update of a user due to an invalid request. */
     @Test
+    @DisplayName("Tests the unsuccessful update of a user due to an invalid request")
     void update_InvalidRequest() throws Exception {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().build();
@@ -222,8 +223,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(400, errorResponseDTO.getErrorCode());
     }
 
-    /** Tests the successful deletion of a user. */
     @Test
+    @DisplayName("Tests the successful deletion of a user")
     void delete_Success() throws Exception {
         // Given
         User user =
@@ -245,8 +246,8 @@ public class UserControllerIT extends BaseIT {
         assertFalse(userRepository.existsById(user.getId()));
     }
 
-    /** Tests the unsuccessful deletion of a user due to the user not being found. */
     @Test
+    @DisplayName("Tests the unsuccessful deletion of a user due to the user not being found")
     void delete_UserNotFound() throws Exception {
         // Given
 
@@ -261,8 +262,8 @@ public class UserControllerIT extends BaseIT {
         assertEquals(404, errorResponseDTO.getErrorCode());
     }
 
-    /** Tests the successful retrieval of users. */
     @Test
+    @DisplayName("Tests the successful retrieval of users")
     void get_Success() throws Exception {
         // Given
         userRepository.save(
@@ -317,6 +318,21 @@ public class UserControllerIT extends BaseIT {
         assertNull(userGetResponseDTO.getUpdatedBy());
     }
 
+    /**
+     * Returns the URL with the specified parameters.
+     *
+     * @param id the ID
+     * @param username the username
+     * @param createdAt the created at
+     * @param updatedAt the updated at
+     * @param createdBy the created by
+     * @param updatedBy the updated by
+     * @param page the page
+     * @param limit the limit
+     * @param orderBy the order by
+     * @param orderDirection the order direction
+     * @return the URL with the specified parameters
+     */
     private String getUrlWithParams(
             long id,
             String username,

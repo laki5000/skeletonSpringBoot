@@ -17,6 +17,7 @@ import com.example.utils.service.IMessageService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,8 +34,8 @@ public class UserServiceTests {
     @Mock private IUserRepository userRepository;
     @Mock private IUserMapper userMapper;
 
-    /** Tests the successful creation of a user. */
     @Test
+    @DisplayName("Tests the successful creation of a user.")
     void create_Success() {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =
@@ -59,8 +60,8 @@ public class UserServiceTests {
         verify(userMapper).toGetResponseDTO(user);
     }
 
-    /** Tests the unsuccessful creation of a user due to username exists. */
     @Test
+    @DisplayName("Tests the unsuccessful creation of a user due to username exists.")
     void create_UsernameExists() {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =
@@ -74,8 +75,8 @@ public class UserServiceTests {
         verify(userRepository).existsByUsername(TEST_USERNAME);
     }
 
-    /** Tests the successful update of a user. */
     @Test
+    @DisplayName("Tests the successful update of a user.")
     void update_Success() {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
@@ -98,8 +99,8 @@ public class UserServiceTests {
         verify(userRepository).saveAndFlush(user);
     }
 
-    /** Tests the unsuccessful update of a user due to not found. */
     @Test
+    @DisplayName("Tests the unsuccessful update of a user due to not found.")
     void update_NotFound() {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
@@ -113,8 +114,8 @@ public class UserServiceTests {
         verify(userRepository).findById(TEST_ID);
     }
 
-    /** Tests the unsuccessful update of a user due to not modified. */
     @Test
+    @DisplayName("Tests the unsuccessful update of a user due to not modified.")
     void update_NotModified() {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
@@ -129,8 +130,8 @@ public class UserServiceTests {
         verify(userRepository).findById(TEST_ID);
     }
 
-    /** Tests the successful deletion of a user. */
     @Test
+    @DisplayName("Tests the successful deletion of a user.")
     void delete_Success() {
         // Given
         User user = User.builder().build();
@@ -146,8 +147,8 @@ public class UserServiceTests {
         verify(userRepository).delete(user);
     }
 
-    /** Tests the unsuccessful deletion of a user due to not found. */
     @Test
+    @DisplayName("Tests the unsuccessful deletion of a user due to not found.")
     void delete_NotFound() {
         // Given
         when(userRepository.findById(TEST_ID)).thenReturn(Optional.empty());
@@ -158,8 +159,8 @@ public class UserServiceTests {
         verify(userRepository).findById(TEST_ID);
     }
 
-    /** Tests the successful retrieval of users. */
     @Test
+    @DisplayName("Tests the successful retrieval of users.")
     void get_Success() {
         // Given
         Map<String, String> params = Map.of(TEST_KEY, TEST_VALUE);

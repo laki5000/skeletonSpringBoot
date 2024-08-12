@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,8 +36,8 @@ public class MessageServiceTests {
         when(servletRequestAttributes.getRequest()).thenReturn(request);
     }
 
-    /** Tests the successful retrieval of a message. */
     @Test
+    @DisplayName("Tests the successful retrieval of a message.")
     public void getMessage_Success() {
         // Given
         when(localeResolver.resolveLocale(request)).thenReturn(TEST_LOCALE);
@@ -49,8 +50,8 @@ public class MessageServiceTests {
         assertEquals(TEST_MESSAGE, result);
     }
 
-    /** Tests the unsuccessful retrieval of a message due to an invalid key. */
     @Test
+    @DisplayName("Tests the unsuccessful retrieval of a message due to an invalid key.")
     public void getMessage_InvalidKey() {
         // Given
         when(localeResolver.resolveLocale(request)).thenReturn(TEST_LOCALE);

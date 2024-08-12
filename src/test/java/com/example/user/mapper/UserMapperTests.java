@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.model.User;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -14,8 +15,8 @@ import org.mapstruct.factory.Mappers;
 public class UserMapperTests {
     private final IUserMapper userMapper = Mappers.getMapper(IUserMapper.class);
 
-    /** Tests the successful mapping of an entity to a get response DTO. */
     @Test
+    @DisplayName("Tests the successful mapping of an entity to a get response DTO.")
     public void toGetResponseDTO_Success() {
         // Given
         User user =
@@ -41,8 +42,8 @@ public class UserMapperTests {
         assertEquals(TEST_USERNAME, result.getUpdatedBy());
     }
 
-    /** Tests the successful mapping of a create request DTO to an entity. */
     @Test
+    @DisplayName("Tests the successful mapping of a create request DTO to an entity.")
     public void toEntity_Success() {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =
