@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGenericException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex) {
         return handleException(ex, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<?> handleMyConflictException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleMyConflictException(Exception ex) {
         return handleException(ex, ex.getMessage(), HttpStatus.CONFLICT);
     }
 
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleMyNotFoundException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleMyNotFoundException(Exception ex) {
         return handleException(ex, ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(NotModifiedException.class)
-    public ResponseEntity<?> handleMyNotModifiedException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleMyNotModifiedException(Exception ex) {
         return handleException(ex, ex.getMessage(), HttpStatus.NOT_MODIFIED);
     }
 
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(InvalidDateFormatException.class)
-    public ResponseEntity<?> handleMyInvalidDateFormatException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleMyInvalidDateFormatException(Exception ex) {
         return handleException(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
@@ -81,7 +81,8 @@ public class GlobalExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
         StringBuilder errorMessage = new StringBuilder();
 
         ex.getBindingResult()
@@ -98,7 +99,7 @@ public class GlobalExceptionHandler {
      * @param statusCode the status code to return
      * @return the response entity
      */
-    public ResponseEntity<?> handleException(
+    public ResponseEntity<ErrorResponseDTO> handleException(
             Exception ex, String errorMessage, HttpStatus statusCode) {
         log.error("Handling exception", ex);
 
