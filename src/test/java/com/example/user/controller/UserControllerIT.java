@@ -3,7 +3,7 @@ package com.example.user.controller;
 import static com.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.example.ABaseIT;
+import com.example.BaseIT;
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.request.UserUpdateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
@@ -20,7 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.web.servlet.MvcResult;
 
 /** Integration tests for {@link UserController}. */
-public class UserControllerIT extends ABaseIT {
+public class UserControllerIT extends BaseIT {
     @Autowired private IUserRepository userRepository;
 
     /** Sets up the tests. */

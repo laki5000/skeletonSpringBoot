@@ -16,19 +16,18 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-public abstract class ABaseEntity {
+public abstract class BaseEntity {
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
     @NotNull
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private String createdBy;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(nullable = false)
     private Instant updatedAt;
 
-    @Column(name = "updated_by")
     private String updatedBy;
 }

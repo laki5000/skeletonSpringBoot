@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public abstract class ABaseIT {
+public abstract class BaseIT {
     @Autowired private MockMvc mockMvc;
     @Autowired protected ObjectMapper objectMapper;
 
