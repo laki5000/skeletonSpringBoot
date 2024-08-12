@@ -1,15 +1,16 @@
 package com.example.user.dto.request;
 
+import com.example.user.annotation.IsValidPassword;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /** DTO class for updating a user. */
 @Getter
-@SuperBuilder
-@NoArgsConstructor
-public class UserUpdateRequestDTO extends OnlyPasswordDTO {
+@Builder
+public class UserUpdateRequestDTO {
     @NotNull(message = "Id is required")
     private Long id;
+
+    @IsValidPassword private String password;
 }
