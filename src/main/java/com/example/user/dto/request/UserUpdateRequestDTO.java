@@ -1,6 +1,6 @@
 package com.example.user.dto.request;
 
-import com.example.user.annotation.IsValidPassword;
+import com.example.annotation.IsValidPassword;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.example.user.validation;
+package com.example.validation;
 
-import com.example.user.annotation.IsValidPassword;
+import com.example.annotation.IsValidPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

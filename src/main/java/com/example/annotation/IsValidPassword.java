@@ -1,6 +1,6 @@
-package com.example.user.annotation;
+package com.example.annotation;
 
-import com.example.user.validation.PasswordValidator;
+import com.example.validation.PasswordValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
