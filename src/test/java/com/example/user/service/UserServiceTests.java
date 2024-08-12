@@ -59,6 +59,21 @@ public class UserServiceTests {
         verify(userMapper).toGetResponseDTO(user);
     }
 
+    /** Tests the unsuccessful creation of a user due to username exists. */
+    @Test
+    void create_UsernameExists() {
+        // Given
+        UserCreateRequestDTO userCreateRequestDTO =
+                UserCreateRequestDTO.builder().username(TEST_USERNAME).build();
+
+        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(true);
+
+        // When & Then
+        assertThrows(ConflictException.class, () -> userService.create(userCreateRequestDTO));
+
+        verify(userRepository).existsByUsername(TEST_USERNAME);
+    }
+
     /** Tests the successful update of a user. */
     @Test
     void update_Success() {
@@ -81,6 +96,21 @@ public class UserServiceTests {
         verify(userRepository).findById(TEST_ID);
         verify(userMapper).toGetResponseDTO(user);
         verify(userRepository).saveAndFlush(user);
+    }
+
+    /** Tests the unsuccessful update of a user due to not found. */
+    @Test
+    void update_NotFound() {
+        // Given
+        UserUpdateRequestDTO userUpdateRequestDTO =
+                UserUpdateRequestDTO.builder().id(TEST_ID).password(TEST_PASSWORD).build();
+
+        when(userRepository.findById(TEST_ID)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(NotFoundException.class, () -> userService.update(userUpdateRequestDTO));
+
+        verify(userRepository).findById(TEST_ID);
     }
 
     /** Tests the unsuccessful update of a user due to not modified. */
@@ -116,6 +146,18 @@ public class UserServiceTests {
         verify(userRepository).delete(user);
     }
 
+    /** Tests the unsuccessful deletion of a user due to not found. */
+    @Test
+    void delete_NotFound() {
+        // Given
+        when(userRepository.findById(TEST_ID)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(NotFoundException.class, () -> userService.delete(TEST_ID));
+
+        verify(userRepository).findById(TEST_ID);
+    }
+
     /** Tests the successful retrieval of users. */
     @Test
     void get_Success() {
@@ -135,75 +177,5 @@ public class UserServiceTests {
 
         verify(userRepository).findAllWithCriteria(params);
         verify(userMapper).toGetResponseDTO(user);
-    }
-
-    /** Tests the successful validation of a unique username. */
-    @Test
-    void ensureUsernameIsUnique_Success() {
-        // Given
-        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
-
-        // When
-        userService.ensureUsernameIsUnique(TEST_USERNAME);
-
-        // Then
-        verify(userRepository).existsByUsername(TEST_USERNAME);
-    }
-
-    /** Tests the unsuccessful validation of a unique username due to conflict. */
-    @Test
-    void ensureUsernameIsUnique_UsernameExists() {
-        // Given
-        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(true);
-
-        // When & Then
-        assertThrows(
-                ConflictException.class, () -> userService.ensureUsernameIsUnique(TEST_USERNAME));
-
-        verify(userRepository).existsByUsername(TEST_USERNAME);
-    }
-
-    /** Tests the successful check for the existence of a user by username. */
-    @Test
-    void existsByUsername_Success() {
-        // Given
-        when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(true);
-
-        // When
-        boolean result = userService.existsByUsername(TEST_USERNAME);
-
-        // Then
-        assertTrue(result);
-
-        verify(userRepository).existsByUsername(TEST_USERNAME);
-    }
-
-    /** Tests the successful retrieval of a user by ID. */
-    @Test
-    void getById_Success() {
-        // Given
-        User user = User.builder().build();
-
-        when(userRepository.findById(TEST_ID)).thenReturn(Optional.of(user));
-
-        // When
-        User result = userService.getById(TEST_ID);
-
-        // Then
-        assertEquals(user, result);
-
-        verify(userRepository).findById(TEST_ID);
-    }
-
-    /** Tests the unsuccessful retrieval of a user by ID due to not found. */
-    @Test
-    void getById_NotFound() {
-        // Given
-        when(userRepository.findById(TEST_ID)).thenReturn(Optional.empty());
-
-        // When & Then
-        assertThrows(NotFoundException.class, () -> userService.getById(TEST_ID));
-
-        verify(userRepository).findById(TEST_ID);
     }
 }

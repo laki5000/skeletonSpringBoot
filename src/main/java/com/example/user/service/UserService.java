@@ -41,7 +41,7 @@ public class UserService implements IUserService {
     public UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
         log.info("Creating user");
 
-        ensureUsernameIsUnique(userCreateRequestDTO.getUsername());
+        validateUsername(userCreateRequestDTO.getUsername());
 
         return userMapper.toGetResponseDTO(
                 userRepository.save(userMapper.toEntity(userCreateRequestDTO, UNKNOWN_USER)));
@@ -100,29 +100,17 @@ public class UserService implements IUserService {
     }
 
     /**
-     * Ensures that a username is unique.
+     * Validates that a username is unique.
      *
      * @param username the username to validate
      * @throws ConflictException if the username already exists
      */
-    public void ensureUsernameIsUnique(String username) {
+    private void validateUsername(String username) {
         log.debug("Validating username: {}", username);
 
-        if (existsByUsername(username)) {
+        if (userRepository.existsByUsername(username)) {
             throw new ConflictException(messageService.getMessage(ERROR_USER_USERNAME_EXISTS));
         }
-    }
-
-    /**
-     * Checks if a user exists by username.
-     *
-     * @param username the username to check
-     * @return true if the user exists, false otherwise
-     */
-    public boolean existsByUsername(String username) {
-        log.debug("Checking if user exists by username: {}", username);
-
-        return userRepository.existsByUsername(username);
     }
 
     /**
@@ -132,7 +120,7 @@ public class UserService implements IUserService {
      * @return the user
      * @throws NotFoundException if the user is not found
      */
-    public User getById(Long id) {
+    private User getById(Long id) {
         log.debug("Getting user by ID: {}", id);
 
         return userRepository

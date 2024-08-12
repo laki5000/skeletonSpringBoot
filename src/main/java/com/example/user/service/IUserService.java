@@ -3,7 +3,6 @@ package com.example.user.service;
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.request.UserUpdateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
-import com.example.user.model.User;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 
@@ -40,27 +39,4 @@ public interface IUserService {
      * @return the page of user get response DTOs
      */
     Page<UserGetResponseDTO> get(Map<String, String> params);
-
-    /**
-     * Ensures that a username is unique.
-     *
-     * @param username the username to validate
-     */
-    void ensureUsernameIsUnique(String username);
-
-    /**
-     * Checks if a user exists by username.
-     *
-     * @param username the username to check
-     * @return true if the user exists, false otherwise
-     */
-    boolean existsByUsername(String username);
-
-    /**
-     * Gets a user by ID.
-     *
-     * @param id the ID of the user to get
-     * @return the user
-     */
-    User getById(Long id);
 }
