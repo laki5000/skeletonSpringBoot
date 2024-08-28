@@ -1,8 +1,7 @@
 package com.example.user.mapper;
 
 import static com.example.Constants.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
@@ -29,17 +28,21 @@ public class UserMapperTests {
                         .createdBy(TEST_USERNAME2)
                         .updatedBy(TEST_USERNAME)
                         .build();
+        UserGetResponseDTO expected =
+                UserGetResponseDTO.builder()
+                        .id(TEST_ID)
+                        .username(TEST_USERNAME)
+                        .createdAt(TEST_INSTANT)
+                        .updatedAt(TEST_INSTANT2)
+                        .createdBy(TEST_USERNAME2)
+                        .updatedBy(TEST_USERNAME)
+                        .build();
 
         // When
         UserGetResponseDTO result = userMapper.toGetResponseDTO(user);
 
         // Then
-        assertEquals(TEST_ID, result.getId());
-        assertEquals(TEST_USERNAME, result.getUsername());
-        assertEquals(TEST_INSTANT, result.getCreatedAt());
-        assertEquals(TEST_INSTANT2, result.getUpdatedAt());
-        assertEquals(TEST_USERNAME2, result.getCreatedBy());
-        assertEquals(TEST_USERNAME, result.getUpdatedBy());
+        assertEquals(result, expected);
     }
 
     @Test
@@ -51,18 +54,17 @@ public class UserMapperTests {
                         .username(TEST_USERNAME)
                         .password(TEST_PASSWORD)
                         .build();
+        User expected =
+                User.builder()
+                        .username(TEST_USERNAME)
+                        .password(TEST_PASSWORD)
+                        .createdBy(TEST_USERNAME2)
+                        .build();
 
         // When
         User result = userMapper.toEntity(userCreateRequestDTO, TEST_USERNAME2);
 
         // Then
-        assertEquals(TEST_USERNAME, result.getUsername());
-        assertEquals(TEST_PASSWORD, result.getPassword());
-        assertEquals(TEST_USERNAME2, result.getCreatedBy());
-
-        assertNull(result.getId());
-        assertNull(result.getCreatedAt());
-        assertNull(result.getUpdatedAt());
-        assertNull(result.getUpdatedBy());
+        assertEquals(expected, result);
     }
 }
