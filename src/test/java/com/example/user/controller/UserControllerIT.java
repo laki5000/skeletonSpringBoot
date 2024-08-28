@@ -19,19 +19,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Integration tests for {@link UserController}. */
 public class UserControllerIT extends BaseIT {
     @Autowired private IUserRepository userRepository;
 
-    /** Sets up the tests. */
-    @BeforeEach
-    void setup() {
-        userRepository.deleteAll();
-    }
-
     @Test
     @DisplayName("Tests the successful creation of a user")
+    @Transactional
     void create_Success() throws Exception {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =
@@ -74,6 +70,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the unsuccessful creation of a user due to the username already existing")
+    @Transactional
     void create_UsernameExists() throws Exception {
         // Given
         userRepository.save(
@@ -102,6 +99,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the unsuccessful creation of a user due to an invalid request")
+    @Transactional
     void create_InvalidRequest() throws Exception {
         // Given
         UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().build();
@@ -119,6 +117,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the successful update of a user")
+    @Transactional
     void update_Success() throws Exception {
         // Given
         User user =
@@ -165,6 +164,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the unsuccessful update of a user due to the user not being found")
+    @Transactional
     void update_UserNotFound() throws Exception {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
@@ -183,6 +183,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the unsuccessful update of a user due to not modified")
+    @Transactional
     void update_NotModified() throws Exception {
         // Given
         User user =
@@ -208,6 +209,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the unsuccessful update of a user due to an invalid request")
+    @Transactional
     void update_InvalidRequest() throws Exception {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().build();
@@ -225,6 +227,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the successful deletion of a user")
+    @Transactional
     void delete_Success() throws Exception {
         // Given
         User user =
@@ -248,6 +251,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the unsuccessful deletion of a user due to the user not being found")
+    @Transactional
     void delete_UserNotFound() throws Exception {
         // Given
 
@@ -264,6 +268,7 @@ public class UserControllerIT extends BaseIT {
 
     @Test
     @DisplayName("Tests the successful retrieval of users")
+    @Transactional
     void get_Success() throws Exception {
         // Given
         userRepository.save(
