@@ -80,7 +80,7 @@ public class UserServiceTests {
     void update_Success() {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().id(TEST_ID).password(TEST_PASSWORD2).build();
+                UserUpdateRequestDTO.builder().password(TEST_PASSWORD2).build();
         User user = User.builder().password(TEST_PASSWORD).build();
         UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
 
@@ -89,7 +89,7 @@ public class UserServiceTests {
         when(userRepository.saveAndFlush(user)).thenReturn(user);
 
         // When
-        UserGetResponseDTO result = userService.update(userUpdateRequestDTO);
+        UserGetResponseDTO result = userService.update(TEST_ID, userUpdateRequestDTO);
 
         // Then
         assertEquals(userGetResponseDTO, result);
@@ -104,12 +104,13 @@ public class UserServiceTests {
     void update_NotFound() {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().id(TEST_ID).password(TEST_PASSWORD).build();
+                UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
 
         when(userRepository.findById(TEST_ID)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> userService.update(userUpdateRequestDTO));
+        assertThrows(
+                NotFoundException.class, () -> userService.update(TEST_ID, userUpdateRequestDTO));
 
         verify(userRepository).findById(TEST_ID);
     }
@@ -119,13 +120,15 @@ public class UserServiceTests {
     void update_NotModified() {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().id(TEST_ID).password(TEST_PASSWORD).build();
+                UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
         User user = User.builder().password(TEST_PASSWORD).build();
 
         when(userRepository.findById(TEST_ID)).thenReturn(java.util.Optional.of(user));
 
         // When & Then
-        assertThrows(NotModifiedException.class, () -> userService.update(userUpdateRequestDTO));
+        assertThrows(
+                NotModifiedException.class,
+                () -> userService.update(TEST_ID, userUpdateRequestDTO));
 
         verify(userRepository).findById(TEST_ID);
     }

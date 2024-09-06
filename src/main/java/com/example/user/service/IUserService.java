@@ -20,10 +20,11 @@ public interface IUserService {
     /**
      * Updates an existing user.
      *
+     * @param id the id of the user to update
      * @param userUpdateRequestDTO the user update request DTO containing the user's details
      * @return the user get response DTO
      */
-    UserGetResponseDTO update(UserUpdateRequestDTO userUpdateRequestDTO);
+    UserGetResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO);
 
     /**
      * Deletes a user.

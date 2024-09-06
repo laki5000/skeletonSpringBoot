@@ -2,10 +2,10 @@
 
 ## Project Description
 
-
 Skeleton Spring Boot is a starter project designed to help you quickly set up a new Spring Boot application. It includes basic CRUD (Create, Read, Update, Delete) functionality and various useful dependencies to save you time from setting up from scratch.
 
 The project also contains global exception handling with custom exceptions, a base repository interface for flexible data access, and a message service to support internationalization (i18n).
+
 ## Installation
 
 ### Prerequisites
@@ -62,6 +62,7 @@ Once the application is running, you can access it at `http://localhost:8080`.
     ```
 
   **Request Body**:
+
     ```json
     {
       "username": "john.doe",
@@ -70,6 +71,7 @@ Once the application is running, you can access it at `http://localhost:8080`.
     ```
 
   **Response**:
+
     ```json
     {
       "message": "User created successfully.",
@@ -87,42 +89,49 @@ Once the application is running, you can access it at `http://localhost:8080`.
 - **Update an existing user**
 
     ```http
-    PUT /api/v1/users
+    PUT /api/v1/users/{id}
     ```
 
+  **Path Parameters**:
+
+  - `id` (mandatory): The id of the user to update
+  
   **Request Body**:
+
     ```json
     {
-      "id": 1,
-      "password": "P@ssw0rd"
+     "password": "P@ssw0rd"
     }
     ```
 
   **Response**:
+
     ```json
     {
-      "message": "User updated successfully.",
-      "data": {
-        "id": 1,
-        "username": "john.doe",
-        "createdAt": "2024-07-22T16:51:12.650060Z",
-        "updatedAt": "2024-07-22T16:51:12.650060Z",
-        "createdBy": "unknown",
-        "updatedBy": "unknown"
-      }
+     "message": "User updated successfully.",
+     "data": {
+       "id": 1,
+       "username": "john.doe",
+       "createdAt": "2024-07-22T16:51:12.650060Z",
+       "updatedAt": "2024-07-22T16:51:12.650060Z",
+       "createdBy": "unknown",
+       "updatedBy": "unknown"
+     }
     }
     ```
 
 - **Delete a user**
 
     ```http
-    DELETE /api/v1/users
+    DELETE /api/v1/users/{id}
     ```
-    
-  **Query Parameters**:
-   - `id` (mandatory): Filter by id
+
+  **Path Parameters**:
+
+  - `id` (mandatory): The id of the user to delete
 
   **Response**:
+
     ```json
     {
       "message": "User deleted successfully."
@@ -136,18 +145,20 @@ Once the application is running, you can access it at `http://localhost:8080`.
     ```
 
   **Query Parameters**:
-   - `id` (optional): Filter by id
-   - `username` (optional): Filter by username
-   - `createdAt` (optional): Filter by createdAt
-   - `updatedAt` (optional): Filter by updatedAt
-   - `createdBy` (optional): Filter by createdBy
-   - `updatedBy` (optional): Filter by updatedBy
-   - `page` (optional): Page number
-   - `limit` (optional): Page size
-   - `orderBy` (optional): Order by field
-   - `orderDirection` (optional): Order direction
+
+  - `id` (optional): Filter by id
+  - `username` (optional): Filter by username
+  - `createdAt` (optional): Filter by createdAt
+  - `updatedAt` (optional): Filter by updatedAt
+  - `createdBy` (optional): Filter by createdBy
+  - `updatedBy` (optional): Filter by updatedBy
+  - `page` (optional): Page number
+  - `limit` (optional): Page size
+  - `orderBy` (optional): Order by field
+  - `orderDirection` (optional): Order direction
 
   **Response**:
+
     ```json
     {
       "message": "Users retrieved successfully.",
@@ -161,18 +172,18 @@ Once the application is running, you can access it at `http://localhost:8080`.
              "createdBy": "unknown",
              "updatedBy": "unknown"
            }
-          ],
-          "pageable": {
-            "pageNumber": 0,
-            "pageSize": 10,
-            "sort": {
-              "empty": true,
-              "unsorted": true,
-              "sorted": false
-            },
-            "offset": 0,
-            "paged": true,
-            "unpaged": false
+        ],
+        "pageable": {
+          "pageNumber": 0,
+          "pageSize": 10,
+          "sort": {
+            "empty": true,
+            "unsorted": true,
+            "sorted": false
+          },
+          "offset": 0,
+          "paged": true,
+          "unpaged": false
         },
         "last": true,
         "totalPages": 1,
@@ -198,12 +209,12 @@ For ease of testing and exploring the API, a Postman Collection is included in t
 To import the collection into Postman:
 1. Open Postman.
 2. Go to the "Import" option.
-3. Select the `User.postman_collection.json` file from the repository.
+3. Select the `User.postman_collection` file from the repository.
 4. Import and use the pre-configured requests to test the API endpoints.
 
 ## Contact
 
-If you have any questions, please feel free to connect on LinkedIn at https://www.linkedin.com/in/lakatos-bence-669a03279.
+If you have any questions, please feel free to connect on LinkedIn at [https://www.linkedin.com/in/lakatos-bence-669a03279](https://www.linkedin.com/in/lakatos-bence-669a03279).
 
 ## Continuous Integration
 

@@ -127,10 +127,11 @@ public class UserControllerIT extends BaseIT {
                                 .createdBy(TEST_USERNAME)
                                 .build());
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().id(user.getId()).password(TEST_PASSWORD2).build();
+                UserUpdateRequestDTO.builder().password(TEST_PASSWORD2).build();
 
         // When
-        MvcResult result = performPutAndExpect(USER_API_URL, userUpdateRequestDTO, 200);
+        MvcResult result =
+                performPutAndExpect(USER_API_URL + "/" + user.getId(), userUpdateRequestDTO, 200);
 
         // Then
         SuccessResponseDTO successResponseDTO =
@@ -167,10 +168,11 @@ public class UserControllerIT extends BaseIT {
     void update_UserNotFound() throws Exception {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().id(TEST_ID).password(TEST_PASSWORD).build();
+                UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
 
         // When
-        MvcResult result = performPutAndExpect(USER_API_URL, userUpdateRequestDTO, 404);
+        MvcResult result =
+                performPutAndExpect(USER_API_URL + "/" + TEST_ID, userUpdateRequestDTO, 404);
 
         // Then
         ErrorResponseDTO errorResponseDTO =
@@ -193,10 +195,11 @@ public class UserControllerIT extends BaseIT {
                                 .createdBy(TEST_USERNAME)
                                 .build());
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().id(user.getId()).password(TEST_PASSWORD).build();
+                UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
 
         // When
-        MvcResult result = performPutAndExpect(USER_API_URL, userUpdateRequestDTO, 304);
+        MvcResult result =
+                performPutAndExpect(USER_API_URL + "/" + user.getId(), userUpdateRequestDTO, 304);
 
         // Then
         ErrorResponseDTO errorResponseDTO =
@@ -214,7 +217,8 @@ public class UserControllerIT extends BaseIT {
         UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().build();
 
         // When
-        MvcResult result = performPutAndExpect(USER_API_URL, userUpdateRequestDTO, 400);
+        MvcResult result =
+                performPutAndExpect(USER_API_URL + "/" + TEST_ID, userUpdateRequestDTO, 400);
 
         // Then
         ErrorResponseDTO errorResponseDTO =
@@ -238,7 +242,7 @@ public class UserControllerIT extends BaseIT {
                                 .build());
 
         // When
-        MvcResult result = performDeleteAndExpect(USER_API_URL + "?id=" + user.getId(), 200);
+        MvcResult result = performDeleteAndExpect(USER_API_URL + "/" + user.getId(), 200);
 
         // Then
         BaseResponseDTO baseResponseDTO =
@@ -255,7 +259,7 @@ public class UserControllerIT extends BaseIT {
         // Given
 
         // When
-        MvcResult result = performDeleteAndExpect(USER_API_URL + "?id=" + TEST_ID, 404);
+        MvcResult result = performDeleteAndExpect(USER_API_URL + "/" + TEST_ID, 404);
 
         // Then
         ErrorResponseDTO errorResponseDTO =

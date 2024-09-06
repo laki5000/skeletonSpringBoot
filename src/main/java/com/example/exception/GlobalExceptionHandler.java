@@ -99,9 +99,9 @@ public class GlobalExceptionHandler {
      * @param statusCode the status code to return
      * @return the response entity
      */
-    public ResponseEntity<ErrorResponseDTO> handleException(
+    private ResponseEntity<ErrorResponseDTO> handleException(
             Exception ex, String errorMessage, HttpStatus statusCode) {
-        log.error("Handling " + ex.getClass().getSimpleName() + ":", ex);
+        log.error("Handling {}:", ex.getClass().getSimpleName(), ex);
 
         ErrorResponseDTO errorResponse =
                 ErrorResponseDTO.builder()

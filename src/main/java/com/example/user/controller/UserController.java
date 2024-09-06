@@ -52,17 +52,19 @@ public class UserController {
     /**
      * Updates an existing user.
      *
+     * @param id the id of the user to update
      * @param userUpdateRequestDTO the user update request DTO containing the user's details
      * @return the response entity
      */
-    @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
-        log.info("api/v1/users - Updating user");
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(
+            @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
+        log.info("api/v1/users/{} - Updating user", id);
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
                         .message(messageService.getMessage(SUCCESS_USER_UPDATED))
-                        .data(userService.update(userUpdateRequestDTO))
+                        .data(userService.update(id, userUpdateRequestDTO))
                         .build());
     }
 
@@ -72,9 +74,9 @@ public class UserController {
      * @param id the id of the user to delete
      * @return the response entity
      */
-    @DeleteMapping
-    public ResponseEntity<?> delete(@RequestParam Long id) {
-        log.info("api/v1/users - Deleting user");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        log.info("api/v1/users/{} - Deleting user", id);
 
         userService.delete(id);
 

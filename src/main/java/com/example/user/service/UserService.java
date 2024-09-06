@@ -50,15 +50,16 @@ public class UserService implements IUserService {
     /**
      * Updates an existing user.
      *
+     * @param id the id of the user to update
      * @param userUpdateRequestDTO the user update request DTO containing the user's details
      * @return the user get response DTO
      * @throws NotModifiedException if the user is not modified
      */
     @Transactional
-    public UserGetResponseDTO update(UserUpdateRequestDTO userUpdateRequestDTO) {
+    public UserGetResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO) {
         log.debug("Updating user");
 
-        User user = getById(userUpdateRequestDTO.getId());
+        User user = getById(id);
         boolean updated = false;
 
         if (!user.getPassword().equals(userUpdateRequestDTO.getPassword())) {
