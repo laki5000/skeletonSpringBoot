@@ -39,7 +39,7 @@ public class UserService implements IUserService {
      */
     @Transactional
     public UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
-        log.info("Creating user");
+        log.debug("Creating user");
 
         validateUsername(userCreateRequestDTO.getUsername());
 
@@ -56,7 +56,7 @@ public class UserService implements IUserService {
      */
     @Transactional
     public UserGetResponseDTO update(UserUpdateRequestDTO userUpdateRequestDTO) {
-        log.info("Updating user");
+        log.debug("Updating user");
 
         User user = getById(userUpdateRequestDTO.getId());
         boolean updated = false;
@@ -82,7 +82,7 @@ public class UserService implements IUserService {
      */
     @Transactional
     public void delete(Long id) {
-        log.info("Deleting user");
+        log.debug("Deleting user");
 
         userRepository.delete(getById(id));
     }
@@ -94,7 +94,7 @@ public class UserService implements IUserService {
      * @return the page of user get response DTOs
      */
     public Page<UserGetResponseDTO> get(Map<String, String> params) {
-        log.info("Getting users");
+        log.debug("Getting users");
 
         return userRepository.findAllWithCriteria(params).map(userMapper::toGetResponseDTO);
     }

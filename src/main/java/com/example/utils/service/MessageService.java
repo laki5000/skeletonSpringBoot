@@ -29,7 +29,7 @@ public class MessageService implements IMessageService {
      * @return the message
      */
     public String getMessage(String key) {
-        log.info("Getting message for key: {}", key);
+        log.debug("Getting message for key: {}", key);
 
         ServletRequestAttributes attributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

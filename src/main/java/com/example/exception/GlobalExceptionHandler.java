@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
      */
     public ResponseEntity<ErrorResponseDTO> handleException(
             Exception ex, String errorMessage, HttpStatus statusCode) {
-        log.error("Handling exception", ex);
+        log.error("Handling " + ex.getClass().getSimpleName() + ":", ex);
 
         ErrorResponseDTO errorResponse =
                 ErrorResponseDTO.builder()

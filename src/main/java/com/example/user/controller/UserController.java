@@ -39,7 +39,7 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequestDTO userCreateRequestDTO) {
-        log.info("Creating user");
+        log.info("api/v1/users - Creating user");
 
         return ResponseEntity.status(201)
                 .body(
@@ -57,7 +57,7 @@ public class UserController {
      */
     @PutMapping
     public ResponseEntity<?> update(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
-        log.info("Updating user");
+        log.info("api/v1/users - Updating user");
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
@@ -74,7 +74,7 @@ public class UserController {
      */
     @DeleteMapping
     public ResponseEntity<?> delete(@RequestParam Long id) {
-        log.info("Deleting user");
+        log.info("api/v1/users - Deleting user");
 
         userService.delete(id);
 
@@ -92,7 +92,7 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<?> get(@RequestParam Map<String, String> params) {
-        log.info("Getting users");
+        log.info("api/v1/users - Getting users");
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
