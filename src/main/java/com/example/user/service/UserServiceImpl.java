@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 @RequiredArgsConstructor
 @Service
-public class UserService implements IUserService {
+public class UserServiceImpl implements IUserService {
     private static final String UNKNOWN_USER = "unknown";
     private static final String ERROR_USER_NOT_MODIFIED = "error.user.not_modified";
     private static final String ERROR_USER_NOT_FOUND = "error.user.not_found";

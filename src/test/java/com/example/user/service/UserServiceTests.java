@@ -26,10 +26,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-/** Unit tests for {@link UserService}. */
+/** Unit tests for {@link UserServiceImpl}. */
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
-    @InjectMocks private UserService userService;
+    @InjectMocks private UserServiceImpl userService;
     @Mock private IMessageService messageService;
     @Mock private IUserRepository userRepository;
     @Mock private IUserMapper userMapper;

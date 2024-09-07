@@ -1,5 +1,7 @@
 package com.example.exception;
 
+import static org.springframework.http.HttpStatus.*;
+
 import com.example.utils.dto.response.ErrorResponseDTO;
 import com.example.utils.service.IMessageService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return handleException(ex, ex.getMessage(), INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -38,7 +40,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponseDTO> handleMyConflictException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.CONFLICT);
+        return handleException(ex, ex.getMessage(), CONFLICT);
     }
 
     /**
@@ -49,7 +51,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleMyNotFoundException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.NOT_FOUND);
+        return handleException(ex, ex.getMessage(), NOT_FOUND);
     }
 
     /**
@@ -60,7 +62,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotModifiedException.class)
     public ResponseEntity<ErrorResponseDTO> handleMyNotModifiedException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.NOT_MODIFIED);
+        return handleException(ex, ex.getMessage(), NOT_MODIFIED);
     }
 
     /**
@@ -71,7 +73,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(InvalidDateFormatException.class)
     public ResponseEntity<ErrorResponseDTO> handleMyInvalidDateFormatException(Exception ex) {
-        return handleException(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return handleException(ex, ex.getMessage(), BAD_REQUEST);
     }
 
     /**
@@ -89,7 +91,7 @@ public class GlobalExceptionHandler {
                 .getAllErrors()
                 .forEach((error) -> errorMessage.append(error.getDefaultMessage()).append(", "));
 
-        return handleException(ex, errorMessage.toString(), HttpStatus.BAD_REQUEST);
+        return handleException(ex, errorMessage.toString(), BAD_REQUEST);
     }
 
     /**

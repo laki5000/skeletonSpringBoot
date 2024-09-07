@@ -1,5 +1,7 @@
 package com.example.user.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.request.UserUpdateRequestDTO;
 import com.example.user.service.IUserService;
@@ -41,7 +43,7 @@ public class UserController {
     public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequestDTO userCreateRequestDTO) {
         log.info("api/v1/users - Creating user");
 
-        return ResponseEntity.status(201)
+        return ResponseEntity.status(CREATED)
                 .body(
                         SuccessResponseDTO.builder()
                                 .message(messageService.getMessage(SUCCESS_USER_CREATED))

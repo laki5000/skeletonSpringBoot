@@ -18,7 +18,7 @@ import org.springframework.web.servlet.LocaleResolver;
 @SuppressFBWarnings(
         value = "EI_EXPOSE_REP2",
         justification = "False positive - no mutable fields exposed")
-public class MessageService implements IMessageService {
+public class MessageServiceImpl implements IMessageService {
     private final MessageSource messageSource;
     private final LocaleResolver localeResolver;
 

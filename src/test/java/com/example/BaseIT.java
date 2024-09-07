@@ -15,7 +15,6 @@ import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 /** Superclass for integration tests. */
 @SpringBootTest
@@ -81,15 +80,23 @@ public abstract class BaseIT {
      * @param url the URL to post to
      * @param body the body of the request
      * @param statusCode the expected status code
+     * @param clazz the class of the object to return
      * @return the result of the request
+     * @param <T> the type of the object to return
      * @throws Exception if an error occurs
      */
-    protected MvcResult performPostAndExpect(String url, Object body, int statusCode)
+    protected <T> T performPostAndExpect(String url, Object body, int statusCode, Class<T> clazz)
             throws Exception {
-        return mockMvc.perform(
-                        post(url).contentType(MediaType.APPLICATION_JSON).content(toJson(body)))
-                .andExpect(status().is(statusCode))
-                .andReturn();
+        return fromJson(
+                mockMvc.perform(
+                                post(url)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content(toJson(body)))
+                        .andExpect(status().is(statusCode))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(),
+                clazz);
     }
 
     /**
@@ -98,15 +105,22 @@ public abstract class BaseIT {
      * @param url the URL to put to
      * @param body the body of the request
      * @param statusCode the expected status code
+     * @param clazz the class of the object to return
      * @return the result of the request
+     * @param <T> the type of the object to return
      * @throws Exception if an error occurs
      */
-    protected MvcResult performPutAndExpect(String url, Object body, int statusCode)
+    protected <T> T performPutAndExpect(String url, Object body, int statusCode, Class<T> clazz)
             throws Exception {
-        return mockMvc.perform(
-                        put(url).contentType(MediaType.APPLICATION_JSON).content(toJson(body)))
-                .andExpect(status().is(statusCode))
-                .andReturn();
+        return fromJson(
+                mockMvc.perform(
+                                put(url).contentType(MediaType.APPLICATION_JSON)
+                                        .content(toJson(body)))
+                        .andExpect(status().is(statusCode))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(),
+                clazz);
     }
 
     /**
@@ -114,11 +128,20 @@ public abstract class BaseIT {
      *
      * @param url the URL to delete
      * @param statusCode the expected status code
+     * @param clazz the class of the object to return
      * @return the result of the request
+     * @param <T> the type of the object to return
      * @throws Exception if an error occurs
      */
-    protected MvcResult performDeleteAndExpect(String url, int statusCode) throws Exception {
-        return mockMvc.perform(delete(url)).andExpect(status().is(statusCode)).andReturn();
+    protected <T> T performDeleteAndExpect(String url, int statusCode, Class<T> clazz)
+            throws Exception {
+        return fromJson(
+                mockMvc.perform(delete(url))
+                        .andExpect(status().is(statusCode))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(),
+                clazz);
     }
 
     /**
@@ -126,10 +149,19 @@ public abstract class BaseIT {
      *
      * @param url the URL to get
      * @param statusCode the expected status code
+     * @param clazz the class of the object to return
      * @return the result of the request
+     * @param <T> the type of the object to return
      * @throws Exception if an error occurs
      */
-    protected MvcResult performGetAndExpect(String url, int statusCode) throws Exception {
-        return mockMvc.perform(get(url)).andExpect(status().is(statusCode)).andReturn();
+    protected <T> T performGetAndExpect(String url, int statusCode, Class<T> clazz)
+            throws Exception {
+        return fromJson(
+                mockMvc.perform(get(url))
+                        .andExpect(status().is(statusCode))
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString(),
+                clazz);
     }
 }

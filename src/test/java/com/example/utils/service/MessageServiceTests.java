@@ -3,7 +3,6 @@ package com.example.utils.service;
 import static com.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +18,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 
-/** Unit tests for {@link MessageService}. */
+/** Unit tests for {@link MessageServiceImpl}. */
 @ExtendWith(MockitoExtension.class)
 public class MessageServiceTests {
-    @InjectMocks private MessageService messageService;
+    @InjectMocks private MessageServiceImpl messageService;
     @Mock private MessageSource messageSource;
     @Mock private LocaleResolver localeResolver;
     @Mock private HttpServletRequest request;

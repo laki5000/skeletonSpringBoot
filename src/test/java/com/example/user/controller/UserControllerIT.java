@@ -2,6 +2,7 @@ package com.example.user.controller;
 
 import static com.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.HttpStatus.*;
 
 import com.example.BaseIT;
 import com.example.user.dto.request.UserCreateRequestDTO;
@@ -17,8 +18,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /** Integration tests for {@link UserController}. */
 public class UserControllerIT extends BaseIT {
@@ -36,16 +37,18 @@ public class UserControllerIT extends BaseIT {
                         .build();
 
         // When
-        MvcResult result = performPostAndExpect(USER_API_URL, userCreateRequestDTO, 201);
+        SuccessResponseDTO response =
+                performPostAndExpect(
+                        USER_API_URL,
+                        userCreateRequestDTO,
+                        CREATED.value(),
+                        SuccessResponseDTO.class);
 
         // Then
-        SuccessResponseDTO successResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), SuccessResponseDTO.class);
-
-        assertNotNull(successResponseDTO);
+        assertNotNull(response);
 
         UserGetResponseDTO userGetResponseDTO =
-                fromJson(toJson(successResponseDTO.getData()), UserGetResponseDTO.class);
+                fromJson(toJson(response.getData()), UserGetResponseDTO.class);
 
         assertNotNull(userGetResponseDTO);
 
@@ -86,14 +89,16 @@ public class UserControllerIT extends BaseIT {
                         .build();
 
         // When
-        MvcResult result = performPostAndExpect(USER_API_URL, userCreateRequestDTO, 409);
+        ErrorResponseDTO result =
+                performPostAndExpect(
+                        USER_API_URL,
+                        userCreateRequestDTO,
+                        CONFLICT.value(),
+                        ErrorResponseDTO.class);
 
         // Then
-        ErrorResponseDTO errorResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), ErrorResponseDTO.class);
-
-        assertNotNull(errorResponseDTO);
-        assertEquals(409, errorResponseDTO.getErrorCode());
+        assertNotNull(result);
+        assertEquals(CONFLICT.value(), result.getErrorCode());
     }
 
     @Test
@@ -104,14 +109,16 @@ public class UserControllerIT extends BaseIT {
         UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().build();
 
         // When
-        MvcResult result = performPostAndExpect(USER_API_URL, userCreateRequestDTO, 400);
+        ErrorResponseDTO result =
+                performPostAndExpect(
+                        USER_API_URL,
+                        userCreateRequestDTO,
+                        BAD_REQUEST.value(),
+                        ErrorResponseDTO.class);
 
         // Then
-        ErrorResponseDTO errorResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), ErrorResponseDTO.class);
-
-        assertNotNull(errorResponseDTO);
-        assertEquals(400, errorResponseDTO.getErrorCode());
+        assertNotNull(result);
+        assertEquals(BAD_REQUEST.value(), result.getErrorCode());
     }
 
     @Test
@@ -130,17 +137,18 @@ public class UserControllerIT extends BaseIT {
                 UserUpdateRequestDTO.builder().password(TEST_PASSWORD2).build();
 
         // When
-        MvcResult result =
-                performPutAndExpect(USER_API_URL + "/" + user.getId(), userUpdateRequestDTO, 200);
+        SuccessResponseDTO result =
+                performPutAndExpect(
+                        USER_API_URL + "/" + user.getId(),
+                        userUpdateRequestDTO,
+                        OK.value(),
+                        SuccessResponseDTO.class);
 
         // Then
-        SuccessResponseDTO successResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), SuccessResponseDTO.class);
-
-        assertNotNull(successResponseDTO);
+        assertNotNull(result);
 
         UserGetResponseDTO userGetResponseDTO =
-                fromJson(toJson(successResponseDTO.getData()), UserGetResponseDTO.class);
+                fromJson(toJson(result.getData()), UserGetResponseDTO.class);
 
         assertNotNull(userGetResponseDTO);
 
@@ -171,15 +179,16 @@ public class UserControllerIT extends BaseIT {
                 UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
 
         // When
-        MvcResult result =
-                performPutAndExpect(USER_API_URL + "/" + TEST_ID, userUpdateRequestDTO, 404);
+        ErrorResponseDTO result =
+                performPutAndExpect(
+                        USER_API_URL + "/" + TEST_ID,
+                        userUpdateRequestDTO,
+                        NOT_FOUND.value(),
+                        ErrorResponseDTO.class);
 
         // Then
-        ErrorResponseDTO errorResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), ErrorResponseDTO.class);
-
-        assertNotNull(errorResponseDTO);
-        assertEquals(404, errorResponseDTO.getErrorCode());
+        assertNotNull(result);
+        assertEquals(NOT_FOUND.value(), result.getErrorCode());
     }
 
     @Test
@@ -198,15 +207,16 @@ public class UserControllerIT extends BaseIT {
                 UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
 
         // When
-        MvcResult result =
-                performPutAndExpect(USER_API_URL + "/" + user.getId(), userUpdateRequestDTO, 304);
+        ErrorResponseDTO result =
+                performPutAndExpect(
+                        USER_API_URL + "/" + user.getId(),
+                        userUpdateRequestDTO,
+                        NOT_MODIFIED.value(),
+                        ErrorResponseDTO.class);
 
         // Then
-        ErrorResponseDTO errorResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), ErrorResponseDTO.class);
-
-        assertNotNull(errorResponseDTO);
-        assertEquals(304, errorResponseDTO.getErrorCode());
+        assertNotNull(result);
+        assertEquals(NOT_MODIFIED.value(), result.getErrorCode());
     }
 
     @Test
@@ -217,15 +227,16 @@ public class UserControllerIT extends BaseIT {
         UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().build();
 
         // When
-        MvcResult result =
-                performPutAndExpect(USER_API_URL + "/" + TEST_ID, userUpdateRequestDTO, 400);
+        ErrorResponseDTO result =
+                performPutAndExpect(
+                        USER_API_URL + "/" + TEST_ID,
+                        userUpdateRequestDTO,
+                        BAD_REQUEST.value(),
+                        ErrorResponseDTO.class);
 
         // Then
-        ErrorResponseDTO errorResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), ErrorResponseDTO.class);
-
-        assertNotNull(errorResponseDTO);
-        assertEquals(400, errorResponseDTO.getErrorCode());
+        assertNotNull(result);
+        assertEquals(BAD_REQUEST.value(), result.getErrorCode());
     }
 
     @Test
@@ -242,13 +253,12 @@ public class UserControllerIT extends BaseIT {
                                 .build());
 
         // When
-        MvcResult result = performDeleteAndExpect(USER_API_URL + "/" + user.getId(), 200);
+        BaseResponseDTO result =
+                performDeleteAndExpect(
+                        USER_API_URL + "/" + user.getId(), OK.value(), BaseResponseDTO.class);
 
         // Then
-        BaseResponseDTO baseResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), BaseResponseDTO.class);
-
-        assertNotNull(baseResponseDTO);
+        assertNotNull(result);
         assertFalse(userRepository.existsById(user.getId()));
     }
 
@@ -259,14 +269,13 @@ public class UserControllerIT extends BaseIT {
         // Given
 
         // When
-        MvcResult result = performDeleteAndExpect(USER_API_URL + "/" + TEST_ID, 404);
+        ErrorResponseDTO result =
+                performDeleteAndExpect(
+                        USER_API_URL + "/" + TEST_ID, NOT_FOUND.value(), ErrorResponseDTO.class);
 
         // Then
-        ErrorResponseDTO errorResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), ErrorResponseDTO.class);
-
-        assertNotNull(errorResponseDTO);
-        assertEquals(404, errorResponseDTO.getErrorCode());
+        assertNotNull(result);
+        assertEquals(NOT_FOUND.value(), result.getErrorCode());
     }
 
     @Test
@@ -302,16 +311,13 @@ public class UserControllerIT extends BaseIT {
                         "asc");
 
         // When
-        MvcResult result = performGetAndExpect(url, 200);
+        SuccessResponseDTO result = performGetAndExpect(url, OK.value(), SuccessResponseDTO.class);
 
         // Then
-        SuccessResponseDTO successResponseDTO =
-                fromJson(result.getResponse().getContentAsString(), SuccessResponseDTO.class);
-
-        assertNotNull(successResponseDTO);
+        assertNotNull(result);
 
         Page<UserGetResponseDTO> userGetResponseDTOPage =
-                fromJsonToPage(toJson(successResponseDTO.getData()), UserGetResponseDTO.class);
+                fromJsonToPage(toJson(result.getData()), UserGetResponseDTO.class);
 
         assertNotNull(userGetResponseDTOPage);
         assertEquals(1, userGetResponseDTOPage.getTotalElements());
@@ -352,26 +358,19 @@ public class UserControllerIT extends BaseIT {
             int limit,
             String orderBy,
             String orderDirection) {
-        return USER_API_URL
-                + "?id="
-                + id
-                + "&username="
-                + username
-                + "&createdAt="
-                + createdAt.toString()
-                + "&updatedAt="
-                + updatedAt
-                + "&createdBy="
-                + createdBy
-                + "&updatedBy="
-                + updatedBy
-                + "&page="
-                + page
-                + "&limit="
-                + limit
-                + "&orderBy="
-                + orderBy
-                + "&orderDirection="
-                + orderDirection;
+        UriComponentsBuilder builder =
+                UriComponentsBuilder.fromUriString(USER_API_URL)
+                        .queryParam("id", id)
+                        .queryParam("username", username)
+                        .queryParam("createdAt", createdAt)
+                        .queryParam("updatedAt", updatedAt)
+                        .queryParam("createdBy", createdBy)
+                        .queryParam("updatedBy", updatedBy)
+                        .queryParam("page", page)
+                        .queryParam("limit", limit)
+                        .queryParam("orderBy", orderBy)
+                        .queryParam("orderDirection", orderDirection);
+
+        return builder.toUriString();
     }
 }
