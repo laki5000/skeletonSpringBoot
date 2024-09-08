@@ -76,6 +76,28 @@ public class UserServiceTests {
     }
 
     @Test
+    @DisplayName("Tests the successful retrieval of users.")
+    void get_Success() {
+        // Given
+        List<FilteringDTO> filteringDTOList = List.of(FilteringDTO.builder().build());
+        User user = User.builder().build();
+        UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
+
+        when(userRepository.findAllWithCriteria(filteringDTOList))
+                .thenReturn(new PageImpl<>(List.of(user)));
+        when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
+
+        // When
+        Page<UserGetResponseDTO> result = userService.get(filteringDTOList);
+
+        // Then
+        assertEquals(List.of(userGetResponseDTO), result.getContent());
+
+        verify(userRepository).findAllWithCriteria(filteringDTOList);
+        verify(userMapper).toGetResponseDTO(user);
+    }
+
+    @Test
     @DisplayName("Tests the successful update of a user.")
     void update_Success() {
         // Given
@@ -160,27 +182,5 @@ public class UserServiceTests {
         assertThrows(NotFoundException.class, () -> userService.delete(TEST_ID));
 
         verify(userRepository).findById(TEST_ID);
-    }
-
-    @Test
-    @DisplayName("Tests the successful retrieval of users.")
-    void get_Success() {
-        // Given
-        List<FilteringDTO> filteringDTOList = List.of(FilteringDTO.builder().build());
-        User user = User.builder().build();
-        UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
-
-        when(userRepository.findAllWithCriteria(filteringDTOList))
-                .thenReturn(new PageImpl<>(List.of(user)));
-        when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
-
-        // When
-        Page<UserGetResponseDTO> result = userService.get(filteringDTOList);
-
-        // Then
-        assertEquals(List.of(userGetResponseDTO), result.getContent());
-
-        verify(userRepository).findAllWithCriteria(filteringDTOList);
-        verify(userMapper).toGetResponseDTO(user);
     }
 }

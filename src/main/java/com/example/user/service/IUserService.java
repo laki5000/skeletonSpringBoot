@@ -19,6 +19,14 @@ public interface IUserService {
     UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO);
 
     /**
+     * Gets users.
+     *
+     * @param filteringDTOList the search parameters
+     * @return the page of user get response DTOs
+     */
+    Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList);
+
+    /**
      * Updates an existing user.
      *
      * @param id the id of the user to update
@@ -33,12 +41,4 @@ public interface IUserService {
      * @param id the id of the user to delete
      */
     void delete(Long id);
-
-    /**
-     * Gets users.
-     *
-     * @param filteringDTOList the search parameters
-     * @return the page of user get response DTOs
-     */
-    Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList);
 }

@@ -50,6 +50,20 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
+     * Gets users.
+     *
+     * @param filteringDTOList the search parameters
+     * @return the page of user get response DTOs
+     */
+    public Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList) {
+        log.debug("Getting users");
+
+        return userRepository
+                .findAllWithCriteria(filteringDTOList)
+                .map(userMapper::toGetResponseDTO);
+    }
+
+    /**
      * Updates an existing user.
      *
      * @param id the id of the user to update
@@ -90,20 +104,6 @@ public class UserServiceImpl implements IUserService {
         log.debug("Deleting user");
 
         userRepository.delete(getById(id));
-    }
-
-    /**
-     * Gets users.
-     *
-     * @param filteringDTOList the search parameters
-     * @return the page of user get response DTOs
-     */
-    public Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList) {
-        log.debug("Getting users");
-
-        return userRepository
-                .findAllWithCriteria(filteringDTOList)
-                .map(userMapper::toGetResponseDTO);
     }
 
     /**
