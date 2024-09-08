@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     private final IMessageService messageService;
 
     /**
-     * Handle generic exception.
+     * Handle generic exceptions.
      *
      * @param ex the Exception to handle
      * @return the response entity
@@ -33,51 +33,51 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handle ConflictException.
+     * Handle conflict exceptions.
      *
      * @param ex the ConflictException to handle
      * @return the response entity
      */
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMyConflictException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleConflictExceptions(Exception ex) {
         return handleException(ex, ex.getMessage(), CONFLICT);
     }
 
     /**
-     * Handle NotFoundException.
+     * Handle not found exceptions.
      *
      * @param ex the NotFoundException to handle
      * @return the response entity
      */
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMyNotFoundException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleNotFoundExceptions(Exception ex) {
         return handleException(ex, ex.getMessage(), NOT_FOUND);
     }
 
     /**
-     * Handle NotModifiedException.
+     * Handle not modified exceptions.
      *
      * @param ex the NotModifiedException to handle
      * @return the response entity
      */
     @ExceptionHandler(NotModifiedException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMyNotModifiedException(Exception ex) {
+    public ResponseEntity<ErrorResponseDTO> handleNotModifiedExceptions(Exception ex) {
         return handleException(ex, ex.getMessage(), NOT_MODIFIED);
     }
 
     /**
-     * Handle InvalidDateFormatException.
+     * Handle bad request exceptions.
      *
-     * @param ex the InvalidDateFormatException to handle
+     * @param ex the InvalidDateFormatException, InvalidFilterException to handle
      * @return the response entity
      */
-    @ExceptionHandler(InvalidDateFormatException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMyInvalidDateFormatException(Exception ex) {
+    @ExceptionHandler({InvalidDateFormatException.class, InvalidFilterException.class})
+    public ResponseEntity<ErrorResponseDTO> handleBadRequestExceptions(Exception ex) {
         return handleException(ex, ex.getMessage(), BAD_REQUEST);
     }
 
     /**
-     * Handle MethodArgumentNotValidException.
+     * Handle validation exceptions.
      *
      * @param ex MethodArgumentNotValidException to handle
      * @return the response entity

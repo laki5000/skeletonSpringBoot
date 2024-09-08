@@ -1,6 +1,7 @@
 package com.example.user.controller;
 
 import static com.example.Constants.*;
+import static com.example.utils.enums.FilterOperator.EQUALS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -10,16 +11,17 @@ import com.example.user.dto.request.UserUpdateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.model.User;
 import com.example.user.repository.IUserRepository;
+import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.ErrorResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
-import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /** Integration tests for {@link UserController}. */
 public class UserControllerIT extends BaseIT {
@@ -55,19 +57,14 @@ public class UserControllerIT extends BaseIT {
         User user = userRepository.findById(userGetResponseDTO.getId()).orElse(null);
 
         assertNotNull(user);
-        assertEquals(TEST_USERNAME, user.getUsername());
-        assertEquals(TEST_PASSWORD, user.getPassword());
-        assertEquals("unknown", user.getCreatedBy());
-        assertNull(user.getUpdatedBy());
-        assertNotNull(user.getCreatedAt());
-        assertNotNull(user.getUpdatedAt());
-        assertEquals(TEST_USERNAME, userGetResponseDTO.getUsername());
-        assertEquals("unknown", userGetResponseDTO.getCreatedBy());
-        assertNull(userGetResponseDTO.getUpdatedBy());
-        assertNotNull(userGetResponseDTO.getCreatedAt());
-        assertNotNull(userGetResponseDTO.getUpdatedAt());
-        assertEquals(user.getCreatedAt(), userGetResponseDTO.getCreatedAt());
-        assertEquals(user.getUpdatedAt(), userGetResponseDTO.getUpdatedAt());
+        assertUserProperties(
+                userGetResponseDTO.getId(),
+                TEST_USERNAME,
+                TEST_PASSWORD,
+                userGetResponseDTO.getCreatedBy(),
+                userGetResponseDTO.getUpdatedBy(),
+                user);
+        assertUserProperties(user, userGetResponseDTO);
     }
 
     @Test
@@ -122,6 +119,129 @@ public class UserControllerIT extends BaseIT {
     }
 
     @Test
+    @DisplayName("Tests the successful retrieval of a user")
+    @Transactional
+    void get_Success() throws Exception {
+        // Given
+        User user =
+                userRepository.save(
+                        User.builder()
+                                .username(TEST_USERNAME)
+                                .password(TEST_PASSWORD)
+                                .createdBy(TEST_USERNAME)
+                                .build());
+
+        userRepository.save(
+                User.builder()
+                        .username(TEST_USERNAME2)
+                        .password(TEST_PASSWORD2)
+                        .createdBy(TEST_USERNAME2)
+                        .build());
+
+        List<FilteringDTO> filteringDTOList =
+                List.of(
+                        FilteringDTO.builder().field(PAGE).value("0").build(),
+                        FilteringDTO.builder().field(LIMIT).value("10").build(),
+                        FilteringDTO.builder().field(ORDER_BY).value(ID).build(),
+                        FilteringDTO.builder().field(ORDER_DIRECTION).value(ASC).build(),
+                        FilteringDTO.builder()
+                                .field(ID)
+                                .operator(EQUALS)
+                                .value(user.getId().toString())
+                                .build(),
+                        FilteringDTO.builder()
+                                .field(USERNAME)
+                                .operator(EQUALS)
+                                .value(user.getUsername())
+                                .build(),
+                        FilteringDTO.builder()
+                                .field(CREATED_AT)
+                                .operator(EQUALS)
+                                .value(user.getCreatedAt().toString())
+                                .build(),
+                        FilteringDTO.builder()
+                                .field(UPDATED_AT)
+                                .operator(EQUALS)
+                                .value(user.getUpdatedAt().toString())
+                                .build(),
+                        FilteringDTO.builder()
+                                .field(CREATED_BY)
+                                .operator(EQUALS)
+                                .value(user.getCreatedBy())
+                                .build());
+
+        // When
+        SuccessResponseDTO result =
+                performPostAndExpect(
+                        USER_API_URL + "/get",
+                        filteringDTOList,
+                        OK.value(),
+                        SuccessResponseDTO.class);
+
+        // Then
+        assertNotNull(result);
+
+        Page<UserGetResponseDTO> userGetResponseDTOPage =
+                fromJsonToPage(toJson(result.getData()), UserGetResponseDTO.class);
+
+        assertNotNull(userGetResponseDTOPage);
+        assertEquals(1, userGetResponseDTOPage.getTotalElements());
+
+        UserGetResponseDTO userGetResponseDTO = userGetResponseDTOPage.getContent().get(0);
+
+        assertNotNull(userGetResponseDTO);
+        assertUserProperties(user, userGetResponseDTO);
+    }
+
+    @Test
+    @DisplayName(
+            "Tests the unsuccessful retrieval of a user due to invalid date format in the filter")
+    @Transactional
+    void get_InvalidDateFormat() throws Exception {
+        // Given
+        List<FilteringDTO> filteringDTOList =
+                Collections.singletonList(
+                        FilteringDTO.builder()
+                                .field(CREATED_AT)
+                                .operator(EQUALS)
+                                .value(TEST_INVALID_DATE)
+                                .build());
+
+        // When
+        ErrorResponseDTO result =
+                performPostAndExpect(
+                        USER_API_URL + "/get",
+                        filteringDTOList,
+                        BAD_REQUEST.value(),
+                        ErrorResponseDTO.class);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(BAD_REQUEST.value(), result.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("Tests the unsuccessful retrieval of a user due to invalid filter")
+    @Transactional
+    void get_InvalidFilter() throws Exception {
+        // Given
+        List<FilteringDTO> filteringDTOList =
+                Collections.singletonList(FilteringDTO.builder().build());
+
+        // When
+        ErrorResponseDTO result =
+                performPostAndExpect(
+                        USER_API_URL + "/get",
+                        filteringDTOList,
+                        BAD_REQUEST.value(),
+                        ErrorResponseDTO.class);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(BAD_REQUEST.value(), result.getErrorCode());
+    }
+
+    @Test
     @DisplayName("Tests the successful update of a user")
     @Transactional
     void update_Success() throws Exception {
@@ -155,19 +275,14 @@ public class UserControllerIT extends BaseIT {
         user = userRepository.findById(userGetResponseDTO.getId()).orElse(null);
 
         assertNotNull(user);
-        assertEquals(TEST_USERNAME, user.getUsername());
-        assertEquals(TEST_PASSWORD2, user.getPassword());
-        assertEquals(TEST_USERNAME, user.getCreatedBy());
-        assertEquals("unknown", user.getUpdatedBy());
-        assertNotNull(user.getCreatedAt());
-        assertNotNull(user.getUpdatedAt());
-        assertEquals(TEST_USERNAME, userGetResponseDTO.getUsername());
-        assertEquals(TEST_USERNAME, userGetResponseDTO.getCreatedBy());
-        assertEquals("unknown", userGetResponseDTO.getUpdatedBy());
-        assertNotNull(userGetResponseDTO.getCreatedAt());
-        assertNotNull(userGetResponseDTO.getUpdatedAt());
-        assertEquals(user.getCreatedAt(), userGetResponseDTO.getCreatedAt());
-        assertEquals(user.getUpdatedAt(), userGetResponseDTO.getUpdatedAt());
+        assertUserProperties(
+                userGetResponseDTO.getId(),
+                TEST_USERNAME,
+                TEST_PASSWORD2,
+                TEST_USERNAME,
+                UNKNOWN,
+                user);
+        assertUserProperties(user, userGetResponseDTO);
     }
 
     @Test
@@ -278,99 +393,44 @@ public class UserControllerIT extends BaseIT {
         assertEquals(NOT_FOUND.value(), result.getErrorCode());
     }
 
-    @Test
-    @DisplayName("Tests the successful retrieval of users")
-    @Transactional
-    void get_Success() throws Exception {
-        // Given
-        userRepository.save(
-                User.builder()
-                        .username(TEST_USERNAME)
-                        .password(TEST_PASSWORD)
-                        .createdBy(TEST_USERNAME)
-                        .build());
-
-        User user =
-                userRepository.save(
-                        User.builder()
-                                .username(TEST_USERNAME2)
-                                .password(TEST_PASSWORD2)
-                                .createdBy(TEST_USERNAME2)
-                                .build());
-        String url =
-                getUrlWithParams(
-                        user.getId(),
-                        TEST_USERNAME2,
-                        user.getCreatedAt(),
-                        user.getUpdatedAt(),
-                        TEST_USERNAME,
-                        "",
-                        0,
-                        10,
-                        "id",
-                        "asc");
-
-        // When
-        SuccessResponseDTO result = performGetAndExpect(url, OK.value(), SuccessResponseDTO.class);
-
-        // Then
-        assertNotNull(result);
-
-        Page<UserGetResponseDTO> userGetResponseDTOPage =
-                fromJsonToPage(toJson(result.getData()), UserGetResponseDTO.class);
-
-        assertNotNull(userGetResponseDTOPage);
-        assertEquals(1, userGetResponseDTOPage.getTotalElements());
-
-        UserGetResponseDTO userGetResponseDTO = userGetResponseDTOPage.getContent().get(0);
-
-        assertEquals(user.getId(), userGetResponseDTO.getId());
-        assertEquals(TEST_USERNAME2, userGetResponseDTO.getUsername());
-        assertEquals(user.getCreatedAt(), userGetResponseDTO.getCreatedAt());
-        assertEquals(user.getUpdatedAt(), userGetResponseDTO.getUpdatedAt());
-        assertEquals(TEST_USERNAME2, userGetResponseDTO.getCreatedBy());
-        assertNull(userGetResponseDTO.getUpdatedBy());
+    /**
+     * Asserts the properties of the given user.
+     *
+     * @param id The expected ID
+     * @param username The expected username
+     * @param password The expected password
+     * @param createdBy The expected createdBy
+     * @param updatedBy The expected updatedBy
+     * @param user The user to check
+     */
+    private void assertUserProperties(
+            Long id,
+            String username,
+            String password,
+            String createdBy,
+            String updatedBy,
+            User user) {
+        assertEquals(id, user.getId());
+        assertEquals(username, user.getUsername());
+        assertEquals(password, user.getPassword());
+        assertEquals(createdBy, user.getCreatedBy());
+        assertEquals(updatedBy, user.getUpdatedBy());
+        assertNotNull(user.getCreatedAt());
+        assertNotNull(user.getUpdatedAt());
     }
 
     /**
-     * Returns the URL with the specified parameters.
+     * Asserts the properties of the given user.
      *
-     * @param id the ID
-     * @param username the username
-     * @param createdAt the created at
-     * @param updatedAt the updated at
-     * @param createdBy the created by
-     * @param updatedBy the updated by
-     * @param page the page
-     * @param limit the limit
-     * @param orderBy the order by
-     * @param orderDirection the order direction
-     * @return the URL with the specified parameters
+     * @param user The user with the expected properties
+     * @param dto The DTO to check
      */
-    private String getUrlWithParams(
-            long id,
-            String username,
-            Instant createdAt,
-            Instant updatedAt,
-            String createdBy,
-            String updatedBy,
-            int page,
-            int limit,
-            String orderBy,
-            String orderDirection) {
-        UriComponentsBuilder builder =
-                UriComponentsBuilder.fromUriString(USER_API_URL)
-                        .queryParam("id", id)
-                        .queryParam("username", username)
-                        .queryParam("createdAt", createdAt)
-                        .queryParam("updatedAt", updatedAt)
-                        .queryParam("createdBy", createdBy)
-                        .queryParam("updatedBy", updatedBy)
-                        .queryParam("page", page)
-                        .queryParam("limit", limit)
-                        .queryParam("orderBy", orderBy)
-                        .queryParam("orderDirection", orderDirection);
-
-        return builder.toUriString();
+    private void assertUserProperties(User user, UserGetResponseDTO dto) {
+        assertEquals(user.getId(), dto.getId());
+        assertEquals(user.getUsername(), dto.getUsername());
+        assertEquals(user.getCreatedBy(), dto.getCreatedBy());
+        assertEquals(user.getUpdatedBy(), dto.getUpdatedBy());
+        assertEquals(user.getCreatedAt(), dto.getCreatedAt());
+        assertEquals(user.getUpdatedAt(), dto.getUpdatedAt());
     }
 }

@@ -9,8 +9,9 @@ import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.mapper.IUserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.IUserRepository;
+import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.service.IMessageService;
-import java.util.Map;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements IUserService {
      *
      * @param userCreateRequestDTO the user create request DTO containing the user's details
      * @return the user get response DTO
+     * @throws ConflictException if the username already exists
      */
     @Transactional
     public UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
@@ -54,6 +56,7 @@ public class UserServiceImpl implements IUserService {
      * @param userUpdateRequestDTO the user update request DTO containing the user's details
      * @return the user get response DTO
      * @throws NotModifiedException if the user is not modified
+     * @throws NotFoundException if the user is not found
      */
     @Transactional
     public UserGetResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO) {
@@ -80,6 +83,7 @@ public class UserServiceImpl implements IUserService {
      * Deletes a user.
      *
      * @param id the id of the user to delete
+     * @throws NotFoundException if the user is not found
      */
     @Transactional
     public void delete(Long id) {
@@ -91,13 +95,15 @@ public class UserServiceImpl implements IUserService {
     /**
      * Gets users.
      *
-     * @param params the search parameters
+     * @param filteringDTOList the search parameters
      * @return the page of user get response DTOs
      */
-    public Page<UserGetResponseDTO> get(Map<String, String> params) {
+    public Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList) {
         log.debug("Getting users");
 
-        return userRepository.findAllWithCriteria(params).map(userMapper::toGetResponseDTO);
+        return userRepository
+                .findAllWithCriteria(filteringDTOList)
+                .map(userMapper::toGetResponseDTO);
     }
 
     /**

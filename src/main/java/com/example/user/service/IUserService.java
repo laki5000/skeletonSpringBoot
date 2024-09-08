@@ -3,7 +3,8 @@ package com.example.user.service;
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.request.UserUpdateRequestDTO;
 import com.example.user.dto.response.UserGetResponseDTO;
-import java.util.Map;
+import com.example.utils.dto.request.FilteringDTO;
+import java.util.List;
 import org.springframework.data.domain.Page;
 
 /** Service interface for managing user-related operations. */
@@ -36,8 +37,8 @@ public interface IUserService {
     /**
      * Gets users.
      *
-     * @param params the search parameters
+     * @param filteringDTOList the search parameters
      * @return the page of user get response DTOs
      */
-    Page<UserGetResponseDTO> get(Map<String, String> params);
+    Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList);
 }

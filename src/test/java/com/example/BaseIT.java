@@ -143,25 +143,4 @@ public abstract class BaseIT {
                         .getContentAsString(),
                 clazz);
     }
-
-    /**
-     * Performs a GET request and expects the specified status code.
-     *
-     * @param url the URL to get
-     * @param statusCode the expected status code
-     * @param clazz the class of the object to return
-     * @return the result of the request
-     * @param <T> the type of the object to return
-     * @throws Exception if an error occurs
-     */
-    protected <T> T performGetAndExpect(String url, int statusCode, Class<T> clazz)
-            throws Exception {
-        return fromJson(
-                mockMvc.perform(get(url))
-                        .andExpect(status().is(statusCode))
-                        .andReturn()
-                        .getResponse()
-                        .getContentAsString(),
-                clazz);
-    }
 }

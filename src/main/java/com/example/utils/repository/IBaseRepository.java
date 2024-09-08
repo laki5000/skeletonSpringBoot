@@ -1,6 +1,9 @@
 package com.example.utils.repository;
 
 import com.example.exception.InvalidDateFormatException;
+import com.example.exception.InvalidFilterException;
+import com.example.utils.dto.request.FilteringDTO;
+import com.example.utils.enums.FilterOperator;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
@@ -9,7 +12,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,71 +30,158 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface IBaseRepository<T, ID extends Serializable>
         extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
+    String PAGE = "page";
+    String LIMIT = "limit";
+    String ORDER_BY = "orderBy";
+    String ORDER_DIRECTION = "orderDirection";
+    String ASC = "asc";
+    String DESC = "desc";
+    String PASSWORD = "password";
+    String ID = "id";
+
+    String STRING = "String";
+    String INSTANT = "Instant";
+    String LONG = "Long";
+
     String DATE_REGEX = "\\d{4}-\\d{2}-\\d{2}";
     String DATE_TIME_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}";
     String DATE_TIME_WITH_MILLIS_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z";
+    String UTC = "UTC";
 
-    DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    DateTimeFormatter DATE_TIME_WITH_MILLIS_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    String INVALID_FILTER_MESSAGE = "Invalid filter";
+    String INVALID_DATE_FORMAT_MESSAGE =
+            "expected formats: yyyy-MM-dd, yyyy-MM-ddTHH:mm:ss, yyyy-MM-ddTHH:mm:ss.SSSSSSZ, received: ";
 
     /**
      * Find all entities with criteria.
      *
-     * @param params the search parameters
+     * @param filteringDTOList the search parameters
      * @return page of entities
+     * @throws InvalidDateFormatException if the date format is invalid
+     * @throws InvalidFilterException if the filter is invalid
      */
-    default Page<T> findAllWithCriteria(Map<String, String> params) {
-        int page = getIntParam(params, "page", 0);
-        int limit = getIntParam(params, "limit", 10);
-        String orderBy = params.getOrDefault("orderBy", "id");
-        String orderDirection = params.getOrDefault("orderDirection", "asc");
+    default Page<T> findAllWithCriteria(List<FilteringDTO> filteringDTOList) {
+        int page = getIntParamAndRemove(filteringDTOList, PAGE, 0);
+        int limit = getIntParamAndRemove(filteringDTOList, LIMIT, 10);
+        String orderBy = getParamAndRemove(filteringDTOList, ORDER_BY, ID);
+        String orderDirection = getParamAndRemove(filteringDTOList, ORDER_DIRECTION, ASC);
 
-        Arrays.asList("page", "limit", "orderBy", "orderDirection", "password")
-                .forEach(params.keySet()::remove);
+        removeParam(filteringDTOList, PASSWORD);
 
         Pageable pageable = PageRequest.of(page, limit);
-        Specification<T> spec = buildSpecification(params, orderBy, orderDirection);
+        Specification<T> spec = buildSpecification(filteringDTOList, orderBy, orderDirection);
 
         return findAll(spec, pageable);
     }
 
     /**
+     * Get an integer parameter and remove it from the list.
+     *
+     * @param filteringDTOList the search parameters
+     * @param key the parameter key
+     * @param defaultValue the default value
+     * @return the integer value
+     */
+    private int getIntParamAndRemove(
+            List<FilteringDTO> filteringDTOList, String key, int defaultValue) {
+        return filteringDTOList == null
+                ? defaultValue
+                : filteringDTOList.stream()
+                        .filter(filteringDTO -> key.equals(filteringDTO.getField()))
+                        .findFirst()
+                        .map(
+                                filteringDTO -> {
+                                    removeParam(filteringDTOList, key);
+
+                                    return Integer.parseInt(filteringDTO.getValue());
+                                })
+                        .orElse(defaultValue);
+    }
+
+    /**
+     * Get a string parameter and remove it from the list.
+     *
+     * @param filteringDTOList the search parameters
+     * @param key the parameter key
+     * @param defaultValue the default value
+     * @return the string value
+     */
+    private String getParamAndRemove(
+            List<FilteringDTO> filteringDTOList, String key, String defaultValue) {
+        return filteringDTOList == null
+                ? defaultValue
+                : filteringDTOList.stream()
+                        .filter(filteringDTO -> key.equals(filteringDTO.getField()))
+                        .findFirst()
+                        .map(
+                                filteringDTO -> {
+                                    removeParam(filteringDTOList, key);
+
+                                    return filteringDTO.getValue();
+                                })
+                        .orElse(defaultValue);
+    }
+
+    /**
+     * Remove a parameter from the list.
+     *
+     * @param filteringDTOList the search parameters
+     * @param key the parameter key
+     */
+    private void removeParam(List<FilteringDTO> filteringDTOList, String key) {
+        if (filteringDTOList != null) {
+            filteringDTOList.removeIf(filteringDTO -> key.equals(filteringDTO.getField()));
+        }
+    }
+
+    /**
      * Build a specification.
      *
-     * @param params the search parameters
+     * @param filteringDTOList the search parameters
      * @param orderBy the field to order by
      * @param orderDirection the order direction
      * @return the specification
      * @throws InvalidDateFormatException if the date format is invalid
+     * @throws InvalidFilterException if the filter is invalid
      */
-    default Specification<T> buildSpecification(
-            Map<String, String> params, String orderBy, String orderDirection) {
+    private Specification<T> buildSpecification(
+            List<FilteringDTO> filteringDTOList, String orderBy, String orderDirection) {
         return (root, query, criteriaBuilder) -> {
+            if (filteringDTOList == null) {
+                return criteriaBuilder.conjunction();
+            }
+
             List<Predicate> predicates = new ArrayList<>();
 
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
+            for (FilteringDTO filter : filteringDTOList) {
+                String key = filter.getField();
+                String value = filter.getValue();
+                FilterOperator operator = filter.getOperator();
+                String otherValue = filter.getOtherValue();
 
-                if (isNullOrEmpty(value)) {
-                    continue;
+                if (isNullOrEmpty(value) || isNullOrEmpty(key) || operator == null) {
+                    throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
                 }
 
                 Class<?> javaType = root.get(key).getJavaType();
-                if (javaType.equals(String.class)) {
-                    predicates.add(criteriaBuilder.like(root.get(key), value + "%"));
-                } else if (javaType.equals(Instant.class)) {
-                    predicates.add(handleDatePredicate(root, criteriaBuilder, key, value));
-                } else {
-                    predicates.add(criteriaBuilder.equal(root.get(key), value));
+
+                switch (javaType.getSimpleName()) {
+                    case STRING -> predicates.add(
+                            buildStringPredicate(criteriaBuilder, root, key, value, operator));
+                    case INSTANT -> predicates.add(
+                            buildDatePredicate(
+                                    criteriaBuilder, root, key, value, operator, otherValue));
+                    case LONG -> predicates.add(
+                            buildLongPredicate(
+                                    criteriaBuilder, root, key, value, operator, otherValue));
+                    default -> throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
                 }
             }
 
             if (orderBy != null && orderDirection != null) {
-                if ("asc".equalsIgnoreCase(orderDirection)) {
+                if (ASC.equalsIgnoreCase(orderDirection)) {
                     query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
-                } else if ("desc".equalsIgnoreCase(orderDirection)) {
+                } else if (DESC.equalsIgnoreCase(orderDirection)) {
                     query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
                 }
             }
@@ -102,52 +191,80 @@ public interface IBaseRepository<T, ID extends Serializable>
     }
 
     /**
-     * Handle date predicate construction.
+     * Build a predicate for a string field.
      *
-     * @param root the root type in the from clause
-     * @param criteriaBuilder used to construct criteria queries
-     * @param key the field name
-     * @param value the field value
-     * @return a predicate for the date
-     * @throws InvalidDateFormatException if the date format is invalid
+     * @param criteriaBuilder the criteria builder
+     * @param root the root
+     * @param key the field key
+     * @param value the value
+     * @param operator the operator
+     * @return the predicate
+     * @throws InvalidFilterException if the filter is invalid
      */
-    private Predicate handleDatePredicate(
-            Root<T> root, CriteriaBuilder criteriaBuilder, String key, String value)
-            throws InvalidDateFormatException {
-        if (!value.matches(DATE_REGEX)
-                && !value.matches(DATE_TIME_REGEX)
-                && !value.matches(DATE_TIME_WITH_MILLIS_REGEX)) {
-            throw new InvalidDateFormatException(
-                    "expected formats: yyyy-MM-dd, yyyy-MM-ddTHH:mm:ss, yyyy-MM-ddTHH:mm:ss.SSSSSSZ, received: "
-                            + value);
-        }
-
-        String formattedValue = value;
-        if (value.matches(DATE_TIME_WITH_MILLIS_REGEX)) {
-            ZonedDateTime zonedDateTime = ZonedDateTime.parse(value);
-            LocalDateTime localDateTime =
-                    zonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
-            formattedValue = localDateTime.format(DATE_TIME_WITH_MILLIS_FORMATTER);
-        } else if (value.matches(DATE_TIME_REGEX)) {
-            LocalDateTime localDateTime = LocalDateTime.parse(value);
-            formattedValue = localDateTime.format(DATE_TIME_FORMATTER);
-        }
-
-        return criteriaBuilder.like(root.get(key).as(String.class), formattedValue + "%");
+    private Predicate buildStringPredicate(
+            CriteriaBuilder criteriaBuilder,
+            Root<T> root,
+            String key,
+            String value,
+            FilterOperator operator) {
+        return switch (operator) {
+            case EQUALS -> criteriaBuilder.equal(
+                    criteriaBuilder.lower(root.get(key)), value.toLowerCase());
+            case CONTAINS -> criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get(key)), "%" + value.toLowerCase() + "%");
+            case STARTS_WITH -> criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get(key)), value.toLowerCase() + "%");
+            case ENDS_WITH -> criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get(key)), "%" + value.toLowerCase());
+            case NOT_EQUALS -> criteriaBuilder.notEqual(
+                    criteriaBuilder.lower(root.get(key)), value.toLowerCase());
+            default -> throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+        };
     }
 
     /**
-     * Retrieve an integer parameter from the map, with a default value.
+     * Build a predicate for a date field.
      *
-     * @param params the parameter map
-     * @param key the parameter key
-     * @param defaultValue the default value if the key is not found or empty
-     * @return the integer value
+     * @param criteriaBuilder the criteria builder
+     * @param root the root
+     * @param key the field key
+     * @param value the value
+     * @param operator the operator
+     * @param otherValue the other value
+     * @return the predicate
+     * @throws InvalidFilterException if the filter is invalid
+     * @throws InvalidDateFormatException if the date format is invalid
      */
-    private int getIntParam(Map<String, String> params, String key, int defaultValue) {
-        return params.get(key) != null && !params.get(key).isEmpty()
-                ? Integer.parseInt(params.get(key))
-                : defaultValue;
+    private Predicate buildDatePredicate(
+            CriteriaBuilder criteriaBuilder,
+            Root<T> root,
+            String key,
+            String value,
+            FilterOperator operator,
+            String otherValue)
+            throws InvalidFilterException {
+        Instant parsedValue = parseDate(value);
+
+        switch (operator) {
+            case EQUALS:
+                return criteriaBuilder.equal(root.get(key), parsedValue);
+            case GREATER_THAN:
+                return criteriaBuilder.greaterThan(root.get(key), parsedValue);
+            case LESS_THAN:
+                return criteriaBuilder.lessThan(root.get(key), parsedValue);
+            case BETWEEN:
+                if (isNullOrEmpty(otherValue)) {
+                    throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+                }
+
+                Instant parsedOtherValue = parseDate(otherValue);
+
+                return criteriaBuilder.between(root.get(key), parsedValue, parsedOtherValue);
+            case NOT_EQUALS:
+                return criteriaBuilder.notEqual(root.get(key), parsedValue);
+            default:
+                throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+        }
     }
 
     /**
@@ -158,5 +275,67 @@ public interface IBaseRepository<T, ID extends Serializable>
      */
     private boolean isNullOrEmpty(String value) {
         return value == null || value.isEmpty();
+    }
+
+    /**
+     * Build a predicate for a long field.
+     *
+     * @param criteriaBuilder the criteria builder
+     * @param root the root
+     * @param key the field key
+     * @param value the value
+     * @param operator the operator
+     * @param otherValue the other value
+     * @return the predicate
+     * @throws InvalidFilterException if the filter is invalid
+     */
+    private Predicate buildLongPredicate(
+            CriteriaBuilder criteriaBuilder,
+            Root<T> root,
+            String key,
+            String value,
+            FilterOperator operator,
+            String otherValue)
+            throws InvalidFilterException {
+        Long parsedValue = Long.parseLong(value);
+        switch (operator) {
+            case EQUALS:
+                return criteriaBuilder.equal(root.get(key), parsedValue);
+            case GREATER_THAN:
+                return criteriaBuilder.greaterThan(root.get(key), parsedValue);
+            case LESS_THAN:
+                return criteriaBuilder.lessThan(root.get(key), parsedValue);
+            case BETWEEN:
+                if (isNullOrEmpty(otherValue)) {
+                    throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+                }
+
+                Long parsedOtherValue = Long.parseLong(otherValue);
+
+                return criteriaBuilder.between(root.get(key), parsedValue, parsedOtherValue);
+            case NOT_EQUALS:
+                return criteriaBuilder.notEqual(root.get(key), parsedValue);
+            default:
+                throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+        }
+    }
+
+    /**
+     * Parse a date string into an Instant.
+     *
+     * @param value the date string
+     * @return the date as an Instant
+     * @throws InvalidDateFormatException if the date format is invalid
+     */
+    private Instant parseDate(String value) throws InvalidDateFormatException {
+        if (value.matches(DATE_REGEX)) {
+            return LocalDateTime.parse(value + "T00:00:00").atZone(ZoneId.of(UTC)).toInstant();
+        } else if (value.matches(DATE_TIME_REGEX)) {
+            return LocalDateTime.parse(value).atZone(ZoneId.of(UTC)).toInstant();
+        } else if (value.matches(DATE_TIME_WITH_MILLIS_REGEX)) {
+            return ZonedDateTime.parse(value).toInstant();
+        } else {
+            throw new InvalidDateFormatException(INVALID_DATE_FORMAT_MESSAGE + value);
+        }
     }
 }

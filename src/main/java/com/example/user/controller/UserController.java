@@ -5,12 +5,13 @@ import static org.springframework.http.HttpStatus.CREATED;
 import com.example.user.dto.request.UserCreateRequestDTO;
 import com.example.user.dto.request.UserUpdateRequestDTO;
 import com.example.user.service.IUserService;
+import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import com.example.utils.service.IMessageService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.validation.Valid;
-import java.util.Map;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,24 @@ public class UserController {
     }
 
     /**
+     * Gets users.
+     *
+     * @param filteringDTOList the search parameters
+     * @return the response entity
+     */
+    @PostMapping("/get")
+    public ResponseEntity<?> get(
+            @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
+        log.info("api/v1/users - Getting users");
+
+        return ResponseEntity.ok(
+                SuccessResponseDTO.builder()
+                        .message(messageService.getMessage(SUCCESS_USER_GET))
+                        .data(userService.get(filteringDTOList))
+                        .build());
+    }
+
+    /**
      * Updates an existing user.
      *
      * @param id the id of the user to update
@@ -85,23 +104,6 @@ public class UserController {
         return ResponseEntity.ok(
                 BaseResponseDTO.builder()
                         .message(messageService.getMessage(SUCCESS_USER_DELETED))
-                        .build());
-    }
-
-    /**
-     * Gets users.
-     *
-     * @param params the search parameters
-     * @return the response entity
-     */
-    @GetMapping
-    public ResponseEntity<?> get(@RequestParam Map<String, String> params) {
-        log.info("api/v1/users - Getting users");
-
-        return ResponseEntity.ok(
-                SuccessResponseDTO.builder()
-                        .message(messageService.getMessage(SUCCESS_USER_GET))
-                        .data(userService.get(params))
                         .build());
     }
 }

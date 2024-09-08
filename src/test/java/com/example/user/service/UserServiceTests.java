@@ -13,9 +13,9 @@ import com.example.user.dto.response.UserGetResponseDTO;
 import com.example.user.mapper.IUserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.IUserRepository;
+import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.service.IMessageService;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -166,20 +166,21 @@ public class UserServiceTests {
     @DisplayName("Tests the successful retrieval of users.")
     void get_Success() {
         // Given
-        Map<String, String> params = Map.of(TEST_KEY, TEST_VALUE);
+        List<FilteringDTO> filteringDTOList = List.of(FilteringDTO.builder().build());
         User user = User.builder().build();
         UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
 
-        when(userRepository.findAllWithCriteria(params)).thenReturn(new PageImpl<>(List.of(user)));
+        when(userRepository.findAllWithCriteria(filteringDTOList))
+                .thenReturn(new PageImpl<>(List.of(user)));
         when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
 
         // When
-        Page<UserGetResponseDTO> result = userService.get(params);
+        Page<UserGetResponseDTO> result = userService.get(filteringDTOList);
 
         // Then
         assertEquals(List.of(userGetResponseDTO), result.getContent());
 
-        verify(userRepository).findAllWithCriteria(params);
+        verify(userRepository).findAllWithCriteria(filteringDTOList);
         verify(userMapper).toGetResponseDTO(user);
     }
 }

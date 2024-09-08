@@ -86,76 +86,68 @@ Once the application is running, you can access it at `http://localhost:8080`.
     }
     ```
 
-- **Update an existing user**
-
-    ```http
-    PUT /api/v1/users/{id}
-    ```
-
-  **Path Parameters**:
-
-  - `id` (mandatory): The id of the user to update
-  
-  **Request Body**:
-
-    ```json
-    {
-     "password": "P@ssw0rd"
-    }
-    ```
-
-  **Response**:
-
-    ```json
-    {
-     "message": "User updated successfully.",
-     "data": {
-       "id": 1,
-       "username": "john.doe",
-       "createdAt": "2024-07-22T16:51:12.650060Z",
-       "updatedAt": "2024-07-22T16:51:12.650060Z",
-       "createdBy": "unknown",
-       "updatedBy": "unknown"
-     }
-    }
-    ```
-
-- **Delete a user**
-
-    ```http
-    DELETE /api/v1/users/{id}
-    ```
-
-  **Path Parameters**:
-
-  - `id` (mandatory): The id of the user to delete
-
-  **Response**:
-
-    ```json
-    {
-      "message": "User deleted successfully."
-    }
-    ```
-
 - **Get users**
 
+  **In this project, I use POST requests for retrieving data instead of the usual GET requests. This allows us to include a request body with complex filtering parameters and special operators.**
+
+  **The request body supports special operators for filtering:**
+    - String fields: `EQUALS`, `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, `NOT_EQUAL`
+    - Instant fields: `EQUALS`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN`
+    - Long fields: `EQUALS`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN`
+
+  **The request body should be a list of DTOs (FilteringDTO) containing the following fields:**
+    - field: The name of the field to filter.
+    - operator: The filtering operator to apply (not needed for pagination and sorting fields like page, limit, orderBy, orderDirection).
+    - value: The value to compare against.
+    - otherValue: Required for the BETWEEN operator, representing the end value of the range.
+
     ```http
-    GET /api/v1/users
+    POST /api/v1/users/get
     ```
 
-  **Query Parameters**:
+  **Request Body example**:
 
-  - `id` (optional): Filter by id
-  - `username` (optional): Filter by username
-  - `createdAt` (optional): Filter by createdAt
-  - `updatedAt` (optional): Filter by updatedAt
-  - `createdBy` (optional): Filter by createdBy
-  - `updatedBy` (optional): Filter by updatedBy
-  - `page` (optional): Page number
-  - `limit` (optional): Page size
-  - `orderBy` (optional): Order by field
-  - `orderDirection` (optional): Order direction
+    ```json
+    [
+      {
+        "field": "page",
+        "value": "0"
+      },
+      {
+        "field": "limit",
+        "value": "10"
+      },
+      {
+        "field": "orderBy",
+        "value": "id"
+      },
+      {
+        "field": "orderDirection",
+        "value": "asc"
+      },
+      {
+        "field": "id",
+        "operator": "EQUALS",
+        "value": "1"
+      },
+      {
+        "field": "username",
+        "operator": "EQUALS",
+        "value": "john.doe"
+      },
+      {
+        "field": "createdAt",
+        "operator": "GREATER_THAN",
+        "value": "2024-07-22T16:51:12.650060Z"
+      },
+      {
+        "field": "updatedAt",
+        "operator": "BETWEEN",
+        "value": "2024-07-22T16:51:12.650060Z",
+        "otherValue": "2024-08-22T16:51:12.650060Z"
+      }
+    ]
+    ```
 
   **Response**:
 
@@ -165,13 +157,13 @@ Once the application is running, you can access it at `http://localhost:8080`.
       "data": {
         "content": [
           {
-             "id": 1,
-             "username": "john.doe",
-             "createdAt": "2024-07-22T16:59:43.631651Z",
-             "updatedAt": "2024-07-22T16:59:43.631651Z",
-             "createdBy": "unknown",
-             "updatedBy": "unknown"
-           }
+            "id": 1,
+            "username": "john.doe",
+            "createdAt": "2024-07-22T16:59:43.631651Z",
+            "updatedAt": "2024-07-22T16:59:43.631651Z",
+            "createdBy": "unknown",
+            "updatedBy": null
+          }
         ],
         "pageable": {
           "pageNumber": 0,
@@ -202,6 +194,58 @@ Once the application is running, you can access it at `http://localhost:8080`.
     }
     ```
 
+- **Update an existing user**
+
+    ```http
+    PUT /api/v1/users/{id}
+    ```
+
+  **Path Parameters**:
+
+    - `id` (mandatory): The id of the user to update
+
+  **Request Body**:
+
+    ```json
+    {
+      "password": "P@ssw0rd"
+    }
+    ```
+
+  **Response**:
+
+    ```json
+    {
+      "message": "User updated successfully.",
+      "data": {
+        "id": 1,
+        "username": "john.doe",
+        "createdAt": "2024-07-22T16:51:12.650060Z",
+        "updatedAt": "2024-07-22T16:51:12.650060Z",
+        "createdBy": "unknown",
+        "updatedBy": "unknown"
+      }
+    }
+    ```
+
+- **Delete a user**
+
+    ```http
+    DELETE /api/v1/users/{id}
+    ```
+
+  **Path Parameters**:
+
+    - `id` (mandatory): The id of the user to delete
+
+  **Response**:
+
+    ```json
+    {
+      "message": "User deleted successfully."
+    }
+    ```
+
 ### Postman Collection
 
 For ease of testing and exploring the API, a Postman Collection is included in the repository. You can find the collection file at `User.postman_collection.json` in the root directory of the project.
@@ -209,7 +253,7 @@ For ease of testing and exploring the API, a Postman Collection is included in t
 To import the collection into Postman:
 1. Open Postman.
 2. Go to the "Import" option.
-3. Select the `User.postman_collection` file from the repository.
+3. Select the `User.postman_collection.json` file from the repository.
 4. Import and use the pre-configured requests to test the API endpoints.
 
 ## Contact
