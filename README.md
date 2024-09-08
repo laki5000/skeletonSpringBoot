@@ -88,7 +88,11 @@ Once the application is running, you can access it at `http://localhost:8080`.
 
 - **Get users**
 
-  **In this project, I use POST requests for retrieving data instead of the usual GET requests. This allows us to include a request body with complex filtering parameters and special operators.**
+    ```http
+    POST /api/v1/users/get
+    ```
+
+  In this project, I use POST requests for retrieving data instead of the usual GET requests. This allows us to include a request body with complex filtering parameters and special operators.
 
   **The request body supports special operators for filtering:**
     - String fields: `EQUALS`, `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, `NOT_EQUAL`
@@ -100,10 +104,6 @@ Once the application is running, you can access it at `http://localhost:8080`.
     - operator: The filtering operator to apply (not needed for pagination and sorting fields like page, limit, orderBy, orderDirection).
     - value: The value to compare against.
     - otherValue: Required for the BETWEEN operator, representing the end value of the range.
-
-    ```http
-    POST /api/v1/users/get
-    ```
 
   **Request Body example**:
 
