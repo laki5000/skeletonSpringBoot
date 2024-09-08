@@ -1,5 +1,6 @@
 package com.example.exception;
 
+import static com.example.utils.constants.MessageConstants.ERROR_DEFAULT_MESSAGE;
 import static org.springframework.http.HttpStatus.*;
 
 import com.example.utils.dto.response.ErrorResponseDTO;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    private static final String ERROR_DEFAULT_MESSAGE = "error.default_message";
-
     private final IMessageService messageService;
 
     /**

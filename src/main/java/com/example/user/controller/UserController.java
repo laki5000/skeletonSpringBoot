@@ -1,5 +1,7 @@
 package com.example.user.controller;
 
+import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
+import static com.example.utils.constants.MessageConstants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
 import com.example.user.dto.request.UserCreateRequestDTO;
@@ -21,16 +23,11 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping(USER_BASE_URL)
 @SuppressFBWarnings(
         value = "EI_EXPOSE_REP2",
         justification = "False positive - no mutable fields exposed")
 public class UserController {
-    private static final String SUCCESS_USER_CREATED = "success.user.created";
-    private static final String SUCCESS_USER_UPDATED = "success.user.updated";
-    private static final String SUCCESS_USER_DELETED = "success.user.deleted";
-    private static final String SUCCESS_USER_GET = "success.user.get";
-
     private final IMessageService messageService;
     private final IUserService userService;
 
@@ -42,7 +39,7 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequestDTO userCreateRequestDTO) {
-        log.info("api/v1/users - Creating user");
+        log.info(USER_BASE_URL + " - Creating user");
 
         return ResponseEntity.status(CREATED)
                 .body(
@@ -61,7 +58,7 @@ public class UserController {
     @PostMapping("/get")
     public ResponseEntity<?> get(
             @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
-        log.info("api/v1/users - Getting users");
+        log.info(USER_BASE_URL + " - Getting users");
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
@@ -80,7 +77,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(
             @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
-        log.info("api/v1/users/{} - Updating user", id);
+        log.info(USER_BASE_URL + "/{} - Updating user", id);
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
@@ -97,7 +94,7 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        log.info("api/v1/users/{} - Deleting user", id);
+        log.info(USER_BASE_URL + "/{} - Deleting user", id);
 
         userService.delete(id);
 

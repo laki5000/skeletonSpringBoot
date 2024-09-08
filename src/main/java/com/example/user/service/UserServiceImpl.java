@@ -1,5 +1,9 @@
 package com.example.user.service;
 
+import static com.example.utils.constants.FilteringConstants.LIMIT;
+import static com.example.utils.constants.FilteringConstants.PAGE;
+import static com.example.utils.constants.MessageConstants.*;
+
 import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
@@ -10,11 +14,15 @@ import com.example.user.mapper.IUserMapper;
 import com.example.user.model.User;
 import com.example.user.repository.IUserRepository;
 import com.example.utils.dto.request.FilteringDTO;
+import com.example.utils.repository.BaseSpecification;
 import com.example.utils.service.IMessageService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements IUserService {
-    private static final String UNKNOWN_USER = "unknown";
-    private static final String ERROR_USER_NOT_MODIFIED = "error.user.not_modified";
-    private static final String ERROR_USER_NOT_FOUND = "error.user.not_found";
-    private static final String ERROR_USER_USERNAME_EXISTS = "error.user.username_exists";
-
     private final IMessageService messageService;
     private final IUserRepository userRepository;
+    private final BaseSpecification<User> baseSpecification;
     private final IUserMapper userMapper;
 
     /**
@@ -46,7 +50,7 @@ public class UserServiceImpl implements IUserService {
         validateUsername(userCreateRequestDTO.getUsername());
 
         return userMapper.toGetResponseDTO(
-                userRepository.save(userMapper.toEntity(userCreateRequestDTO, UNKNOWN_USER)));
+                userRepository.save(userMapper.toEntity(userCreateRequestDTO, "unknown")));
     }
 
     /**
@@ -58,9 +62,12 @@ public class UserServiceImpl implements IUserService {
     public Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList) {
         log.debug("Getting users");
 
-        return userRepository
-                .findAllWithCriteria(filteringDTOList)
-                .map(userMapper::toGetResponseDTO);
+        int page = baseSpecification.getIntParamAndRemove(filteringDTOList, PAGE, 0);
+        int limit = baseSpecification.getIntParamAndRemove(filteringDTOList, LIMIT, 10);
+        Pageable pageable = PageRequest.of(page, limit);
+        Specification<User> specification = baseSpecification.buildSpecification(filteringDTOList);
+
+        return userRepository.findAll(specification, pageable).map(userMapper::toGetResponseDTO);
     }
 
     /**
@@ -88,7 +95,7 @@ public class UserServiceImpl implements IUserService {
             throw new NotModifiedException(messageService.getMessage(ERROR_USER_NOT_MODIFIED));
         }
 
-        user.setUpdatedBy(UNKNOWN_USER);
+        user.setUpdatedBy("unknown");
 
         return userMapper.toGetResponseDTO(userRepository.saveAndFlush(user));
     }

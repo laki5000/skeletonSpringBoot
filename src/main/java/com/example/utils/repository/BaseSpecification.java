@@ -1,77 +1,95 @@
 package com.example.utils.repository;
 
+import static com.example.utils.constants.FilteringConstants.*;
+import static com.example.utils.constants.MessageConstants.ERROR_INVALID_DATE_FORMAT;
+import static com.example.utils.constants.MessageConstants.ERROR_INVALID_FILTER;
+
 import com.example.exception.InvalidDateFormatException;
 import com.example.exception.InvalidFilterException;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.enums.FilterOperator;
+import com.example.utils.service.IMessageService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.stereotype.Component;
 
 /**
- * Base repository interface.
+ * Base specification class.
  *
- * @param <T> the entity type to manage
- * @param <ID> the ID type of the entity
+ * @param <T> the entity type
  */
-@NoRepositoryBean
-public interface IBaseRepository<T, ID extends Serializable>
-        extends JpaRepository<T, ID>, JpaSpecificationExecutor<T> {
-    String PAGE = "page";
-    String LIMIT = "limit";
-    String ORDER_BY = "orderBy";
-    String ORDER_DIRECTION = "orderDirection";
-    String ASC = "asc";
-    String DESC = "desc";
-    String PASSWORD = "password";
-    String ID = "id";
-
-    String STRING = "String";
-    String INSTANT = "Instant";
-    String LONG = "Long";
-
-    String DATE_REGEX = "\\d{4}-\\d{2}-\\d{2}";
-    String DATE_TIME_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}";
-    String DATE_TIME_WITH_MILLIS_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z";
-    String UTC = "UTC";
-
-    String INVALID_FILTER_MESSAGE = "Invalid filter";
-    String INVALID_DATE_FORMAT_MESSAGE =
-            "expected formats: yyyy-MM-dd, yyyy-MM-ddTHH:mm:ss, yyyy-MM-ddTHH:mm:ss.SSSSSSZ, received: ";
+@Component
+@RequiredArgsConstructor
+public class BaseSpecification<T> {
+    private final IMessageService messageService;
 
     /**
-     * Find all entities with criteria.
+     * Build a specification.
      *
      * @param filteringDTOList the search parameters
-     * @return page of entities
+     * @return the specification
      * @throws InvalidDateFormatException if the date format is invalid
      * @throws InvalidFilterException if the filter is invalid
      */
-    default Page<T> findAllWithCriteria(List<FilteringDTO> filteringDTOList) {
-        int page = getIntParamAndRemove(filteringDTOList, PAGE, 0);
-        int limit = getIntParamAndRemove(filteringDTOList, LIMIT, 10);
+    public Specification<T> buildSpecification(List<FilteringDTO> filteringDTOList) {
         String orderBy = getParamAndRemove(filteringDTOList, ORDER_BY, ID);
         String orderDirection = getParamAndRemove(filteringDTOList, ORDER_DIRECTION, ASC);
 
         removeParam(filteringDTOList, PASSWORD);
 
-        Pageable pageable = PageRequest.of(page, limit);
-        Specification<T> spec = buildSpecification(filteringDTOList, orderBy, orderDirection);
+        return (root, query, criteriaBuilder) -> {
+            if (filteringDTOList == null) {
+                return criteriaBuilder.conjunction();
+            }
 
-        return findAll(spec, pageable);
+            List<Predicate> predicates = new ArrayList<>();
+
+            for (FilteringDTO filter : filteringDTOList) {
+                String key = filter.getField();
+                String value = filter.getValue();
+                FilterOperator operator = filter.getOperator();
+                String otherValue = filter.getOtherValue();
+
+                if (isNullOrEmpty(value) || isNullOrEmpty(key) || operator == null) {
+                    throw new InvalidFilterException(
+                            messageService.getMessage(ERROR_INVALID_FILTER));
+                }
+
+                Class<?> javaType = root.get(key).getJavaType();
+
+                switch (javaType.getSimpleName()) {
+                    case STRING -> predicates.add(
+                            buildStringPredicate(criteriaBuilder, root, key, value, operator));
+                    case INSTANT -> predicates.add(
+                            buildDatePredicate(
+                                    criteriaBuilder, root, key, value, operator, otherValue));
+                    case LONG -> predicates.add(
+                            buildLongPredicate(
+                                    criteriaBuilder, root, key, value, operator, otherValue));
+                    default -> throw new InvalidFilterException(
+                            messageService.getMessage(ERROR_INVALID_FILTER));
+                }
+            }
+
+            if (orderBy != null && orderDirection != null) {
+                if (ASC.equalsIgnoreCase(orderDirection)) {
+                    query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+                } else if (DESC.equalsIgnoreCase(orderDirection)) {
+                    query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
+                }
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     /**
@@ -82,7 +100,7 @@ public interface IBaseRepository<T, ID extends Serializable>
      * @param defaultValue the default value
      * @return the integer value
      */
-    private int getIntParamAndRemove(
+    public int getIntParamAndRemove(
             List<FilteringDTO> filteringDTOList, String key, int defaultValue) {
         return filteringDTOList == null
                 ? defaultValue
@@ -135,62 +153,6 @@ public interface IBaseRepository<T, ID extends Serializable>
     }
 
     /**
-     * Build a specification.
-     *
-     * @param filteringDTOList the search parameters
-     * @param orderBy the field to order by
-     * @param orderDirection the order direction
-     * @return the specification
-     * @throws InvalidDateFormatException if the date format is invalid
-     * @throws InvalidFilterException if the filter is invalid
-     */
-    private Specification<T> buildSpecification(
-            List<FilteringDTO> filteringDTOList, String orderBy, String orderDirection) {
-        return (root, query, criteriaBuilder) -> {
-            if (filteringDTOList == null) {
-                return criteriaBuilder.conjunction();
-            }
-
-            List<Predicate> predicates = new ArrayList<>();
-
-            for (FilteringDTO filter : filteringDTOList) {
-                String key = filter.getField();
-                String value = filter.getValue();
-                FilterOperator operator = filter.getOperator();
-                String otherValue = filter.getOtherValue();
-
-                if (isNullOrEmpty(value) || isNullOrEmpty(key) || operator == null) {
-                    throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
-                }
-
-                Class<?> javaType = root.get(key).getJavaType();
-
-                switch (javaType.getSimpleName()) {
-                    case STRING -> predicates.add(
-                            buildStringPredicate(criteriaBuilder, root, key, value, operator));
-                    case INSTANT -> predicates.add(
-                            buildDatePredicate(
-                                    criteriaBuilder, root, key, value, operator, otherValue));
-                    case LONG -> predicates.add(
-                            buildLongPredicate(
-                                    criteriaBuilder, root, key, value, operator, otherValue));
-                    default -> throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
-                }
-            }
-
-            if (orderBy != null && orderDirection != null) {
-                if (ASC.equalsIgnoreCase(orderDirection)) {
-                    query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
-                } else if (DESC.equalsIgnoreCase(orderDirection)) {
-                    query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
-                }
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-    }
-
-    /**
      * Build a predicate for a string field.
      *
      * @param criteriaBuilder the criteria builder
@@ -218,7 +180,8 @@ public interface IBaseRepository<T, ID extends Serializable>
                     criteriaBuilder.lower(root.get(key)), "%" + value.toLowerCase());
             case NOT_EQUALS -> criteriaBuilder.notEqual(
                     criteriaBuilder.lower(root.get(key)), value.toLowerCase());
-            default -> throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+            default -> throw new InvalidFilterException(
+                    messageService.getMessage(ERROR_INVALID_FILTER));
         };
     }
 
@@ -254,7 +217,8 @@ public interface IBaseRepository<T, ID extends Serializable>
                 return criteriaBuilder.lessThan(root.get(key), parsedValue);
             case BETWEEN:
                 if (isNullOrEmpty(otherValue)) {
-                    throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+                    throw new InvalidFilterException(
+                            messageService.getMessage(ERROR_INVALID_FILTER));
                 }
 
                 Instant parsedOtherValue = parseDate(otherValue);
@@ -263,7 +227,7 @@ public interface IBaseRepository<T, ID extends Serializable>
             case NOT_EQUALS:
                 return criteriaBuilder.notEqual(root.get(key), parsedValue);
             default:
-                throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+                throw new InvalidFilterException(messageService.getMessage(ERROR_INVALID_FILTER));
         }
     }
 
@@ -307,7 +271,8 @@ public interface IBaseRepository<T, ID extends Serializable>
                 return criteriaBuilder.lessThan(root.get(key), parsedValue);
             case BETWEEN:
                 if (isNullOrEmpty(otherValue)) {
-                    throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+                    throw new InvalidFilterException(
+                            messageService.getMessage(ERROR_INVALID_FILTER));
                 }
 
                 Long parsedOtherValue = Long.parseLong(otherValue);
@@ -316,7 +281,7 @@ public interface IBaseRepository<T, ID extends Serializable>
             case NOT_EQUALS:
                 return criteriaBuilder.notEqual(root.get(key), parsedValue);
             default:
-                throw new InvalidFilterException(INVALID_FILTER_MESSAGE);
+                throw new InvalidFilterException(messageService.getMessage(ERROR_INVALID_FILTER));
         }
     }
 
@@ -335,7 +300,8 @@ public interface IBaseRepository<T, ID extends Serializable>
         } else if (value.matches(DATE_TIME_WITH_MILLIS_REGEX)) {
             return ZonedDateTime.parse(value).toInstant();
         } else {
-            throw new InvalidDateFormatException(INVALID_DATE_FORMAT_MESSAGE + value);
+            throw new InvalidDateFormatException(
+                    messageService.getMessage(ERROR_INVALID_DATE_FORMAT));
         }
     }
 }

@@ -1,28 +1,30 @@
 package com.example.annotation;
 
+import static com.example.utils.constants.ValidationConstants.*;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import com.example.validation.PasswordValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /** Annotation for password validation. */
 @Constraint(validatedBy = PasswordValidator.class)
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
+@Target({FIELD, PARAMETER})
+@Retention(RUNTIME)
 public @interface IsValidPassword {
-    String message() default "Invalid password";
+    String message() default INVALID_PASSWORD_MESSAGE;
 
-    String nullMessage() default "Password is required";
+    String nullMessage() default PASSWORD_REQUIRED_MESSAGE;
 
-    String minLengthMessage() default "Password must be at least 8 characters long";
+    String minLengthMessage() default PASSWORD_MIN_LENGTH_MESSAGE;
 
-    String maxLengthMessage() default "Password must be no more than 64 characters long";
+    String maxLengthMessage() default PASSWORD_MAX_LENGTH_MESSAGE;
 
-    String patternMessage() default
-            "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character";
+    String patternMessage() default PASSWORD_PATTERN_MESSAGE;
 
     Class<?>[] groups() default {};
 

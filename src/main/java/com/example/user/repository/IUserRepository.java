@@ -1,12 +1,13 @@
 package com.example.user.repository;
 
 import com.example.user.model.User;
-import com.example.utils.repository.IBaseRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /** A repository interface for user-related operations. */
 @Repository
-public interface IUserRepository extends IBaseRepository<User, Long> {
+public interface IUserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     /**
      * Checks if a user with the given username exists.
      *

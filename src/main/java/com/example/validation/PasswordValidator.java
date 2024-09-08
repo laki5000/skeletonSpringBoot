@@ -1,5 +1,7 @@
 package com.example.validation;
 
+import static com.example.utils.constants.ValidationConstants.*;
+
 import com.example.annotation.IsValidPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -42,7 +44,7 @@ public class PasswordValidator implements ConstraintValidator<IsValidPassword, S
             return false;
         }
 
-        if (value.length() < 8) {
+        if (value.length() < PASSWORD_MIN_LENGTH) {
             context.buildConstraintViolationWithTemplate(minLengthMessage)
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
@@ -50,7 +52,7 @@ public class PasswordValidator implements ConstraintValidator<IsValidPassword, S
             return false;
         }
 
-        if (value.length() > 64) {
+        if (value.length() > PASSWORD_MAX_LENGTH) {
             context.buildConstraintViolationWithTemplate(maxLengthMessage)
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
@@ -58,9 +60,7 @@ public class PasswordValidator implements ConstraintValidator<IsValidPassword, S
             return false;
         }
 
-        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-
-        if (!value.matches(regex)) {
+        if (!value.matches(PASSWORD_REGEX)) {
             context.buildConstraintViolationWithTemplate(patternMessage)
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
