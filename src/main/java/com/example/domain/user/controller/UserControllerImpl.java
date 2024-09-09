@@ -22,22 +22,21 @@ import org.springframework.web.bind.annotation.*;
 /** Controller class for managing user-related endpoints. */
 @Log4j2
 @RequiredArgsConstructor
-@RestController
 @RequestMapping(USER_BASE_URL)
 @SuppressFBWarnings(
         value = "EI_EXPOSE_REP2",
         justification = "False positive - no mutable fields exposed")
-public class UserController {
+public class UserController implements IUserController {
     private final IMessageService messageService;
     private final IUserService userService;
 
     /**
      * Creates a new user.
      *
-     * @param userCreateRequestDTO the user create request DTO containing the user's details
+     * @param userCreateRequestDTO a DTO containing the user's details
      * @return the response entity
      */
-    @PostMapping
+    @Override
     public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequestDTO userCreateRequestDTO) {
         log.info(USER_BASE_URL + " - Creating user");
 
@@ -55,7 +54,7 @@ public class UserController {
      * @param filteringDTOList the search parameters
      * @return the response entity
      */
-    @PostMapping("/get")
+    @Override
     public ResponseEntity<?> get(
             @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
         log.info(USER_BASE_URL + " - Getting users");
@@ -71,10 +70,10 @@ public class UserController {
      * Updates an existing user.
      *
      * @param id the id of the user to update
-     * @param userUpdateRequestDTO the user update request DTO containing the user's details
+     * @param userUpdateRequestDTO a DTO containing the user's details
      * @return the response entity
      */
-    @PutMapping("/{id}")
+    @Override
     public ResponseEntity<?> update(
             @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         log.info(USER_BASE_URL + "/{} - Updating user", id);
@@ -92,7 +91,7 @@ public class UserController {
      * @param id the id of the user to delete
      * @return the response entity
      */
-    @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info(USER_BASE_URL + "/{} - Deleting user", id);
 
