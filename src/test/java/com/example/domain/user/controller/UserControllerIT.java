@@ -1,6 +1,8 @@
 package com.example.domain.user.controller;
 
 import static com.example.Constants.*;
+import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
+import static com.example.utils.constants.FilteringConstants.FIELD_ID;
 import static com.example.utils.enums.FilterOperator.EQUALS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
@@ -17,6 +19,7 @@ import com.example.utils.dto.response.ErrorResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +44,7 @@ public class UserControllerIT extends BaseIT {
         // When
         SuccessResponseDTO response =
                 performPostAndExpect(
-                        USER_API_URL,
+                        USER_BASE_URL,
                         userCreateRequestDTO,
                         CREATED.value(),
                         SuccessResponseDTO.class);
@@ -88,7 +91,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_API_URL,
+                        USER_BASE_URL,
                         userCreateRequestDTO,
                         CONFLICT.value(),
                         ErrorResponseDTO.class);
@@ -108,7 +111,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_API_URL,
+                        USER_BASE_URL,
                         userCreateRequestDTO,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);
@@ -138,45 +141,50 @@ public class UserControllerIT extends BaseIT {
                         .createdBy(TEST_USERNAME2)
                         .build());
 
+        Map<String, String> params =
+                Map.of(
+                        TEST_FIELD_PAGE,
+                        String.valueOf(TEST_PAGE2),
+                        TEST_FIELD_LIMIT,
+                        String.valueOf(TEST_LIMIT),
+                        TEST_FIELD_ORDER_BY,
+                        TEST_ORDER_BY,
+                        TEST_FIELD_ORDER_DIRECTION,
+                        TEST_ORDER_DIRECTION);
+
+        String url = USER_BASE_URL + "/get?" + toQueryString(params);
+
         List<FilteringDTO> filteringDTOList =
                 List.of(
-                        FilteringDTO.builder().field(PAGE).value("0").build(),
-                        FilteringDTO.builder().field(LIMIT).value("10").build(),
-                        FilteringDTO.builder().field(ORDER_BY).value(ID).build(),
-                        FilteringDTO.builder().field(ORDER_DIRECTION).value(ASC).build(),
                         FilteringDTO.builder()
-                                .field(ID)
+                                .field(FIELD_ID)
                                 .operator(EQUALS)
                                 .value(user.getId().toString())
                                 .build(),
                         FilteringDTO.builder()
-                                .field(USERNAME)
+                                .field(TEST_FIELD_USERNAME)
                                 .operator(EQUALS)
                                 .value(user.getUsername())
                                 .build(),
                         FilteringDTO.builder()
-                                .field(CREATED_AT)
+                                .field(TEST_FIELD_CREATED_AT)
                                 .operator(EQUALS)
                                 .value(user.getCreatedAt().toString())
                                 .build(),
                         FilteringDTO.builder()
-                                .field(UPDATED_AT)
+                                .field(TEST_FIELD_UPDATED_AT)
                                 .operator(EQUALS)
                                 .value(user.getUpdatedAt().toString())
                                 .build(),
                         FilteringDTO.builder()
-                                .field(CREATED_BY)
+                                .field(TEST_FIELD_CREATED_BY)
                                 .operator(EQUALS)
                                 .value(user.getCreatedBy())
                                 .build());
 
         // When
         SuccessResponseDTO result =
-                performPostAndExpect(
-                        USER_API_URL + "/get",
-                        filteringDTOList,
-                        OK.value(),
-                        SuccessResponseDTO.class);
+                performPostAndExpect(url, filteringDTOList, OK.value(), SuccessResponseDTO.class);
 
         // Then
         assertNotNull(result);
@@ -202,7 +210,7 @@ public class UserControllerIT extends BaseIT {
         List<FilteringDTO> filteringDTOList =
                 Collections.singletonList(
                         FilteringDTO.builder()
-                                .field(CREATED_AT)
+                                .field(TEST_FIELD_CREATED_AT)
                                 .operator(EQUALS)
                                 .value(TEST_INVALID_DATE)
                                 .build());
@@ -210,7 +218,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_API_URL + "/get",
+                        USER_BASE_URL + "/get",
                         filteringDTOList,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);
@@ -231,7 +239,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_API_URL + "/get",
+                        USER_BASE_URL + "/get",
                         filteringDTOList,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);
@@ -259,7 +267,7 @@ public class UserControllerIT extends BaseIT {
         // When
         SuccessResponseDTO result =
                 performPutAndExpect(
-                        USER_API_URL + "/" + user.getId(),
+                        USER_BASE_URL + "/" + user.getId(),
                         userUpdateRequestDTO,
                         OK.value(),
                         SuccessResponseDTO.class);
@@ -280,7 +288,7 @@ public class UserControllerIT extends BaseIT {
                 TEST_USERNAME,
                 TEST_PASSWORD2,
                 TEST_USERNAME,
-                UNKNOWN,
+                "unknown",
                 user);
         assertUserProperties(user, userGetResponseDTO);
     }
@@ -296,7 +304,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPutAndExpect(
-                        USER_API_URL + "/" + TEST_ID,
+                        USER_BASE_URL + "/" + TEST_ID,
                         userUpdateRequestDTO,
                         NOT_FOUND.value(),
                         ErrorResponseDTO.class);
@@ -324,7 +332,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPutAndExpect(
-                        USER_API_URL + "/" + user.getId(),
+                        USER_BASE_URL + "/" + user.getId(),
                         userUpdateRequestDTO,
                         NOT_MODIFIED.value(),
                         ErrorResponseDTO.class);
@@ -344,7 +352,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPutAndExpect(
-                        USER_API_URL + "/" + TEST_ID,
+                        USER_BASE_URL + "/" + TEST_ID,
                         userUpdateRequestDTO,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);
@@ -370,7 +378,7 @@ public class UserControllerIT extends BaseIT {
         // When
         BaseResponseDTO result =
                 performDeleteAndExpect(
-                        USER_API_URL + "/" + user.getId(), OK.value(), BaseResponseDTO.class);
+                        USER_BASE_URL + "/" + user.getId(), OK.value(), BaseResponseDTO.class);
 
         // Then
         assertNotNull(result);
@@ -386,7 +394,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performDeleteAndExpect(
-                        USER_API_URL + "/" + TEST_ID, NOT_FOUND.value(), ErrorResponseDTO.class);
+                        USER_BASE_URL + "/" + TEST_ID, NOT_FOUND.value(), ErrorResponseDTO.class);
 
         // Then
         assertNotNull(result);
@@ -432,5 +440,18 @@ public class UserControllerIT extends BaseIT {
         assertEquals(user.getUpdatedBy(), dto.getUpdatedBy());
         assertEquals(user.getCreatedAt(), dto.getCreatedAt());
         assertEquals(user.getUpdatedAt(), dto.getUpdatedAt());
+    }
+
+    /**
+     * Converts the given parameters to a query string.
+     *
+     * @param params The parameters to convert
+     * @return The query string
+     */
+    private String toQueryString(Map<String, String> params) {
+        return params.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .reduce((a, b) -> a + "&" + b)
+                .orElse("");
     }
 }

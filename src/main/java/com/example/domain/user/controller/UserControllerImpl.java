@@ -66,7 +66,7 @@ public class UserControllerImpl implements IUserController {
     public ResponseEntity<?> get(
             @RequestParam(required = false, defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) int limit,
-            @RequestParam(required = false, defaultValue = ID) String orderBy,
+            @RequestParam(required = false, defaultValue = FIELD_ID) String orderBy,
             @RequestParam(required = false, defaultValue = ASC) String orderDirection,
             @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
         log.info(USER_BASE_URL + " - Getting users");

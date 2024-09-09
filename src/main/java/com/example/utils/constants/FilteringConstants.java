@@ -2,16 +2,11 @@ package com.example.utils.constants;
 
 /** Constants used in filtering. */
 public class FilteringConstants {
-    public static final String PAGE = "page";
-    public static final String LIMIT = "limit";
-    public static final String ORDER_BY = "orderBy";
-    public static final String ORDER_DIRECTION = "orderDirection";
-
     public static final String ASC = "asc";
     public static final String DESC = "desc";
 
-    public static final String PASSWORD = "password";
-    public static final String ID = "id";
+    public static final String FIELD_PASSWORD = "password";
+    public static final String FIELD_ID = "id";
 
     public static final String STRING = "String";
     public static final String INSTANT = "Instant";

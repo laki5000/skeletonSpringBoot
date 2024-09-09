@@ -10,9 +10,13 @@ import com.example.domain.user.dto.response.UserGetResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.IUserRepository;
+import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
+import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.service.IMessageService;
+import com.example.utils.specification.BaseSpecification;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +24,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 /** Unit tests for {@link UserServiceImpl}. */
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +36,7 @@ public class UserServiceTests {
     @InjectMocks private UserServiceImpl userService;
     @Mock private IMessageService messageService;
     @Mock private IUserRepository userRepository;
+    @Mock private BaseSpecification<User> specification;
     @Mock private IUserMapper userMapper;
 
     @Test
@@ -55,7 +65,7 @@ public class UserServiceTests {
         verify(userMapper).toGetResponseDTO(user);
     }
 
-    /*@Test
+    @Test
     @DisplayName("Tests the unsuccessful creation of a user due to username exists.")
     void create_UsernameExists() {
         // Given
@@ -75,22 +85,38 @@ public class UserServiceTests {
     void get_Success() {
         // Given
         List<FilteringDTO> filteringDTOList = List.of(FilteringDTO.builder().build());
+        Pageable pageable = PageRequest.of(TEST_PAGE, TEST_LIMIT);
+
+        @SuppressWarnings("unchecked")
+        Specification<User> specificationMock = mock(Specification.class);
+
         User user = User.builder().build();
         UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
 
-        when(userRepository.findAllWithCriteria(filteringDTOList))
+        when(specification.buildSpecification(
+                        filteringDTOList, TEST_ORDER_BY, TEST_ORDER_DIRECTION))
+                .thenReturn(specificationMock);
+        when(userRepository.findAll(specificationMock, pageable))
                 .thenReturn(new PageImpl<>(List.of(user)));
         when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
 
         // When
-        Page<UserGetResponseDTO> result = userService.get(filteringDTOList);
+        Page<UserGetResponseDTO> result =
+                userService.get(
+                        TEST_PAGE,
+                        TEST_LIMIT,
+                        TEST_ORDER_BY,
+                        TEST_ORDER_DIRECTION,
+                        filteringDTOList);
 
         // Then
         assertEquals(List.of(userGetResponseDTO), result.getContent());
 
-        verify(userRepository).findAllWithCriteria(filteringDTOList);
+        verify(specification)
+                .buildSpecification(filteringDTOList, TEST_ORDER_BY, TEST_ORDER_DIRECTION);
+        verify(userRepository).findAll(specificationMock, pageable);
         verify(userMapper).toGetResponseDTO(user);
-    }*/
+    }
 
     @Test
     @DisplayName("Tests the successful update of a user.")

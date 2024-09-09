@@ -44,7 +44,7 @@ public class BaseSpecification<T> {
      */
     public Specification<T> buildSpecification(
             List<FilteringDTO> filteringDTOList, String orderBy, String orderDirection) {
-        removeParam(filteringDTOList, PASSWORD);
+        removeParam(filteringDTOList, FIELD_PASSWORD);
 
         return (root, query, criteriaBuilder) -> {
             if (filteringDTOList == null) {
