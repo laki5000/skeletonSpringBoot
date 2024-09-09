@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 
-/** Dto class for creating a user. */
+/** DTO class for user creation. */
 @Getter
 @Builder
 public class UserCreateRequestDTO {

@@ -1,5 +1,6 @@
 package com.example.utils.constants;
 
+/** Constants used in the application messages. */
 public class MessageConstants {
     public static final String ERROR_DEFAULT_MESSAGE = "error.default_message";
     public static final String ERROR_INVALID_FILTER = "error.invalid_filter";

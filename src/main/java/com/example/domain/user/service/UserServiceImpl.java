@@ -1,7 +1,5 @@
 package com.example.domain.user.service;
 
-import static com.example.utils.constants.FilteringConstants.LIMIT;
-import static com.example.utils.constants.FilteringConstants.PAGE;
 import static com.example.utils.constants.MessageConstants.*;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
@@ -14,8 +12,8 @@ import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.utils.dto.request.FilteringDTO;
-import com.example.utils.repository.BaseSpecification;
 import com.example.utils.service.IMessageService;
+import com.example.utils.specification.BaseSpecification;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -39,10 +37,11 @@ public class UserServiceImpl implements IUserService {
     /**
      * Creates a new user.
      *
-     * @param userCreateRequestDTO the user create request DTO containing the user's details
-     * @return the user get response DTO
+     * @param userCreateRequestDTO the DTO containing the user's details
+     * @return the response DTO
      * @throws ConflictException if the username already exists
      */
+    @Override
     @Transactional
     public UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
         log.debug("Creating user");
@@ -56,16 +55,24 @@ public class UserServiceImpl implements IUserService {
     /**
      * Gets users.
      *
+     * @param page the page number
+     * @param limit the number of users per page
+     * @param orderBy the field to order by
+     * @param orderDirection the direction to order by
      * @param filteringDTOList the search parameters
-     * @return the page of user get response DTOs
+     * @return the page of response DTOs
      */
-    public Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList) {
+    @Override
+    public Page<UserGetResponseDTO> get(
+            int page,
+            int limit,
+            String orderBy,
+            String orderDirection,
+            List<FilteringDTO> filteringDTOList) {
         log.debug("Getting users");
-
-        int page = baseSpecification.getIntParamAndRemove(filteringDTOList, PAGE, 0);
-        int limit = baseSpecification.getIntParamAndRemove(filteringDTOList, LIMIT, 10);
         Pageable pageable = PageRequest.of(page, limit);
-        Specification<User> specification = baseSpecification.buildSpecification(filteringDTOList);
+        Specification<User> specification =
+                baseSpecification.buildSpecification(filteringDTOList, orderBy, orderDirection);
 
         return userRepository.findAll(specification, pageable).map(userMapper::toGetResponseDTO);
     }
@@ -74,11 +81,12 @@ public class UserServiceImpl implements IUserService {
      * Updates an existing user.
      *
      * @param id the id of the user to update
-     * @param userUpdateRequestDTO the user update request DTO containing the user's details
-     * @return the user get response DTO
+     * @param userUpdateRequestDTO the DTO containing the user's details
+     * @return the response DTO
      * @throws NotModifiedException if the user is not modified
      * @throws NotFoundException if the user is not found
      */
+    @Override
     @Transactional
     public UserGetResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO) {
         log.debug("Updating user");
@@ -106,6 +114,7 @@ public class UserServiceImpl implements IUserService {
      * @param id the id of the user to delete
      * @throws NotFoundException if the user is not found
      */
+    @Override
     @Transactional
     public void delete(Long id) {
         log.debug("Deleting user");
@@ -131,7 +140,7 @@ public class UserServiceImpl implements IUserService {
      * Gets a user by ID.
      *
      * @param id the ID of the user to get
-     * @return the user
+     * @return the entity
      * @throws NotFoundException if the user is not found
      */
     private User getById(Long id) {

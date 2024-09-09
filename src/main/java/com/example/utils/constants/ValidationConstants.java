@@ -1,5 +1,6 @@
 package com.example.utils.constants;
 
+/** Constants used in the application validation. */
 public class ValidationConstants {
     public static final String INVALID_PASSWORD_MESSAGE = "Invalid password";
     public static final String PASSWORD_REQUIRED_MESSAGE = "Password is required";

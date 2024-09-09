@@ -42,7 +42,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\r\n    {\r\n        \"field\": \"page\",\r\n        \"value\": \"0\"\r\n    },\r\n    {\r\n        \"field\": \"limit\",\r\n        \"value\": \"10\"\r\n    },\r\n    {\r\n        \"field\": \"id\",\r\n        \"operator\": \"EQUALS\",\r\n        \"value\": \"2\"\r\n    },\r\n    {\r\n        \"field\": \"username\",\r\n        \"operator\": \"CONTAINS\",\r\n        \"value\": \"john.doe\"\r\n    },\r\n    {\r\n        \"field\": \"createdAt\",\r\n        \"operator\": \"BETWEEN\",\r\n        \"value\": \"2024-09-08T13:00:45.665550Z\",\r\n        \"otherValue\": \"2024-11-08T13:00:45.665550Z\"\r\n    }\r\n]",
+					"raw": "[\r\n    {\r\n        \"field\": \"id\",\r\n        \"operator\": \"EQUALS\",\r\n        \"value\": \"2\"\r\n    },\r\n    {\r\n        \"field\": \"username\",\r\n        \"operator\": \"CONTAINS\",\r\n        \"value\": \"john.doe\"\r\n    },\r\n    {\r\n        \"field\": \"createdAt\",\r\n        \"operator\": \"BETWEEN\",\r\n        \"value\": \"2024-09-08T13:00:45.665550Z\",\r\n        \"otherValue\": \"2024-11-08T13:00:45.665550Z\"\r\n    }\r\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -50,7 +50,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/api/v1/users/get",
+					"raw": "localhost:8080/api/v1/users/get?page=0&limit=10&orderBy=id&orderDirection=asc",
 					"host": [
 						"localhost"
 					],
@@ -60,6 +60,24 @@
 						"v1",
 						"users",
 						"get"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "orderBy",
+							"value": "id"
+						},
+						{
+							"key": "orderDirection",
+							"value": "asc"
+						}
 					]
 				}
 			},

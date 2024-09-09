@@ -6,23 +6,23 @@ import com.example.domain.user.dto.response.UserGetResponseDTO;
 import com.example.domain.user.model.User;
 import org.mapstruct.Mapper;
 
-/** Mapper interface for user-related operations. */
+/** Mapper interface for user-related mappings. */
 @Mapper(config = IMapperBaseConfig.class)
 public interface IUserMapper {
     /**
-     * Converts a user to a user get response DTO.
+     * Converts a User to a UserGetResponseDTO.
      *
      * @param user the user to convert
-     * @return the user get response DTO
+     * @return the converted DTO
      */
     UserGetResponseDTO toGetResponseDTO(User user);
 
     /**
-     * Converts a user create request DTO to a user.
+     * Converts a UserCreateRequestDTO to a User.
      *
-     * @param userCreateRequestDTO the user create request DTO to convert
+     * @param userCreateRequestDTO the DTO to convert
      * @param createdBy the user who created the user
-     * @return the user
+     * @return the converted entity
      */
     User toEntity(UserCreateRequestDTO userCreateRequestDTO, String createdBy);
 }

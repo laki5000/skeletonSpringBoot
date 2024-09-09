@@ -93,38 +93,29 @@ Once the application is running, you can access it at `http://localhost:8080`.
     ```
 
   In this project, I use POST requests for retrieving data instead of the usual GET requests. This allows us to include a request body with complex filtering parameters and special operators.
+  
+  **Request Parameters**:
 
-  **The request body supports special operators for filtering:**
-    - String fields: `EQUALS`, `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, `NOT_EQUAL`
-    - Instant fields: `EQUALS`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN`
-    - Long fields: `EQUALS`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN`
+    - `page` (optional): The page number to retrieve (default: 0)
+    - `limit` (optional): The number of elements per page (default: 10)
+    - `orderBy` (optional): The field to order by (default: id)
+    - `orderDirection` (optional): The direction of the ordering (default: asc)
 
   **The request body should be a list of DTOs (FilteringDTO) containing the following fields:**
     - field: The name of the field to filter.
-    - operator: The filtering operator to apply (not needed for pagination and sorting fields like page, limit, orderBy, orderDirection).
+    - operator: The filtering operator to apply.
     - value: The value to compare against.
     - otherValue: Required for the BETWEEN operator, representing the end value of the range.
 
-  **Request Body example**:
+  **The request body supports special operators for filtering:**
+  - String fields: `EQUALS`, `CONTAINS`, `STARTS_WITH`, `ENDS_WITH`, `NOT_EQUAL`
+  - Instant fields: `EQUALS`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN`
+  - Long fields: `EQUALS`, `GREATER_THAN`, `LESS_THAN`, `BETWEEN`
+
+  **Request Body**:
 
     ```json
     [
-      {
-        "field": "page",
-        "value": "0"
-      },
-      {
-        "field": "limit",
-        "value": "10"
-      },
-      {
-        "field": "orderBy",
-        "value": "id"
-      },
-      {
-        "field": "orderDirection",
-        "value": "asc"
-      },
       {
         "field": "id",
         "operator": "EQUALS",

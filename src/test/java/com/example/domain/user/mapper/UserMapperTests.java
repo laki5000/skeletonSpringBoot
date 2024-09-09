@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.response.UserGetResponseDTO;
-import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

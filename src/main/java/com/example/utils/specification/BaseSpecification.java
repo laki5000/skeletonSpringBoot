@@ -1,4 +1,4 @@
-package com.example.utils.repository;
+package com.example.utils.specification;
 
 import static com.example.utils.constants.FilteringConstants.*;
 import static com.example.utils.constants.MessageConstants.ERROR_INVALID_DATE_FORMAT;
@@ -36,14 +36,14 @@ public class BaseSpecification<T> {
      * Build a specification.
      *
      * @param filteringDTOList the search parameters
+     * @param orderBy the field to order by
+     * @param orderDirection the direction to order by
      * @return the specification
      * @throws InvalidDateFormatException if the date format is invalid
      * @throws InvalidFilterException if the filter is invalid
      */
-    public Specification<T> buildSpecification(List<FilteringDTO> filteringDTOList) {
-        String orderBy = getParamAndRemove(filteringDTOList, ORDER_BY, ID);
-        String orderDirection = getParamAndRemove(filteringDTOList, ORDER_DIRECTION, ASC);
-
+    public Specification<T> buildSpecification(
+            List<FilteringDTO> filteringDTOList, String orderBy, String orderDirection) {
         removeParam(filteringDTOList, PASSWORD);
 
         return (root, query, criteriaBuilder) -> {
@@ -90,54 +90,6 @@ public class BaseSpecification<T> {
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
-    }
-
-    /**
-     * Get an integer parameter and remove it from the list.
-     *
-     * @param filteringDTOList the search parameters
-     * @param key the parameter key
-     * @param defaultValue the default value
-     * @return the integer value
-     */
-    public int getIntParamAndRemove(
-            List<FilteringDTO> filteringDTOList, String key, int defaultValue) {
-        return filteringDTOList == null
-                ? defaultValue
-                : filteringDTOList.stream()
-                        .filter(filteringDTO -> key.equals(filteringDTO.getField()))
-                        .findFirst()
-                        .map(
-                                filteringDTO -> {
-                                    removeParam(filteringDTOList, key);
-
-                                    return Integer.parseInt(filteringDTO.getValue());
-                                })
-                        .orElse(defaultValue);
-    }
-
-    /**
-     * Get a string parameter and remove it from the list.
-     *
-     * @param filteringDTOList the search parameters
-     * @param key the parameter key
-     * @param defaultValue the default value
-     * @return the string value
-     */
-    private String getParamAndRemove(
-            List<FilteringDTO> filteringDTOList, String key, String defaultValue) {
-        return filteringDTOList == null
-                ? defaultValue
-                : filteringDTOList.stream()
-                        .filter(filteringDTO -> key.equals(filteringDTO.getField()))
-                        .findFirst()
-                        .map(
-                                filteringDTO -> {
-                                    removeParam(filteringDTOList, key);
-
-                                    return filteringDTO.getValue();
-                                })
-                        .orElse(defaultValue);
     }
 
     /**

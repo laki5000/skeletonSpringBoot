@@ -1,5 +1,6 @@
 package com.example.utils.constants;
 
+/** Constants used in filtering. */
 public class FilteringConstants {
     public static final String PAGE = "page";
     public static final String LIMIT = "limit";
@@ -21,4 +22,7 @@ public class FilteringConstants {
     public static final String DATE_TIME_WITH_MILLIS_REGEX =
             "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z";
     public static final String UTC = "UTC";
+
+    public static final String DEFAULT_PAGE = "0";
+    public static final String DEFAULT_LIMIT = "10";
 }

@@ -1,6 +1,7 @@
 package com.example.domain.user.controller;
 
 import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
+import static com.example.utils.constants.FilteringConstants.*;
 import static com.example.utils.constants.MessageConstants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -22,21 +23,23 @@ import org.springframework.web.bind.annotation.*;
 /** Controller class for managing user-related endpoints. */
 @Log4j2
 @RequiredArgsConstructor
+@RestController
 @RequestMapping(USER_BASE_URL)
 @SuppressFBWarnings(
         value = "EI_EXPOSE_REP2",
         justification = "False positive - no mutable fields exposed")
-public class UserController implements IUserController {
+public class UserControllerImpl implements IUserController {
     private final IMessageService messageService;
     private final IUserService userService;
 
     /**
      * Creates a new user.
      *
-     * @param userCreateRequestDTO a DTO containing the user's details
+     * @param userCreateRequestDTO the DTO containing the user's details
      * @return the response entity
      */
     @Override
+    @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequestDTO userCreateRequestDTO) {
         log.info(USER_BASE_URL + " - Creating user");
 
@@ -51,18 +54,29 @@ public class UserController implements IUserController {
     /**
      * Gets users.
      *
+     * @param page the page number
+     * @param limit the number of users per page
+     * @param orderBy the field to order by
+     * @param orderDirection the direction to order by
      * @param filteringDTOList the search parameters
      * @return the response entity
      */
     @Override
+    @PostMapping("/get")
     public ResponseEntity<?> get(
+            @RequestParam(required = false, defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) int limit,
+            @RequestParam(required = false, defaultValue = ID) String orderBy,
+            @RequestParam(required = false, defaultValue = ASC) String orderDirection,
             @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
         log.info(USER_BASE_URL + " - Getting users");
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
                         .message(messageService.getMessage(SUCCESS_USER_GET))
-                        .data(userService.get(filteringDTOList))
+                        .data(
+                                userService.get(
+                                        page, limit, orderBy, orderDirection, filteringDTOList))
                         .build());
     }
 
@@ -70,10 +84,11 @@ public class UserController implements IUserController {
      * Updates an existing user.
      *
      * @param id the id of the user to update
-     * @param userUpdateRequestDTO a DTO containing the user's details
+     * @param userUpdateRequestDTO the DTO containing the user's details
      * @return the response entity
      */
     @Override
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(
             @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         log.info(USER_BASE_URL + "/{} - Updating user", id);
@@ -92,6 +107,7 @@ public class UserController implements IUserController {
      * @return the response entity
      */
     @Override
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info(USER_BASE_URL + "/{} - Deleting user", id);
 

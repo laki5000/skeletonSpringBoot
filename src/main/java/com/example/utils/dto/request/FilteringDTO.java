@@ -4,6 +4,7 @@ import com.example.utils.enums.FilterOperator;
 import lombok.Builder;
 import lombok.Getter;
 
+/** DTO class for filtering. */
 @Getter
 @Builder
 public class FilteringDTO {

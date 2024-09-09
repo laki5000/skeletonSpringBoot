@@ -13,7 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** Controller class for handling exceptions globally. */
+/** Controller advice class for handling exceptions globally. */
 @Log4j2
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -21,9 +21,9 @@ public class GlobalExceptionHandler {
     private final IMessageService messageService;
 
     /**
-     * Handle generic exceptions.
+     * Handles generic exceptions.
      *
-     * @param ex the Exception to handle
+     * @param ex the exception to handle
      * @return the response entity
      */
     @ExceptionHandler(Exception.class)
@@ -32,9 +32,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handle conflict exceptions.
+     * Handles conflict exceptions.
      *
-     * @param ex the ConflictException to handle
+     * @param ex the exception to handle
      * @return the response entity
      */
     @ExceptionHandler(ConflictException.class)
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     /**
      * Handle not found exceptions.
      *
-     * @param ex the NotFoundException to handle
+     * @param ex the exception to handle
      * @return the response entity
      */
     @ExceptionHandler(NotFoundException.class)
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
     /**
      * Handle not modified exceptions.
      *
-     * @param ex the NotModifiedException to handle
+     * @param ex the exception to handle
      * @return the response entity
      */
     @ExceptionHandler(NotModifiedException.class)
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
     /**
      * Handle bad request exceptions.
      *
-     * @param ex the InvalidDateFormatException, InvalidFilterException to handle
+     * @param ex the exception to handle
      * @return the response entity
      */
     @ExceptionHandler({InvalidDateFormatException.class, InvalidFilterException.class})
@@ -78,7 +78,7 @@ public class GlobalExceptionHandler {
     /**
      * Handle validation exceptions.
      *
-     * @param ex MethodArgumentNotValidException to handle
+     * @param ex exception to handle
      * @return the response entity
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -96,7 +96,8 @@ public class GlobalExceptionHandler {
     /**
      * Handle Exceptions.
      *
-     * @param ex the Exception to handle
+     * @param ex the exception to handle
+     * @param errorMessage the error message to return
      * @param statusCode the status code to return
      * @return the response entity
      */

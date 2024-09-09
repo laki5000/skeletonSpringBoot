@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.jackson.Jacksonized;
 
-/** DTO class for updating a user. */
+/** DTO class for user update. */
 @Getter
 @Builder
 @Jacksonized

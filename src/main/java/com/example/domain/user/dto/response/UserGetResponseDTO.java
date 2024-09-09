@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-/** DTO class for returning user data. */
+/** DTO class for getting a user. */
 @Getter
 @Builder
 @EqualsAndHashCode

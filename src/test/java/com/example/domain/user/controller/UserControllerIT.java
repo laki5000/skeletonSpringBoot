@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
 import com.example.BaseIT;
-import com.example.domain.user.controller.UserController;
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
 import com.example.domain.user.dto.response.UserGetResponseDTO;
@@ -24,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Integration tests for {@link UserController}. */
+/** Integration tests for {@link UserControllerImpl}. */
 public class UserControllerIT extends BaseIT {
     @Autowired private IUserRepository userRepository;
 

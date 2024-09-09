@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-/** Superclass for common fields in entities. */
+/** Abstract class with common fields for entities. */
 @MappedSuperclass
 @Getter
 @Setter

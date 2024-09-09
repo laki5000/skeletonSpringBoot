@@ -28,6 +28,7 @@ public class MessageServiceImpl implements IMessageService {
      * @param key the key of the message
      * @return the message
      */
+    @Override
     public String getMessage(String key) {
         log.debug("Getting message for key: {}", key);
 
@@ -40,7 +41,6 @@ public class MessageServiceImpl implements IMessageService {
         }
 
         HttpServletRequest request = attributes.getRequest();
-
         Locale currentLocale = localeResolver.resolveLocale(request);
 
         return messageSource.getMessage(key, null, currentLocale);

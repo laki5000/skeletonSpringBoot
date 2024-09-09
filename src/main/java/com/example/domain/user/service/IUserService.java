@@ -3,42 +3,8 @@ package com.example.domain.user.service;
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
 import com.example.domain.user.dto.response.UserGetResponseDTO;
-import com.example.utils.dto.request.FilteringDTO;
-import java.util.List;
-import org.springframework.data.domain.Page;
+import com.example.utils.service.IBaseService;
 
-/** Service interface for managing user-related operations. */
-public interface IUserService {
-
-    /**
-     * Creates a new user.
-     *
-     * @param userCreateRequestDTO the user create request DTO containing the user's details
-     * @return the user get response DTO
-     */
-    UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO);
-
-    /**
-     * Gets users.
-     *
-     * @param filteringDTOList the search parameters
-     * @return the page of user get response DTOs
-     */
-    Page<UserGetResponseDTO> get(List<FilteringDTO> filteringDTOList);
-
-    /**
-     * Updates an existing user.
-     *
-     * @param id the id of the user to update
-     * @param userUpdateRequestDTO the user update request DTO containing the user's details
-     * @return the user get response DTO
-     */
-    UserGetResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO);
-
-    /**
-     * Deletes a user.
-     *
-     * @param id the id of the user to delete
-     */
-    void delete(Long id);
-}
+/** Service interface for user service. */
+public interface IUserService
+        extends IBaseService<UserCreateRequestDTO, UserUpdateRequestDTO, UserGetResponseDTO> {}

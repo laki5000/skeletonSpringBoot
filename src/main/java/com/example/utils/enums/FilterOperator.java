@@ -1,5 +1,6 @@
 package com.example.utils.enums;
 
+/** Enum for filter operator. */
 public enum FilterOperator {
     EQUALS,
     CONTAINS,
