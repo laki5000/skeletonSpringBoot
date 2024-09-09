@@ -1,6 +1,6 @@
 package com.example.utils.service;
 
-/** Service interface for getting messages. */
+/** Service interface for message service */
 public interface IMessageService {
     /**
      * Gets a message for a key.

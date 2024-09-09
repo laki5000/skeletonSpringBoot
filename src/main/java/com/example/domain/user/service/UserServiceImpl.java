@@ -8,12 +8,12 @@ import com.example.domain.user.dto.response.UserGetResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.IUserRepository;
+import com.example.domain.user.specification.UserSpecification;
 import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.service.IMessageService;
-import com.example.utils.specification.BaseSpecification;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,8 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements IUserService {
     private final IMessageService messageService;
     private final IUserRepository userRepository;
-    private final BaseSpecification<User> baseSpecification;
     private final IUserMapper userMapper;
+    private final UserSpecification userSpecification;
 
     /**
      * Creates a new user.
@@ -72,7 +72,7 @@ public class UserServiceImpl implements IUserService {
         log.debug("Getting users");
         Pageable pageable = PageRequest.of(page, limit);
         Specification<User> specification =
-                baseSpecification.buildSpecification(filteringDTOList, orderBy, orderDirection);
+                userSpecification.buildSpecification(filteringDTOList, orderBy, orderDirection);
 
         return userRepository.findAll(specification, pageable).map(userMapper::toGetResponseDTO);
     }

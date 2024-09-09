@@ -10,12 +10,12 @@ import com.example.domain.user.dto.response.UserGetResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.IUserRepository;
+import com.example.domain.user.specification.UserSpecification;
 import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.service.IMessageService;
-import com.example.utils.specification.BaseSpecification;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -36,8 +36,8 @@ public class UserServiceTests {
     @InjectMocks private UserServiceImpl userService;
     @Mock private IMessageService messageService;
     @Mock private IUserRepository userRepository;
-    @Mock private BaseSpecification<User> specification;
     @Mock private IUserMapper userMapper;
+    @Mock private UserSpecification specification;
 
     @Test
     @DisplayName("Tests the successful creation of a user.")

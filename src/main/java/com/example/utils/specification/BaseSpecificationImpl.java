@@ -20,16 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
 
 /**
- * Base specification class.
+ * Specification class for filtering entities.
  *
  * @param <T> the entity type
  */
-@Component
 @RequiredArgsConstructor
-public class BaseSpecification<T> {
+public class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
     private final IMessageService messageService;
 
     /**
@@ -42,10 +40,9 @@ public class BaseSpecification<T> {
      * @throws InvalidDateFormatException if the date format is invalid
      * @throws InvalidFilterException if the filter is invalid
      */
+    @Override
     public Specification<T> buildSpecification(
             List<FilteringDTO> filteringDTOList, String orderBy, String orderDirection) {
-        removeParam(filteringDTOList, FIELD_PASSWORD);
-
         return (root, query, criteriaBuilder) -> {
             if (filteringDTOList == null) {
                 return criteriaBuilder.conjunction();
@@ -98,7 +95,8 @@ public class BaseSpecification<T> {
      * @param filteringDTOList the search parameters
      * @param key the parameter key
      */
-    private void removeParam(List<FilteringDTO> filteringDTOList, String key) {
+    @Override
+    public void removeParam(List<FilteringDTO> filteringDTOList, String key) {
         if (filteringDTOList != null) {
             filteringDTOList.removeIf(filteringDTO -> key.equals(filteringDTO.getField()));
         }

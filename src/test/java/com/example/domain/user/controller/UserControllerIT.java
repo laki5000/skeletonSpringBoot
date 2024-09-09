@@ -151,7 +151,6 @@ public class UserControllerIT extends BaseIT {
                         TEST_ORDER_BY,
                         TEST_FIELD_ORDER_DIRECTION,
                         TEST_ORDER_DIRECTION);
-
         String url = USER_BASE_URL + "/get?" + toQueryString(params);
 
         List<FilteringDTO> filteringDTOList =
