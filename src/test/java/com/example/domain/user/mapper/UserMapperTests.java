@@ -1,11 +1,12 @@
-package com.example.user.mapper;
+package com.example.domain.user.mapper;
 
 import static com.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.example.user.dto.request.UserCreateRequestDTO;
-import com.example.user.dto.response.UserGetResponseDTO;
-import com.example.user.model.User;
+import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.mapper.IUserMapper;
+import com.example.domain.user.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;

@@ -1,12 +1,12 @@
-package com.example.user.controller;
+package com.example.domain.user.controller;
 
 import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
 import static com.example.utils.constants.MessageConstants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
-import com.example.user.dto.request.UserCreateRequestDTO;
-import com.example.user.dto.request.UserUpdateRequestDTO;
-import com.example.user.service.IUserService;
+import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.request.UserUpdateRequestDTO;
+import com.example.domain.user.service.IUserService;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;

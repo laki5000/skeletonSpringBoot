@@ -1,8 +1,8 @@
-package com.example.user.service;
+package com.example.domain.user.service;
 
-import com.example.user.dto.request.UserCreateRequestDTO;
-import com.example.user.dto.request.UserUpdateRequestDTO;
-import com.example.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.request.UserUpdateRequestDTO;
+import com.example.domain.user.dto.response.UserGetResponseDTO;
 import com.example.utils.dto.request.FilteringDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;

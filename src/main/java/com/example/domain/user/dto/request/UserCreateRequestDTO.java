@@ -1,4 +1,4 @@
-package com.example.user.dto.request;
+package com.example.domain.user.dto.request;
 
 import static com.example.utils.constants.ValidationConstants.*;
 

@@ -1,4 +1,4 @@
-package com.example.user.model;
+package com.example.domain.user.model;
 
 import static com.example.utils.constants.ValidationConstants.USERNAME_MAX_LENGTH;
 import static com.example.utils.constants.ValidationConstants.USERNAME_MIN_LENGTH;

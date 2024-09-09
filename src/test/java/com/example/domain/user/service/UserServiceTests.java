@@ -1,17 +1,18 @@
-package com.example.user.service;
+package com.example.domain.user.service;
 
 import static com.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.example.domain.user.service.UserServiceImpl;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
-import com.example.user.dto.request.UserCreateRequestDTO;
-import com.example.user.dto.request.UserUpdateRequestDTO;
-import com.example.user.dto.response.UserGetResponseDTO;
-import com.example.user.mapper.IUserMapper;
-import com.example.user.model.User;
-import com.example.user.repository.IUserRepository;
+import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.request.UserUpdateRequestDTO;
+import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.mapper.IUserMapper;
+import com.example.domain.user.model.User;
+import com.example.domain.user.repository.IUserRepository;
 import com.example.utils.service.IMessageService;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

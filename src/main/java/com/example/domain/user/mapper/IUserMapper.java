@@ -1,9 +1,9 @@
-package com.example.user.mapper;
+package com.example.domain.user.mapper;
 
 import com.example.config.IMapperBaseConfig;
-import com.example.user.dto.request.UserCreateRequestDTO;
-import com.example.user.dto.response.UserGetResponseDTO;
-import com.example.user.model.User;
+import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.model.User;
 import org.mapstruct.Mapper;
 
 /** Mapper interface for user-related operations. */

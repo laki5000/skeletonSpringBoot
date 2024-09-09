@@ -1,4 +1,4 @@
-package com.example.user.dto.response;
+package com.example.domain.user.dto.response;
 
 import java.time.Instant;
 import lombok.Builder;

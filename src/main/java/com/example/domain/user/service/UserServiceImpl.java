@@ -1,18 +1,18 @@
-package com.example.user.service;
+package com.example.domain.user.service;
 
 import static com.example.utils.constants.FilteringConstants.LIMIT;
 import static com.example.utils.constants.FilteringConstants.PAGE;
 import static com.example.utils.constants.MessageConstants.*;
 
+import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.request.UserUpdateRequestDTO;
+import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.mapper.IUserMapper;
+import com.example.domain.user.model.User;
+import com.example.domain.user.repository.IUserRepository;
 import com.example.exception.ConflictException;
 import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
-import com.example.user.dto.request.UserCreateRequestDTO;
-import com.example.user.dto.request.UserUpdateRequestDTO;
-import com.example.user.dto.response.UserGetResponseDTO;
-import com.example.user.mapper.IUserMapper;
-import com.example.user.model.User;
-import com.example.user.repository.IUserRepository;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.repository.BaseSpecification;
 import com.example.utils.service.IMessageService;

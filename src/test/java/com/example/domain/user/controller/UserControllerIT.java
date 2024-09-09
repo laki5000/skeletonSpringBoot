@@ -1,4 +1,4 @@
-package com.example.user.controller;
+package com.example.domain.user.controller;
 
 import static com.example.Constants.*;
 import static com.example.utils.enums.FilterOperator.EQUALS;
@@ -6,11 +6,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
 import com.example.BaseIT;
-import com.example.user.dto.request.UserCreateRequestDTO;
-import com.example.user.dto.request.UserUpdateRequestDTO;
-import com.example.user.dto.response.UserGetResponseDTO;
-import com.example.user.model.User;
-import com.example.user.repository.IUserRepository;
+import com.example.domain.user.controller.UserController;
+import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.request.UserUpdateRequestDTO;
+import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.model.User;
+import com.example.domain.user.repository.IUserRepository;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.ErrorResponseDTO;
