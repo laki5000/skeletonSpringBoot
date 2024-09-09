@@ -27,9 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(USER_BASE_URL)
-@SuppressFBWarnings(
-        value = EI_EXPOSE_REP2,
-        justification = EI_EXPOSE_REP2_JUSTIFICATION)
+@SuppressFBWarnings(value = EI_EXPOSE_REP2, justification = EI_EXPOSE_REP2_JUSTIFICATION)
 public class UserControllerImpl implements IUserController {
     private final IMessageService messageService;
     private final IUserService userService;

@@ -16,9 +16,8 @@ import com.example.exception.NotFoundException;
 import com.example.exception.NotModifiedException;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.service.IMessageService;
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -32,9 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 @RequiredArgsConstructor
 @Service
-@SuppressFBWarnings(
-        value = EI_EXPOSE_REP2,
-        justification = EI_EXPOSE_REP2_JUSTIFICATION)
+@SuppressFBWarnings(value = EI_EXPOSE_REP2, justification = EI_EXPOSE_REP2_JUSTIFICATION)
 public class UserServiceImpl implements IUserService {
     private final IMessageService messageService;
     private final IUserRepository userRepository;
