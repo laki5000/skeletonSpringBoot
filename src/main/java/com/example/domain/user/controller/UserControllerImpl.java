@@ -3,6 +3,8 @@ package com.example.domain.user.controller;
 import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
 import static com.example.utils.constants.FilteringConstants.*;
 import static com.example.utils.constants.MessageConstants.*;
+import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2;
+import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
 import static org.springframework.http.HttpStatus.CREATED;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
@@ -26,8 +28,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(USER_BASE_URL)
 @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP2",
-        justification = "False positive - no mutable fields exposed")
+        value = EI_EXPOSE_REP2,
+        justification = EI_EXPOSE_REP2_JUSTIFICATION)
 public class UserControllerImpl implements IUserController {
     private final IMessageService messageService;
     private final IUserService userService;

@@ -11,13 +11,16 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 
+import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2;
+import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
+
 /** Service class for getting messages. */
 @Log4j2
 @RequiredArgsConstructor
 @Service
 @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP2",
-        justification = "False positive - no mutable fields exposed")
+        value = EI_EXPOSE_REP2,
+        justification = EI_EXPOSE_REP2_JUSTIFICATION)
 public class MessageServiceImpl implements IMessageService {
     private final MessageSource messageSource;
     private final LocaleResolver localeResolver;
