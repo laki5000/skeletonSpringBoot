@@ -98,11 +98,13 @@ public class UserServiceImpl implements IUserService {
         User user = getById(id);
         boolean updated = false;
 
-        if (!user.getPassword().equals(userUpdateRequestDTO.getPassword())) {
+        if (userUpdateRequestDTO.getPassword() != null
+                && !user.getPassword().equals(userUpdateRequestDTO.getPassword())) {
             user.setPassword(userUpdateRequestDTO.getPassword());
 
             updated = true;
         }
+
         if (!updated) {
             throw new NotModifiedException(messageService.getMessage(ERROR_USER_NOT_MODIFIED));
         }

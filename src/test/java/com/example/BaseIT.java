@@ -100,7 +100,7 @@ public abstract class BaseIT {
     }
 
     /**
-     * Performs a PUT request and expects the specified status code.
+     * Performs a PATCH request and expects the specified status code.
      *
      * @param url the URL to put to
      * @param body the body of the request
@@ -110,11 +110,12 @@ public abstract class BaseIT {
      * @param <T> the type of the object to return
      * @throws Exception if an error occurs
      */
-    protected <T> T performPutAndExpect(String url, Object body, int statusCode, Class<T> clazz)
+    protected <T> T performPatchAndExpect(String url, Object body, int statusCode, Class<T> clazz)
             throws Exception {
         return fromJson(
                 mockMvc.perform(
-                                put(url).contentType(MediaType.APPLICATION_JSON)
+                                patch(url)
+                                        .contentType(MediaType.APPLICATION_JSON)
                                         .content(toJson(body)))
                         .andExpect(status().is(statusCode))
                         .andReturn()

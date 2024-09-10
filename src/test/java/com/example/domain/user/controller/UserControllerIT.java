@@ -1,6 +1,7 @@
 package com.example.domain.user.controller;
 
 import static com.example.Constants.*;
+import static com.example.utils.constants.EndpointConstants.GET_PATH;
 import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
 import static com.example.utils.constants.FilteringConstants.FIELD_ID;
 import static com.example.utils.enums.FilterOperator.EQUALS;
@@ -151,8 +152,7 @@ public class UserControllerIT extends BaseIT {
                         TEST_ORDER_BY,
                         TEST_FIELD_ORDER_DIRECTION,
                         TEST_ORDER_DIRECTION);
-        String url = USER_BASE_URL + "/get?" + toQueryString(params);
-
+        String url = USER_BASE_URL + GET_PATH + "?" + toQueryString(params);
         List<FilteringDTO> filteringDTOList =
                 List.of(
                         FilteringDTO.builder()
@@ -217,7 +217,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_BASE_URL + "/get",
+                        USER_BASE_URL + GET_PATH,
                         filteringDTOList,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);
@@ -238,7 +238,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_BASE_URL + "/get",
+                        USER_BASE_URL + GET_PATH,
                         filteringDTOList,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);
@@ -265,7 +265,7 @@ public class UserControllerIT extends BaseIT {
 
         // When
         SuccessResponseDTO result =
-                performPutAndExpect(
+                performPatchAndExpect(
                         USER_BASE_URL + "/" + user.getId(),
                         userUpdateRequestDTO,
                         OK.value(),
@@ -302,7 +302,7 @@ public class UserControllerIT extends BaseIT {
 
         // When
         ErrorResponseDTO result =
-                performPutAndExpect(
+                performPatchAndExpect(
                         USER_BASE_URL + "/" + TEST_ID,
                         userUpdateRequestDTO,
                         NOT_FOUND.value(),
@@ -330,7 +330,7 @@ public class UserControllerIT extends BaseIT {
 
         // When
         ErrorResponseDTO result =
-                performPutAndExpect(
+                performPatchAndExpect(
                         USER_BASE_URL + "/" + user.getId(),
                         userUpdateRequestDTO,
                         NOT_MODIFIED.value(),
@@ -346,11 +346,12 @@ public class UserControllerIT extends BaseIT {
     @Transactional
     void update_InvalidRequest() throws Exception {
         // Given
-        UserUpdateRequestDTO userUpdateRequestDTO = UserUpdateRequestDTO.builder().build();
+        UserUpdateRequestDTO userUpdateRequestDTO =
+                UserUpdateRequestDTO.builder().password(TEST_INVALID_PASSWORD).build();
 
         // When
         ErrorResponseDTO result =
-                performPutAndExpect(
+                performPatchAndExpect(
                         USER_BASE_URL + "/" + TEST_ID,
                         userUpdateRequestDTO,
                         BAD_REQUEST.value(),

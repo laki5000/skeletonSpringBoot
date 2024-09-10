@@ -9,7 +9,6 @@ import jakarta.validation.ConstraintValidatorContext;
 /** Validator class for password validation. */
 public class PasswordValidator implements ConstraintValidator<IsValidPassword, String> {
 
-    private String nullMessage;
     private String minLengthMessage;
     private String maxLengthMessage;
     private String patternMessage;
@@ -21,7 +20,6 @@ public class PasswordValidator implements ConstraintValidator<IsValidPassword, S
      */
     @Override
     public void initialize(IsValidPassword constraintAnnotation) {
-        this.nullMessage = constraintAnnotation.nullMessage();
         this.minLengthMessage = constraintAnnotation.minLengthMessage();
         this.maxLengthMessage = constraintAnnotation.maxLengthMessage();
         this.patternMessage = constraintAnnotation.patternMessage();
@@ -37,11 +35,7 @@ public class PasswordValidator implements ConstraintValidator<IsValidPassword, S
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
-            context.buildConstraintViolationWithTemplate(nullMessage)
-                    .addConstraintViolation()
-                    .disableDefaultConstraintViolation();
-
-            return false;
+            return true;
         }
 
         if (value.length() < PASSWORD_MIN_LENGTH) {

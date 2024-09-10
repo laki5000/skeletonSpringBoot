@@ -188,7 +188,7 @@ Once the application is running, you can access it at `http://localhost:8080`.
 - **Update an existing user**
 
     ```http
-    PUT /api/v1/users/{id}
+    PATCH /api/v1/users/{id}
     ```
 
   **Path Parameters**:

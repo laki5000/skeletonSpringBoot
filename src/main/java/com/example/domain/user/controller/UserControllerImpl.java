@@ -1,6 +1,6 @@
 package com.example.domain.user.controller;
 
-import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
+import static com.example.utils.constants.EndpointConstants.*;
 import static com.example.utils.constants.FilteringConstants.*;
 import static com.example.utils.constants.MessageConstants.*;
 import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2;
@@ -62,14 +62,14 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @PostMapping("/get")
+    @PostMapping(GET_PATH)
     public ResponseEntity<?> get(
             @RequestParam(required = false, defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) int limit,
             @RequestParam(required = false, defaultValue = FIELD_ID) String orderBy,
             @RequestParam(required = false, defaultValue = ASC) String orderDirection,
             @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
-        log.info(USER_BASE_URL + " - Getting users");
+        log.info(USER_BASE_URL + GET_PATH + " - Getting users");
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
@@ -88,7 +88,7 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @PutMapping("/{id}")
+    @PatchMapping(ID_PATH)
     public ResponseEntity<?> update(
             @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         log.info(USER_BASE_URL + "/{} - Updating user", id);
@@ -107,7 +107,7 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ID_PATH)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info(USER_BASE_URL + "/{} - Deleting user", id);
 

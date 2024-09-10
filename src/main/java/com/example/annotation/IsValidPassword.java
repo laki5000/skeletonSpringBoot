@@ -18,8 +18,6 @@ import java.lang.annotation.Target;
 public @interface IsValidPassword {
     String message() default INVALID_PASSWORD_MESSAGE;
 
-    String nullMessage() default PASSWORD_REQUIRED_MESSAGE;
-
     String minLengthMessage() default PASSWORD_MIN_LENGTH_MESSAGE;
 
     String maxLengthMessage() default PASSWORD_MAX_LENGTH_MESSAGE;
