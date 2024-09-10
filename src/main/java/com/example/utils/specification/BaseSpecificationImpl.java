@@ -22,13 +22,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
- * Specification class for filtering entities.
+ * Abstract specification class for filtering entities.
  *
  * @param <T> the entity type
  */
 @RequiredArgsConstructor
-public class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
-    private final IMessageService messageService;
+public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
+    protected final IMessageService messageService;
 
     /**
      * Build a specification.
@@ -113,7 +113,7 @@ public class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
      * @return the predicate
      * @throws InvalidFilterException if the filter is invalid
      */
-    private Predicate buildStringPredicate(
+    protected Predicate buildStringPredicate(
             CriteriaBuilder criteriaBuilder,
             Root<T> root,
             String key,
@@ -148,7 +148,7 @@ public class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
      * @throws InvalidFilterException if the filter is invalid
      * @throws InvalidDateFormatException if the date format is invalid
      */
-    private Predicate buildDatePredicate(
+    protected Predicate buildDatePredicate(
             CriteriaBuilder criteriaBuilder,
             Root<T> root,
             String key,
@@ -187,7 +187,7 @@ public class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
      * @param value the string to check
      * @return true if the string is null or empty, false otherwise
      */
-    private boolean isNullOrEmpty(String value) {
+    protected boolean isNullOrEmpty(String value) {
         return value == null || value.isEmpty();
     }
 
@@ -203,7 +203,7 @@ public class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
      * @return the predicate
      * @throws InvalidFilterException if the filter is invalid
      */
-    private Predicate buildLongPredicate(
+    protected Predicate buildLongPredicate(
             CriteriaBuilder criteriaBuilder,
             Root<T> root,
             String key,
@@ -242,7 +242,7 @@ public class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
      * @return the date as an Instant
      * @throws InvalidDateFormatException if the date format is invalid
      */
-    private Instant parseDate(String value) throws InvalidDateFormatException {
+    protected Instant parseDate(String value) throws InvalidDateFormatException {
         if (value.matches(DATE_REGEX)) {
             return LocalDateTime.parse(value + "T00:00:00").atZone(ZoneId.of(UTC)).toInstant();
         } else if (value.matches(DATE_TIME_REGEX)) {
