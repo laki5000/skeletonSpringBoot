@@ -2,9 +2,9 @@
 
 ## Project Description
 
-Skeleton Spring Boot is a starter project designed to help you quickly set up a new Spring Boot application. It includes basic CRUD (Create, Read, Update, Delete) functionality and various useful dependencies to save you time from setting up from scratch.
+This is a pre-configured Spring Boot skeleton application designed to streamline project setup and development. The primary focus is on establishing a robust structure through well-defined policies, utilizing interfaces and abstract classes. The project includes a message service that supports internationalization (i18n), a global exception handler with custom exceptions via RestControllerAdvice, and neatly organized constants for maintainability.
 
-The project also contains global exception handling with custom exceptions, a base repository interface for flexible data access, and a message service to support internationalization (i18n).
+Additionally, the application features a powerful filtering mechanism using specifications for complex queries, along with comprehensive unit and integration tests to ensure code quality and reliability.
 
 ## Installation
 

@@ -5,6 +5,6 @@ import static org.mapstruct.ReportingPolicy.IGNORE;
 
 import org.mapstruct.MapperConfig;
 
-/** Base configuration for all MapStruct mappers. */
+/** Configuration class for all MapStruct mappers. */
 @MapperConfig(unmappedTargetPolicy = IGNORE, componentModel = SPRING)
-public interface IMapperBaseConfig {}
+public class MyMapperConfig {}

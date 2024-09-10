@@ -1,13 +1,13 @@
 package com.example.domain.user.mapper;
 
-import com.example.config.IMapperBaseConfig;
+import com.example.config.MyMapperConfig;
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.response.UserGetResponseDTO;
 import com.example.domain.user.model.User;
 import org.mapstruct.Mapper;
 
 /** Mapper interface for user-related mappings. */
-@Mapper(config = IMapperBaseConfig.class)
+@Mapper(config = MyMapperConfig.class)
 public interface IUserMapper {
     /**
      * Converts a User to a UserGetResponseDTO.
