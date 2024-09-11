@@ -4,7 +4,7 @@ import static com.example.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
-import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,8 @@ public class UserMapperTests {
     private final IUserMapper userMapper = Mappers.getMapper(IUserMapper.class);
 
     @Test
-    @DisplayName("Tests the successful mapping of an entity to a get response DTO.")
-    public void toGetResponseDTO_Success() {
+    @DisplayName("Tests the successful mapping of an User to a UserResponseDTO.")
+    public void toResponseDTO_Success() {
         // Given
         User user =
                 User.builder()
@@ -28,8 +28,8 @@ public class UserMapperTests {
                         .createdBy(TEST_USERNAME2)
                         .updatedBy(TEST_USERNAME)
                         .build();
-        UserGetResponseDTO expected =
-                UserGetResponseDTO.builder()
+        UserResponseDTO expected =
+                UserResponseDTO.builder()
                         .id(TEST_ID)
                         .username(TEST_USERNAME)
                         .createdAt(TEST_INSTANT)
@@ -39,14 +39,14 @@ public class UserMapperTests {
                         .build();
 
         // When
-        UserGetResponseDTO result = userMapper.toGetResponseDTO(user);
+        UserResponseDTO result = userMapper.toResponseDTO(user);
 
         // Then
         assertEquals(result, expected);
     }
 
     @Test
-    @DisplayName("Tests the successful mapping of a create request DTO to an entity.")
+    @DisplayName("Tests the successful mapping of a UserCreateRequestDTO to a User.")
     public void toEntity_Success() {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =

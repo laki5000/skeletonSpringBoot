@@ -66,7 +66,11 @@ Once the application is running, you can access it at `http://localhost:8080`.
     ```json
     {
       "username": "john.doe",
-      "password": "P@ssw0rd"
+      "password": "P@ssw0rd",
+      "details": {
+        "firstName": "John",
+        "lastName": "Doe"
+      }
     }
     ```
 
@@ -81,7 +85,16 @@ Once the application is running, you can access it at `http://localhost:8080`.
         "createdAt": "2024-07-22T16:51:12.650060Z",
         "updatedAt": "2024-07-22T16:51:12.650060Z",
         "createdBy": "unknown",
-        "updatedBy": null
+        "updatedBy": null,
+        "details": {
+          "id": 1,
+          "firstName": "John",
+          "lastName": "Doe",
+          "createdAt": "2024-07-22T16:51:12.650060Z",
+          "updatedAt": "2024-07-22T16:51:12.650060Z",
+          "createdBy": "unknown",
+          "updatedBy": null
+        }
       }
     }
     ```
@@ -122,20 +135,9 @@ Once the application is running, you can access it at `http://localhost:8080`.
         "value": "1"
       },
       {
-        "field": "username",
+        "field": "details.id",
         "operator": "EQUALS",
-        "value": "john.doe"
-      },
-      {
-        "field": "createdAt",
-        "operator": "GREATER_THAN",
-        "value": "2024-07-22T16:51:12.650060Z"
-      },
-      {
-        "field": "updatedAt",
-        "operator": "BETWEEN",
-        "value": "2024-07-22T16:51:12.650060Z",
-        "otherValue": "2024-08-22T16:51:12.650060Z"
+        "value": "1"
       }
     ]
     ```
@@ -153,7 +155,16 @@ Once the application is running, you can access it at `http://localhost:8080`.
             "createdAt": "2024-07-22T16:59:43.631651Z",
             "updatedAt": "2024-07-22T16:59:43.631651Z",
             "createdBy": "unknown",
-            "updatedBy": null
+            "updatedBy": null,
+            "details": {
+              "id": 1,
+              "firstName": "John",
+              "lastName": "Doe",
+              "createdAt": "2024-07-22T16:59:43.631651Z",
+              "updatedAt": "2024-07-22T16:59:43.631651Z",
+              "createdBy": "unknown",
+              "updatedBy": null
+            }
           }
         ],
         "pageable": {
@@ -199,7 +210,11 @@ Once the application is running, you can access it at `http://localhost:8080`.
 
     ```json
     {
-      "password": "P@ssw0rd"
+      "password": "P@ssw0rd",
+        "details": {
+            "firstName": "John",
+            "lastName": "Don"
+        }
     }
     ```
 
@@ -214,7 +229,16 @@ Once the application is running, you can access it at `http://localhost:8080`.
         "createdAt": "2024-07-22T16:51:12.650060Z",
         "updatedAt": "2024-07-22T16:51:12.650060Z",
         "createdBy": "unknown",
-        "updatedBy": "unknown"
+        "updatedBy": "unknown",
+        "details": {
+          "id": 1,
+          "firstName": "John",
+          "lastName": "Don",
+          "createdAt": "2024-07-22T16:51:12.650060Z",
+          "updatedAt": "2024-07-22T16:51:12.650060Z",
+          "createdBy": "unknown",
+          "updatedBy": "unknown"
+        }
       }
     }
     ```

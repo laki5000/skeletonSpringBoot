@@ -3,12 +3,13 @@ package com.example.domain.user.dto.request;
 import static com.example.utils.constants.ValidationConstants.*;
 
 import com.example.annotation.IsValidPassword;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 
-/** DTO class for user creation. */
+/** DTO class for user create request. */
 @Getter
 @Builder
 public class UserCreateRequestDTO {
@@ -17,4 +18,8 @@ public class UserCreateRequestDTO {
     private String username;
 
     @IsValidPassword private String password;
+
+    @NotNull(message = DETAILS_REQUIRED_MESSAGE)
+    @Valid
+    private UserDetailsRequestDTO details;
 }

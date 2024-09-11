@@ -7,6 +7,7 @@ public class FilteringConstants {
 
     public static final String FIELD_PASSWORD = "password";
     public static final String FIELD_ID = "id";
+    public static final String FIELD_DETAILS_ID = "detailsId";
 
     public static final String STRING = "String";
     public static final String INSTANT = "Instant";

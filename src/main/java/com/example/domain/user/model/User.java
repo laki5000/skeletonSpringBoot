@@ -1,7 +1,11 @@
 package com.example.domain.user.model;
 
+import static com.example.utils.constants.EntityConstants.USER_TABLE_NAME;
+import static com.example.utils.constants.FilteringConstants.FIELD_DETAILS_ID;
+import static com.example.utils.constants.FilteringConstants.FIELD_ID;
 import static com.example.utils.constants.ValidationConstants.USERNAME_MAX_LENGTH;
 import static com.example.utils.constants.ValidationConstants.USERNAME_MIN_LENGTH;
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import com.example.utils.model.BaseEntity;
@@ -13,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 
 /** Entity class for users. */
 @Entity
-@Table(name = "users")
+@Table(name = USER_TABLE_NAME)
 @Getter
 @Setter
 @SuperBuilder
@@ -32,4 +36,9 @@ public class User extends BaseEntity {
     @NotNull
     @Column(nullable = false)
     private String password;
+
+    @NotNull
+    @OneToOne(cascade = ALL)
+    @JoinColumn(name = FIELD_DETAILS_ID, referencedColumnName = FIELD_ID, nullable = false)
+    private UserDetails details;
 }

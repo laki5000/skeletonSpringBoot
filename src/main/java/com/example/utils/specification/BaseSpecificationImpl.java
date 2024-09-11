@@ -9,9 +9,7 @@ import com.example.exception.InvalidFilterException;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.enums.FilterOperator;
 import com.example.utils.service.IMessageService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -61,17 +59,16 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
                             messageService.getMessage(ERROR_INVALID_FILTER));
                 }
 
-                Class<?> javaType = root.get(key).getJavaType();
+                Path<?> path = getNestedField(root, key);
+                Class<?> javaType = path.getJavaType();
 
                 switch (javaType.getSimpleName()) {
                     case STRING -> predicates.add(
-                            buildStringPredicate(criteriaBuilder, root, key, value, operator));
+                            buildStringPredicate(criteriaBuilder, path, value, operator));
                     case INSTANT -> predicates.add(
-                            buildDatePredicate(
-                                    criteriaBuilder, root, key, value, operator, otherValue));
+                            buildDatePredicate(criteriaBuilder, path, value, operator, otherValue));
                     case LONG -> predicates.add(
-                            buildLongPredicate(
-                                    criteriaBuilder, root, key, value, operator, otherValue));
+                            buildLongPredicate(criteriaBuilder, path, value, operator, otherValue));
                     default -> throw new InvalidFilterException(
                             messageService.getMessage(ERROR_INVALID_FILTER));
                 }
@@ -103,85 +100,6 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
     }
 
     /**
-     * Build a predicate for a string field.
-     *
-     * @param criteriaBuilder the criteria builder
-     * @param root the root
-     * @param key the field key
-     * @param value the value
-     * @param operator the operator
-     * @return the predicate
-     * @throws InvalidFilterException if the filter is invalid
-     */
-    protected Predicate buildStringPredicate(
-            CriteriaBuilder criteriaBuilder,
-            Root<T> root,
-            String key,
-            String value,
-            FilterOperator operator) {
-        return switch (operator) {
-            case EQUALS -> criteriaBuilder.equal(
-                    criteriaBuilder.lower(root.get(key)), value.toLowerCase());
-            case CONTAINS -> criteriaBuilder.like(
-                    criteriaBuilder.lower(root.get(key)), "%" + value.toLowerCase() + "%");
-            case STARTS_WITH -> criteriaBuilder.like(
-                    criteriaBuilder.lower(root.get(key)), value.toLowerCase() + "%");
-            case ENDS_WITH -> criteriaBuilder.like(
-                    criteriaBuilder.lower(root.get(key)), "%" + value.toLowerCase());
-            case NOT_EQUALS -> criteriaBuilder.notEqual(
-                    criteriaBuilder.lower(root.get(key)), value.toLowerCase());
-            default -> throw new InvalidFilterException(
-                    messageService.getMessage(ERROR_INVALID_FILTER));
-        };
-    }
-
-    /**
-     * Build a predicate for a date field.
-     *
-     * @param criteriaBuilder the criteria builder
-     * @param root the root
-     * @param key the field key
-     * @param value the value
-     * @param operator the operator
-     * @param otherValue the other value
-     * @return the predicate
-     * @throws InvalidFilterException if the filter is invalid
-     * @throws InvalidDateFormatException if the date format is invalid
-     */
-    protected Predicate buildDatePredicate(
-            CriteriaBuilder criteriaBuilder,
-            Root<T> root,
-            String key,
-            String value,
-            FilterOperator operator,
-            String otherValue)
-            throws InvalidFilterException {
-        Instant parsedValue = parseDate(value);
-
-        switch (operator) {
-            case EQUALS:
-                return criteriaBuilder.equal(root.get(key), parsedValue);
-            case GREATER_THAN:
-                return criteriaBuilder.greaterThan(root.get(key), parsedValue);
-            case LESS_THAN:
-                return criteriaBuilder.lessThan(root.get(key), parsedValue);
-            case BETWEEN:
-                if (isNullOrEmpty(otherValue)) {
-                    throw new InvalidFilterException(
-                            messageService.getMessage(ERROR_INVALID_FILTER));
-                }
-
-                Instant parsedOtherValue = parseDate(otherValue);
-
-                return criteriaBuilder.between(root.get(key), parsedValue, parsedOtherValue);
-            case NOT_EQUALS:
-                return criteriaBuilder.notEqual(root.get(key), parsedValue);
-            default:
-                throw new InvalidFilterException(messageService.getMessage(ERROR_INVALID_FILTER));
-        }
-    }
-
-    /**
      * Check if a string is null or empty.
      *
      * @param value the string to check
@@ -192,11 +110,98 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
     }
 
     /**
+     * Get a nested field from a root.
+     *
+     * @param root the root
+     * @param field the field
+     * @return the nested field
+     */
+    protected Path<?> getNestedField(Root<?> root, String field) {
+        String[] fieldParts = field.split("\\.");
+        Path<?> path = root.get(fieldParts[0]);
+
+        for (int i = 1; i < fieldParts.length; i++) {
+            path = path.get(fieldParts[i]);
+        }
+
+        return path;
+    }
+
+    /**
+     * Build a predicate for a string field.
+     *
+     * @param criteriaBuilder the criteria builder
+     * @param path the path
+     * @param value the value
+     * @param operator the operator
+     * @return the predicate
+     * @throws InvalidFilterException if the filter is invalid
+     */
+    protected Predicate buildStringPredicate(
+            CriteriaBuilder criteriaBuilder, Path<?> path, String value, FilterOperator operator) {
+        Expression<String> expression = criteriaBuilder.lower(path.as(String.class));
+
+        return switch (operator) {
+            case EQUALS -> criteriaBuilder.equal(expression, value.toLowerCase());
+            case CONTAINS -> criteriaBuilder.like(expression, "%" + value.toLowerCase() + "%");
+            case STARTS_WITH -> criteriaBuilder.like(expression, value.toLowerCase() + "%");
+            case ENDS_WITH -> criteriaBuilder.like(expression, "%" + value.toLowerCase());
+            case NOT_EQUALS -> criteriaBuilder.notEqual(expression, value.toLowerCase());
+            default -> throw new InvalidFilterException(
+                    messageService.getMessage(ERROR_INVALID_FILTER));
+        };
+    }
+
+    /**
+     * Build a predicate for a date field.
+     *
+     * @param criteriaBuilder the criteria builder
+     * @param path the path
+     * @param value the value
+     * @param operator the operator
+     * @param otherValue the other value
+     * @return the predicate
+     * @throws InvalidFilterException if the filter is invalid
+     * @throws InvalidDateFormatException if the date format is invalid
+     */
+    protected Predicate buildDatePredicate(
+            CriteriaBuilder criteriaBuilder,
+            Path<?> path,
+            String value,
+            FilterOperator operator,
+            String otherValue)
+            throws InvalidFilterException {
+        Expression<Instant> expression = path.as(Instant.class);
+        Instant parsedValue = parseDate(value);
+
+        switch (operator) {
+            case EQUALS:
+                return criteriaBuilder.equal(expression, parsedValue);
+            case GREATER_THAN:
+                return criteriaBuilder.greaterThan(expression, parsedValue);
+            case LESS_THAN:
+                return criteriaBuilder.lessThan(expression, parsedValue);
+            case BETWEEN:
+                if (isNullOrEmpty(otherValue)) {
+                    throw new InvalidFilterException(
+                            messageService.getMessage(ERROR_INVALID_FILTER));
+                }
+
+                Instant parsedOtherValue = parseDate(otherValue);
+
+                return criteriaBuilder.between(expression, parsedValue, parsedOtherValue);
+            case NOT_EQUALS:
+                return criteriaBuilder.notEqual(expression, parsedValue);
+            default:
+                throw new InvalidFilterException(messageService.getMessage(ERROR_INVALID_FILTER));
+        }
+    }
+
+    /**
      * Build a predicate for a long field.
      *
      * @param criteriaBuilder the criteria builder
-     * @param root the root
-     * @param key the field key
+     * @param path the path
      * @param value the value
      * @param operator the operator
      * @param otherValue the other value
@@ -205,20 +210,21 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
      */
     protected Predicate buildLongPredicate(
             CriteriaBuilder criteriaBuilder,
-            Root<T> root,
-            String key,
+            Path<?> path,
             String value,
             FilterOperator operator,
             String otherValue)
             throws InvalidFilterException {
+        Expression<Long> expression = path.as(Long.class);
         Long parsedValue = Long.parseLong(value);
+
         switch (operator) {
             case EQUALS:
-                return criteriaBuilder.equal(root.get(key), parsedValue);
+                return criteriaBuilder.equal(expression, parsedValue);
             case GREATER_THAN:
-                return criteriaBuilder.greaterThan(root.get(key), parsedValue);
+                return criteriaBuilder.greaterThan(expression, parsedValue);
             case LESS_THAN:
-                return criteriaBuilder.lessThan(root.get(key), parsedValue);
+                return criteriaBuilder.lessThan(expression, parsedValue);
             case BETWEEN:
                 if (isNullOrEmpty(otherValue)) {
                     throw new InvalidFilterException(
@@ -227,9 +233,9 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
 
                 Long parsedOtherValue = Long.parseLong(otherValue);
 
-                return criteriaBuilder.between(root.get(key), parsedValue, parsedOtherValue);
+                return criteriaBuilder.between(expression, parsedValue, parsedOtherValue);
             case NOT_EQUALS:
-                return criteriaBuilder.notEqual(root.get(key), parsedValue);
+                return criteriaBuilder.notEqual(expression, parsedValue);
             default:
                 throw new InvalidFilterException(messageService.getMessage(ERROR_INVALID_FILTER));
         }

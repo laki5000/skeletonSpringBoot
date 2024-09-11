@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.*;
 import com.example.BaseIT;
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
-import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.IUserRepository;
 import com.example.utils.dto.request.FilteringDTO;
@@ -53,22 +53,22 @@ public class UserControllerIT extends BaseIT {
         // Then
         assertNotNull(response);
 
-        UserGetResponseDTO userGetResponseDTO =
-                fromJson(toJson(response.getData()), UserGetResponseDTO.class);
+        UserResponseDTO userResponseDTO =
+                fromJson(toJson(response.getData()), UserResponseDTO.class);
 
-        assertNotNull(userGetResponseDTO);
+        assertNotNull(userResponseDTO);
 
-        User user = userRepository.findById(userGetResponseDTO.getId()).orElse(null);
+        User user = userRepository.findById(userResponseDTO.getId()).orElse(null);
 
         assertNotNull(user);
         assertUserProperties(
-                userGetResponseDTO.getId(),
+                userResponseDTO.getId(),
                 TEST_USERNAME,
                 TEST_PASSWORD,
-                userGetResponseDTO.getCreatedBy(),
-                userGetResponseDTO.getUpdatedBy(),
+                userResponseDTO.getCreatedBy(),
+                userResponseDTO.getUpdatedBy(),
                 user);
-        assertUserProperties(user, userGetResponseDTO);
+        assertUserProperties(user, userResponseDTO);
     }
 
     @Test
@@ -188,16 +188,16 @@ public class UserControllerIT extends BaseIT {
         // Then
         assertNotNull(result);
 
-        Page<UserGetResponseDTO> userGetResponseDTOPage =
-                fromJsonToPage(toJson(result.getData()), UserGetResponseDTO.class);
+        Page<UserResponseDTO> userResponseDTOPage =
+                fromJsonToPage(toJson(result.getData()), UserResponseDTO.class);
 
-        assertNotNull(userGetResponseDTOPage);
-        assertEquals(1, userGetResponseDTOPage.getTotalElements());
+        assertNotNull(userResponseDTOPage);
+        assertEquals(1, userResponseDTOPage.getTotalElements());
 
-        UserGetResponseDTO userGetResponseDTO = userGetResponseDTOPage.getContent().get(0);
+        UserResponseDTO userResponseDTO = userResponseDTOPage.getContent().get(0);
 
-        assertNotNull(userGetResponseDTO);
-        assertUserProperties(user, userGetResponseDTO);
+        assertNotNull(userResponseDTO);
+        assertUserProperties(user, userResponseDTO);
     }
 
     @Test
@@ -274,22 +274,21 @@ public class UserControllerIT extends BaseIT {
         // Then
         assertNotNull(result);
 
-        UserGetResponseDTO userGetResponseDTO =
-                fromJson(toJson(result.getData()), UserGetResponseDTO.class);
+        UserResponseDTO userResponseDTO = fromJson(toJson(result.getData()), UserResponseDTO.class);
 
-        assertNotNull(userGetResponseDTO);
+        assertNotNull(userResponseDTO);
 
-        user = userRepository.findById(userGetResponseDTO.getId()).orElse(null);
+        user = userRepository.findById(userResponseDTO.getId()).orElse(null);
 
         assertNotNull(user);
         assertUserProperties(
-                userGetResponseDTO.getId(),
+                userResponseDTO.getId(),
                 TEST_USERNAME,
                 TEST_PASSWORD2,
                 TEST_USERNAME,
                 "unknown",
                 user);
-        assertUserProperties(user, userGetResponseDTO);
+        assertUserProperties(user, userResponseDTO);
     }
 
     @Test
@@ -433,7 +432,7 @@ public class UserControllerIT extends BaseIT {
      * @param user The user with the expected properties
      * @param dto The DTO to check
      */
-    private void assertUserProperties(User user, UserGetResponseDTO dto) {
+    private void assertUserProperties(User user, UserResponseDTO dto) {
         assertEquals(user.getId(), dto.getId());
         assertEquals(user.getUsername(), dto.getUsername());
         assertEquals(user.getCreatedBy(), dto.getCreatedBy());

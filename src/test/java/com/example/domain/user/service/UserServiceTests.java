@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
-import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.IUserRepository;
@@ -46,23 +46,23 @@ public class UserServiceTests {
         UserCreateRequestDTO userCreateRequestDTO =
                 UserCreateRequestDTO.builder().username(TEST_USERNAME).build();
         User user = User.builder().build();
-        UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
+        UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
         when(userMapper.toEntity(userCreateRequestDTO, "unknown")).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
-        when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
+        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
 
         // When
-        UserGetResponseDTO result = userService.create(userCreateRequestDTO);
+        UserResponseDTO result = userService.create(userCreateRequestDTO);
 
         // Then
-        assertEquals(userGetResponseDTO, result);
+        assertEquals(userResponseDTO, result);
 
         verify(userRepository).existsByUsername(TEST_USERNAME);
         verify(userMapper).toEntity(userCreateRequestDTO, "unknown");
         verify(userRepository).save(user);
-        verify(userMapper).toGetResponseDTO(user);
+        verify(userMapper).toResponseDTO(user);
     }
 
     @Test
@@ -91,17 +91,17 @@ public class UserServiceTests {
         Specification<User> specificationMock = mock(Specification.class);
 
         User user = User.builder().build();
-        UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
+        UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(specification.buildSpecification(
                         filteringDTOList, TEST_ORDER_BY, TEST_ORDER_DIRECTION))
                 .thenReturn(specificationMock);
         when(userRepository.findAll(specificationMock, pageable))
                 .thenReturn(new PageImpl<>(List.of(user)));
-        when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
+        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
 
         // When
-        Page<UserGetResponseDTO> result =
+        Page<UserResponseDTO> result =
                 userService.get(
                         TEST_PAGE,
                         TEST_LIMIT,
@@ -110,12 +110,12 @@ public class UserServiceTests {
                         filteringDTOList);
 
         // Then
-        assertEquals(List.of(userGetResponseDTO), result.getContent());
+        assertEquals(List.of(userResponseDTO), result.getContent());
 
         verify(specification)
                 .buildSpecification(filteringDTOList, TEST_ORDER_BY, TEST_ORDER_DIRECTION);
         verify(userRepository).findAll(specificationMock, pageable);
-        verify(userMapper).toGetResponseDTO(user);
+        verify(userMapper).toResponseDTO(user);
     }
 
     @Test
@@ -125,20 +125,20 @@ public class UserServiceTests {
         UserUpdateRequestDTO userUpdateRequestDTO =
                 UserUpdateRequestDTO.builder().password(TEST_PASSWORD2).build();
         User user = User.builder().password(TEST_PASSWORD).build();
-        UserGetResponseDTO userGetResponseDTO = UserGetResponseDTO.builder().build();
+        UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(userRepository.findById(TEST_ID)).thenReturn(java.util.Optional.of(user));
-        when(userMapper.toGetResponseDTO(user)).thenReturn(userGetResponseDTO);
+        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
         when(userRepository.saveAndFlush(user)).thenReturn(user);
 
         // When
-        UserGetResponseDTO result = userService.update(TEST_ID, userUpdateRequestDTO);
+        UserResponseDTO result = userService.update(TEST_ID, userUpdateRequestDTO);
 
         // Then
-        assertEquals(userGetResponseDTO, result);
+        assertEquals(userResponseDTO, result);
 
         verify(userRepository).findById(TEST_ID);
-        verify(userMapper).toGetResponseDTO(user);
+        verify(userMapper).toResponseDTO(user);
         verify(userRepository).saveAndFlush(user);
     }
 

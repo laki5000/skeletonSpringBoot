@@ -6,9 +6,11 @@ import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2_JU
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
-import com.example.domain.user.dto.response.UserGetResponseDTO;
+import com.example.domain.user.dto.response.UserDetailsResponseDTO;
+import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
+import com.example.domain.user.model.UserDetails;
 import com.example.domain.user.repository.IUserRepository;
 import com.example.domain.user.specification.UserSpecification;
 import com.example.exception.ConflictException;
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressFBWarnings(value = EI_EXPOSE_REP2, justification = EI_EXPOSE_REP2_JUSTIFICATION)
 public class UserServiceImpl implements IUserService {
     private final IMessageService messageService;
+    private final IUserDetailsService userDetailsService;
     private final IUserRepository userRepository;
     private final IUserMapper userMapper;
     private final UserSpecification userSpecification;
@@ -47,13 +50,19 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     @Transactional
-    public UserGetResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
+    public UserResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
         log.debug("Creating user");
 
         validateUsername(userCreateRequestDTO.getUsername());
 
-        return userMapper.toGetResponseDTO(
-                userRepository.save(userMapper.toEntity(userCreateRequestDTO, "unknown")));
+        UserDetails userDetails =
+                userDetailsService.mapToEntity(userCreateRequestDTO.getDetails(), "unknown");
+        User user =
+                userRepository.save(
+                        userMapper.toEntity(userCreateRequestDTO, "unknown", userDetails));
+
+        return userMapper.toResponseDTO(
+                user, userDetailsService.mapToResponseDTO(user.getDetails()));
     }
 
     /**
@@ -67,18 +76,27 @@ public class UserServiceImpl implements IUserService {
      * @return the page of response DTOs
      */
     @Override
-    public Page<UserGetResponseDTO> get(
+    public Page<UserResponseDTO> get(
             int page,
             int limit,
             String orderBy,
             String orderDirection,
             List<FilteringDTO> filteringDTOList) {
         log.debug("Getting users");
+
         Pageable pageable = PageRequest.of(page, limit);
         Specification<User> specification =
                 userSpecification.buildSpecification(filteringDTOList, orderBy, orderDirection);
 
-        return userRepository.findAll(specification, pageable).map(userMapper::toGetResponseDTO);
+        return userRepository
+                .findAll(specification, pageable)
+                .map(
+                        user -> {
+                            UserDetailsResponseDTO userDetailsResponseDTO =
+                                    userDetailsService.mapToResponseDTO(user.getDetails());
+
+                            return userMapper.toResponseDTO(user, userDetailsResponseDTO);
+                        });
     }
 
     /**
@@ -92,26 +110,25 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     @Transactional
-    public UserGetResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO) {
+    public UserResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO) {
         log.debug("Updating user");
 
         User user = getById(id);
-        boolean updated = false;
+        boolean userUpdated = updateUser(user, userUpdateRequestDTO);
+        boolean detailsUpdated =
+                userDetailsService.updateUserDetails(
+                        user.getDetails(), userUpdateRequestDTO.getDetails());
 
-        if (userUpdateRequestDTO.getPassword() != null
-                && !user.getPassword().equals(userUpdateRequestDTO.getPassword())) {
-            user.setPassword(userUpdateRequestDTO.getPassword());
-
-            updated = true;
-        }
-
-        if (!updated) {
+        if (!userUpdated && !detailsUpdated) {
             throw new NotModifiedException(messageService.getMessage(ERROR_USER_NOT_MODIFIED));
         }
 
-        user.setUpdatedBy("unknown");
+        updateAuditFields(user, userUpdated, detailsUpdated);
 
-        return userMapper.toGetResponseDTO(userRepository.saveAndFlush(user));
+        user = userRepository.saveAndFlush(user);
+
+        return userMapper.toResponseDTO(
+                user, userDetailsService.mapToResponseDTO(user.getDetails()));
     }
 
     /**
@@ -158,5 +175,42 @@ public class UserServiceImpl implements IUserService {
                         () ->
                                 new NotFoundException(
                                         messageService.getMessage(ERROR_USER_NOT_FOUND)));
+    }
+
+    /**
+     * Updates a user.
+     *
+     * @param user the user to update
+     * @param userUpdateRequestDTO the DTO containing the user's details
+     * @return true if the user is updated, false otherwise
+     */
+    private boolean updateUser(User user, UserUpdateRequestDTO userUpdateRequestDTO) {
+        log.debug("Updating user with ID: {}", user.getId());
+
+        if (userUpdateRequestDTO.getPassword() != null
+                && !user.getPassword().equals(userUpdateRequestDTO.getPassword())) {
+            user.setPassword(userUpdateRequestDTO.getPassword());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Updates audit fields.
+     *
+     * @param user the user to update
+     * @param userUpdated true if the user is updated, false otherwise
+     * @param detailsUpdated true if the user details are updated, false otherwise
+     */
+    private void updateAuditFields(User user, boolean userUpdated, boolean detailsUpdated) {
+        log.debug("Updating audit fields");
+
+        if (userUpdated) {
+            user.setUpdatedBy("unknown");
+        }
+
+        userDetailsService.updateAuditFields(user.getDetails(), detailsUpdated);
     }
 }
