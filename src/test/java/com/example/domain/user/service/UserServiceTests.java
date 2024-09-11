@@ -35,6 +35,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class UserServiceTests {
     @InjectMocks private UserServiceImpl userService;
     @Mock private IMessageService messageService;
+    @Mock private IUserDetailsService userDetailsService;
     @Mock private IUserRepository userRepository;
     @Mock private IUserMapper userMapper;
     @Mock private UserSpecification specification;

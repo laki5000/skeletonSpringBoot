@@ -103,7 +103,7 @@ public class GlobalExceptionHandler {
      */
     private ResponseEntity<ErrorResponseDTO> handleException(
             Exception ex, String errorMessage, HttpStatus statusCode) {
-        log.error("Handling {}:", ex.getClass().getSimpleName(), ex);
+        log.error("{} occurred: {}", ex.getClass().getSimpleName(), ex);
 
         ErrorResponseDTO errorResponse =
                 ErrorResponseDTO.builder()
