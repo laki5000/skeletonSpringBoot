@@ -41,7 +41,7 @@ public class UserControllerImpl implements IUserController {
     @Override
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody UserCreateRequestDTO userCreateRequestDTO) {
-        log.info(USER_BASE_URL + " - Creating user");
+        log.info("create called");
 
         return ResponseEntity.status(CREATED)
                 .body(
@@ -69,7 +69,7 @@ public class UserControllerImpl implements IUserController {
             @RequestParam(required = false, defaultValue = FIELD_ID) String orderBy,
             @RequestParam(required = false, defaultValue = ASC) String orderDirection,
             @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
-        log.info(USER_BASE_URL + GET_PATH + " - Getting users");
+        log.info("get called");
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
@@ -91,7 +91,7 @@ public class UserControllerImpl implements IUserController {
     @PatchMapping(ID_PATH)
     public ResponseEntity<?> update(
             @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
-        log.info(USER_BASE_URL + "/{} - Updating user", id);
+        log.info("update called");
 
         return ResponseEntity.ok(
                 SuccessResponseDTO.builder()
@@ -109,7 +109,7 @@ public class UserControllerImpl implements IUserController {
     @Override
     @DeleteMapping(ID_PATH)
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        log.info(USER_BASE_URL + "/{} - Deleting user", id);
+        log.info("delete called");
 
         userService.delete(id);
 

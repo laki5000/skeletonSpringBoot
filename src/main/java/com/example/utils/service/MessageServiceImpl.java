@@ -31,7 +31,7 @@ public class MessageServiceImpl implements IMessageService {
      */
     @Override
     public String getMessage(String key) {
-        log.debug("Getting message for key: {}", key);
+        log.debug("getMessage called");
 
         ServletRequestAttributes attributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

@@ -51,7 +51,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public UserResponseDTO create(UserCreateRequestDTO userCreateRequestDTO) {
-        log.debug("Creating user");
+        log.debug("create called");
 
         validateUsername(userCreateRequestDTO.getUsername());
 
@@ -82,7 +82,7 @@ public class UserServiceImpl implements IUserService {
             String orderBy,
             String orderDirection,
             List<FilteringDTO> filteringDTOList) {
-        log.debug("Getting users");
+        log.debug("get called");
 
         Pageable pageable = PageRequest.of(page, limit);
         Specification<User> specification =
@@ -111,7 +111,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public UserResponseDTO update(Long id, UserUpdateRequestDTO userUpdateRequestDTO) {
-        log.debug("Updating user");
+        log.debug("update called");
 
         User user = getById(id);
         boolean userUpdated = updateUser(user, userUpdateRequestDTO);
@@ -140,7 +140,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public void delete(Long id) {
-        log.debug("Deleting user");
+        log.debug("delete called");
 
         userRepository.delete(getById(id));
     }
@@ -152,7 +152,7 @@ public class UserServiceImpl implements IUserService {
      * @throws ConflictException if the username already exists
      */
     private void validateUsername(String username) {
-        log.debug("Validating username: {}", username);
+        log.debug("validateUsername called");
 
         if (userRepository.existsByUsername(username)) {
             throw new ConflictException(messageService.getMessage(ERROR_USER_USERNAME_EXISTS));
@@ -167,7 +167,7 @@ public class UserServiceImpl implements IUserService {
      * @throws NotFoundException if the user is not found
      */
     private User getById(Long id) {
-        log.debug("Getting user by ID: {}", id);
+        log.debug("getById called");
 
         return userRepository
                 .findById(id)
@@ -185,7 +185,7 @@ public class UserServiceImpl implements IUserService {
      * @return true if the user is updated, false otherwise
      */
     private boolean updateUser(User user, UserUpdateRequestDTO userUpdateRequestDTO) {
-        log.debug("Updating user with ID: {}", user.getId());
+        log.debug("updateUser called");
 
         if (userUpdateRequestDTO.getPassword() != null
                 && !user.getPassword().equals(userUpdateRequestDTO.getPassword())) {
@@ -205,7 +205,7 @@ public class UserServiceImpl implements IUserService {
      * @param detailsUpdated true if the user details are updated, false otherwise
      */
     private void updateAuditFields(User user, boolean userUpdated, boolean detailsUpdated) {
-        log.debug("Updating audit fields");
+        log.debug("updateAuditFields called");
 
         if (userUpdated) {
             user.setUpdatedBy("unknown");

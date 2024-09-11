@@ -25,7 +25,7 @@ public class MessageSourceConfig implements WebMvcConfigurer {
      */
     @Bean
     public MessageSource messageSource() {
-        log.info("Creating message source bean");
+        log.info("messageSource called");
 
         ReloadableResourceBundleMessageSource messageSource =
                 new ReloadableResourceBundleMessageSource();
@@ -43,7 +43,7 @@ public class MessageSourceConfig implements WebMvcConfigurer {
      */
     @Bean
     public LocaleResolver localeResolver() {
-        log.info("Creating locale resolver bean");
+        log.info("localeResolver called");
 
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 
@@ -59,7 +59,7 @@ public class MessageSourceConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        log.info("Adding locale change interceptor to registry");
+        log.info("addInterceptors called");
 
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
 

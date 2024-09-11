@@ -5,10 +5,11 @@ import static com.example.utils.constants.ValidationConstants.*;
 import com.example.annotation.IsValidPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.extern.log4j.Log4j2;
 
 /** Validator class for password validation. */
+@Log4j2
 public class PasswordValidator implements ConstraintValidator<IsValidPassword, String> {
-
     private String minLengthMessage;
     private String maxLengthMessage;
     private String patternMessage;
@@ -34,6 +35,8 @@ public class PasswordValidator implements ConstraintValidator<IsValidPassword, S
      */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        log.debug("isValid called");
+
         if (value == null) {
             return true;
         }

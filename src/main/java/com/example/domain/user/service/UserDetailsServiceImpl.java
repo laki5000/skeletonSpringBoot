@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements IUserDetailsService {
      */
     @Override
     public UserDetailsResponseDTO mapToResponseDTO(UserDetails userDetails) {
-        log.debug("Mapping UserDetails to UserDetailsResponseDTO");
+        log.debug("mapToResponseDTO called");
 
         return userDetailsMapper.toResponseDTO(userDetails);
     }
@@ -37,7 +37,7 @@ public class UserDetailsServiceImpl implements IUserDetailsService {
      */
     @Override
     public UserDetails mapToEntity(UserDetailsRequestDTO userDetailsRequestDTO, String createdBy) {
-        log.debug("Mapping UserDetailsRequestDTO to UserDetails");
+        log.debug("mapToEntity called");
 
         return userDetailsMapper.toEntity(userDetailsRequestDTO, createdBy);
     }
@@ -52,7 +52,7 @@ public class UserDetailsServiceImpl implements IUserDetailsService {
     @Override
     public boolean updateUserDetails(
             UserDetails userDetails, UserDetailsRequestDTO userDetailsRequestDTO) {
-        log.debug("Updating user details with id: {}", userDetails.getId());
+        log.debug("updateUserDetails called");
 
         boolean updated = false;
 
@@ -81,7 +81,7 @@ public class UserDetailsServiceImpl implements IUserDetailsService {
      */
     @Override
     public void updateAuditFields(UserDetails userDetails, boolean detailsUpdated) {
-        log.debug("Updating audit fields");
+        log.debug("updateAuditFields called");
 
         if (detailsUpdated) {
             userDetails.setUpdatedBy("unknown");

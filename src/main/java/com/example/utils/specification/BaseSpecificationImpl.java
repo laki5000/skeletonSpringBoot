@@ -17,6 +17,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.data.jpa.domain.Specification;
  *
  * @param <T> the entity type
  */
+@Log4j2
 @RequiredArgsConstructor
 public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
     protected final IMessageService messageService;
@@ -41,6 +43,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
     @Override
     public Specification<T> buildSpecification(
             List<FilteringDTO> filteringDTOList, String orderBy, String orderDirection) {
+        log.debug("buildSpecification called");
+
         return (root, query, criteriaBuilder) -> {
             if (filteringDTOList == null) {
                 return criteriaBuilder.conjunction();
@@ -94,6 +98,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
      */
     @Override
     public void removeParam(List<FilteringDTO> filteringDTOList, String key) {
+        log.debug("removeParam called");
+
         if (filteringDTOList != null) {
             filteringDTOList.removeIf(filteringDTO -> key.equals(filteringDTO.getField()));
         }
@@ -106,6 +112,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
      * @return true if the string is null or empty, false otherwise
      */
     protected boolean isNullOrEmpty(String value) {
+        log.debug("isNullOrEmpty called");
+
         return value == null || value.isEmpty();
     }
 
@@ -117,6 +125,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
      * @return the nested field
      */
     protected Path<?> getNestedField(Root<?> root, String field) {
+        log.debug("getNestedField called");
+
         String[] fieldParts = field.split("\\.");
         Path<?> path = root.get(fieldParts[0]);
 
@@ -139,6 +149,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
      */
     protected Predicate buildStringPredicate(
             CriteriaBuilder criteriaBuilder, Path<?> path, String value, FilterOperator operator) {
+        log.debug("buildStringPredicate called");
+
         Expression<String> expression = criteriaBuilder.lower(path.as(String.class));
 
         return switch (operator) {
@@ -171,6 +183,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
             FilterOperator operator,
             String otherValue)
             throws InvalidFilterException {
+        log.debug("buildDatePredicate called");
+
         Expression<Instant> expression = path.as(Instant.class);
         Instant parsedValue = parseDate(value);
 
@@ -215,6 +229,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
             FilterOperator operator,
             String otherValue)
             throws InvalidFilterException {
+        log.debug("buildLongPredicate called");
+
         Expression<Long> expression = path.as(Long.class);
         Long parsedValue = Long.parseLong(value);
 
@@ -249,6 +265,8 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
      * @throws InvalidDateFormatException if the date format is invalid
      */
     protected Instant parseDate(String value) throws InvalidDateFormatException {
+        log.debug("parseDate called");
+
         if (value.matches(DATE_REGEX)) {
             return LocalDateTime.parse(value + "T00:00:00").atZone(ZoneId.of(UTC)).toInstant();
         } else if (value.matches(DATE_TIME_REGEX)) {
