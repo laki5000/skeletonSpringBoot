@@ -1,6 +1,6 @@
 package com.example.utils.dto.request;
 
-import com.example.utils.enums.FilterOperator;
+import com.example.enums.FilterOperator;
 import lombok.Builder;
 import lombok.Getter;
 

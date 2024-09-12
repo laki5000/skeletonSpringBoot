@@ -1,4 +1,4 @@
-package com.example.utils.enums;
+package com.example.enums;
 
 /** Enum for filter operator. */
 public enum FilterOperator {

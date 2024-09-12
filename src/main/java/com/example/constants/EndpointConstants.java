@@ -1,4 +1,4 @@
-package com.example.utils.constants;
+package com.example.constants;
 
 /** Constants used in the application endpoints. */
 public class EndpointConstants {

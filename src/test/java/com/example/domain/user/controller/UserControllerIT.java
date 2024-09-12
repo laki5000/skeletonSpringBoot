@@ -1,10 +1,10 @@
 package com.example.domain.user.controller;
 
 import static com.example.Constants.*;
-import static com.example.utils.constants.EndpointConstants.GET_PATH;
-import static com.example.utils.constants.EndpointConstants.USER_BASE_URL;
-import static com.example.utils.constants.FilteringConstants.FIELD_ID;
-import static com.example.utils.enums.FilterOperator.EQUALS;
+import static com.example.constants.EndpointConstants.GET_PATH;
+import static com.example.constants.EndpointConstants.USER_BASE_URL;
+import static com.example.constants.FilteringConstants.FIELD_ID;
+import static com.example.enums.FilterOperator.EQUALS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -15,7 +15,7 @@ import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.IUserRepository;
 import com.example.utils.dto.request.FilteringDTO;
-import com.example.utils.dto.response.BaseResponseDTO;
+import com.example.base.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.ErrorResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import java.util.Collections;

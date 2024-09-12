@@ -1,9 +1,9 @@
 package com.example.domain.user.model;
 
-import static com.example.utils.constants.EntityConstants.USER_DETAILS_TABLE_NAME;
+import static com.example.constants.EntityConstants.USER_DETAILS_TABLE_NAME;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-import com.example.utils.model.BaseEntity;
+import com.example.base.model.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

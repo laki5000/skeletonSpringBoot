@@ -1,23 +1,24 @@
-package com.example.utils.controller;
+package com.example.base.service;
 
 import com.example.utils.dto.request.FilteringDTO;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 
 /**
- * Controller interface for common endpoints.
+ * Service Interface for common operations.
  *
  * @param <CreateDTO> the create DTO type
  * @param <UpdateDTO> the update DTO type
+ * @param <GetDTO> the get DTO type
  */
-public interface IBaseController<CreateDTO, UpdateDTO> {
+public interface IBaseService<CreateDTO, UpdateDTO, GetDTO> {
     /**
      * Creates a new entity.
      *
      * @param createDTO the DTO containing the entity's details
-     * @return the response entity
+     * @return the created entity
      */
-    ResponseEntity<?> create(CreateDTO createDTO);
+    GetDTO create(CreateDTO createDTO);
 
     /**
      * Gets entities.
@@ -27,9 +28,9 @@ public interface IBaseController<CreateDTO, UpdateDTO> {
      * @param orderBy the field to order by
      * @param orderDirection the direction to order by
      * @param filteringDTOList the search parameters
-     * @return the response entity
+     * @return the entities
      */
-    ResponseEntity<?> get(
+    Page<GetDTO> get(
             int page,
             int limit,
             String orderBy,
@@ -41,15 +42,14 @@ public interface IBaseController<CreateDTO, UpdateDTO> {
      *
      * @param id the id of the entity to update
      * @param updateDTO the DTO containing the entity's details
-     * @return the response entity
+     * @return the updated entity
      */
-    ResponseEntity<?> update(Long id, UpdateDTO updateDTO);
+    GetDTO update(Long id, UpdateDTO updateDTO);
 
     /**
      * Deletes an entity.
      *
      * @param id the id of the entity to delete
-     * @return the response entity
      */
-    ResponseEntity<?> delete(Long id);
+    void delete(Long id);
 }

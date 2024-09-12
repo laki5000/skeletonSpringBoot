@@ -1,13 +1,13 @@
-package com.example.utils.specification;
+package com.example.base.specification;
 
-import static com.example.utils.constants.FilteringConstants.*;
-import static com.example.utils.constants.MessageConstants.ERROR_INVALID_DATE_FORMAT;
-import static com.example.utils.constants.MessageConstants.ERROR_INVALID_FILTER;
+import static com.example.constants.FilteringConstants.*;
+import static com.example.constants.MessageConstants.ERROR_INVALID_DATE_FORMAT;
+import static com.example.constants.MessageConstants.ERROR_INVALID_FILTER;
 
 import com.example.exception.InvalidDateFormatException;
 import com.example.exception.InvalidFilterException;
 import com.example.utils.dto.request.FilteringDTO;
-import com.example.utils.enums.FilterOperator;
+import com.example.enums.FilterOperator;
 import com.example.utils.service.IMessageService;
 import jakarta.persistence.criteria.*;
 import java.time.Instant;

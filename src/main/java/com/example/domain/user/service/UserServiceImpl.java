@@ -1,8 +1,8 @@
 package com.example.domain.user.service;
 
-import static com.example.utils.constants.MessageConstants.*;
-import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2;
-import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
+import static com.example.constants.MessageConstants.*;
+import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2;
+import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;

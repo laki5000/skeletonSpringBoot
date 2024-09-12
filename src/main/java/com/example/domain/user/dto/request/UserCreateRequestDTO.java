@@ -1,6 +1,6 @@
 package com.example.domain.user.dto.request;
 
-import static com.example.utils.constants.ValidationConstants.*;
+import static com.example.constants.ValidationConstants.*;
 
 import com.example.annotation.IsValidPassword;
 import jakarta.validation.Valid;

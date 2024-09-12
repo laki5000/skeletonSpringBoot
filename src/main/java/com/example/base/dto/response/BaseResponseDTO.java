@@ -1,4 +1,4 @@
-package com.example.utils.dto.response;
+package com.example.base.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

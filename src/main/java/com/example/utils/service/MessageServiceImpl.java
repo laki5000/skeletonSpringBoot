@@ -1,7 +1,7 @@
 package com.example.utils.service;
 
-import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2;
-import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
+import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2;
+import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.example.utils.specification;
+package com.example.base.specification;
 
 import com.example.utils.dto.request.FilteringDTO;
 import java.util.List;

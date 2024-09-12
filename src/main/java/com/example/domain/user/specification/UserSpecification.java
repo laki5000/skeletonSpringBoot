@@ -1,11 +1,11 @@
 package com.example.domain.user.specification;
 
-import static com.example.utils.constants.FilteringConstants.FIELD_PASSWORD;
+import static com.example.constants.FilteringConstants.FIELD_PASSWORD;
 
 import com.example.domain.user.model.User;
 import com.example.utils.dto.request.FilteringDTO;
 import com.example.utils.service.IMessageService;
-import com.example.utils.specification.BaseSpecificationImpl;
+import com.example.base.specification.BaseSpecificationImpl;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.domain.Specification;

@@ -1,6 +1,6 @@
 package com.example.annotation;
 
-import static com.example.utils.constants.ValidationConstants.*;
+import static com.example.constants.ValidationConstants.*;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

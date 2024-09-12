@@ -1,17 +1,17 @@
 package com.example.domain.user.controller;
 
-import static com.example.utils.constants.EndpointConstants.*;
-import static com.example.utils.constants.FilteringConstants.*;
-import static com.example.utils.constants.MessageConstants.*;
-import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2;
-import static com.example.utils.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
+import static com.example.constants.EndpointConstants.*;
+import static com.example.constants.FilteringConstants.*;
+import static com.example.constants.MessageConstants.*;
+import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2;
+import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
 import static org.springframework.http.HttpStatus.CREATED;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
 import com.example.domain.user.service.IUserService;
 import com.example.utils.dto.request.FilteringDTO;
-import com.example.utils.dto.response.BaseResponseDTO;
+import com.example.base.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import com.example.utils.service.IMessageService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

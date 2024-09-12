@@ -1,6 +1,6 @@
 package com.example.config;
 
-import static com.example.utils.constants.ConfigConstants.*;
+import static com.example.constants.ConfigConstants.*;
 
 import java.util.Locale;
 import lombok.extern.log4j.Log4j2;

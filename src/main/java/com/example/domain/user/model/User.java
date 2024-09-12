@@ -1,14 +1,14 @@
 package com.example.domain.user.model;
 
-import static com.example.utils.constants.EntityConstants.USER_TABLE_NAME;
-import static com.example.utils.constants.FilteringConstants.FIELD_DETAILS_ID;
-import static com.example.utils.constants.FilteringConstants.FIELD_ID;
-import static com.example.utils.constants.ValidationConstants.USERNAME_MAX_LENGTH;
-import static com.example.utils.constants.ValidationConstants.USERNAME_MIN_LENGTH;
+import static com.example.constants.EntityConstants.USER_TABLE_NAME;
+import static com.example.constants.FilteringConstants.FIELD_DETAILS_ID;
+import static com.example.constants.FilteringConstants.FIELD_ID;
+import static com.example.constants.ValidationConstants.USERNAME_MAX_LENGTH;
+import static com.example.constants.ValidationConstants.USERNAME_MIN_LENGTH;
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-import com.example.utils.model.BaseEntity;
+import com.example.base.model.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

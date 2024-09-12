@@ -1,4 +1,4 @@
-package com.example.utils.constants;
+package com.example.constants;
 
 public class SuppressionConstants {
     public static final String EI_EXPOSE_REP2 = "EI_EXPOSE_REP2";
