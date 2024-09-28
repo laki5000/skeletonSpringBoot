@@ -1,21 +1,21 @@
 package com.example.domain.user.controller;
 
 import static com.example.Constants.*;
+import static com.example.TestUtils.*;
 import static com.example.constants.EndpointConstants.GET_PATH;
 import static com.example.constants.EndpointConstants.USER_BASE_URL;
-import static com.example.constants.FilteringConstants.FIELD_ID;
 import static com.example.enums.FilterOperator.EQUALS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
 import com.example.BaseIT;
+import com.example.base.dto.response.BaseResponseDTO;
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
 import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.model.User;
 import com.example.domain.user.repository.IUserRepository;
 import com.example.utils.dto.request.FilteringDTO;
-import com.example.base.dto.response.BaseResponseDTO;
 import com.example.utils.dto.response.ErrorResponseDTO;
 import com.example.utils.dto.response.SuccessResponseDTO;
 import java.util.Collections;
@@ -37,10 +37,8 @@ public class UserControllerIT extends BaseIT {
     void create_Success() throws Exception {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =
-                UserCreateRequestDTO.builder()
-                        .username(TEST_USERNAME)
-                        .password(TEST_PASSWORD)
-                        .build();
+                buildUserCreateRequestDTO(
+                        TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // When
         SuccessResponseDTO response =
@@ -65,8 +63,8 @@ public class UserControllerIT extends BaseIT {
                 userResponseDTO.getId(),
                 TEST_USERNAME,
                 TEST_PASSWORD,
-                userResponseDTO.getCreatedBy(),
-                userResponseDTO.getUpdatedBy(),
+                TEST_FIRST_NAME,
+                TEST_LAST_NAME,
                 user);
         assertUserProperties(user, userResponseDTO);
     }
@@ -77,17 +75,25 @@ public class UserControllerIT extends BaseIT {
     void create_UsernameExists() throws Exception {
         // Given
         userRepository.save(
-                User.builder()
-                        .username(TEST_USERNAME)
-                        .password(TEST_PASSWORD)
-                        .createdBy(TEST_USERNAME)
-                        .build());
+                buildUser(
+                        null,
+                        TEST_USERNAME,
+                        TEST_PASSWORD,
+                        null,
+                        null,
+                        TEST_USERNAME,
+                        null,
+                        null,
+                        TEST_FIRST_NAME,
+                        TEST_LAST_NAME,
+                        null,
+                        null,
+                        TEST_USERNAME,
+                        null));
 
         UserCreateRequestDTO userCreateRequestDTO =
-                UserCreateRequestDTO.builder()
-                        .username(TEST_USERNAME)
-                        .password(TEST_PASSWORD)
-                        .build();
+                buildUserCreateRequestDTO(
+                        TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // When
         ErrorResponseDTO result =
@@ -107,7 +113,8 @@ public class UserControllerIT extends BaseIT {
     @Transactional
     void create_InvalidRequest() throws Exception {
         // Given
-        UserCreateRequestDTO userCreateRequestDTO = UserCreateRequestDTO.builder().build();
+        UserCreateRequestDTO userCreateRequestDTO =
+                buildUserCreateRequestDTO(null, null, null, null);
 
         // When
         ErrorResponseDTO result =
@@ -129,18 +136,38 @@ public class UserControllerIT extends BaseIT {
         // Given
         User user =
                 userRepository.save(
-                        User.builder()
-                                .username(TEST_USERNAME)
-                                .password(TEST_PASSWORD)
-                                .createdBy(TEST_USERNAME)
-                                .build());
+                        buildUser(
+                                null,
+                                TEST_USERNAME,
+                                TEST_PASSWORD,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null,
+                                null,
+                                TEST_FIRST_NAME,
+                                TEST_LAST_NAME,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null));
 
         userRepository.save(
-                User.builder()
-                        .username(TEST_USERNAME2)
-                        .password(TEST_PASSWORD2)
-                        .createdBy(TEST_USERNAME2)
-                        .build());
+                buildUser(
+                        null,
+                        TEST_USERNAME2,
+                        TEST_PASSWORD2,
+                        null,
+                        null,
+                        TEST_USERNAME,
+                        null,
+                        null,
+                        TEST_FIRST_NAME2,
+                        TEST_LAST_NAME2,
+                        null,
+                        null,
+                        TEST_USERNAME,
+                        null));
 
         Map<String, String> params =
                 Map.of(
@@ -155,31 +182,31 @@ public class UserControllerIT extends BaseIT {
         String url = USER_BASE_URL + GET_PATH + "?" + toQueryString(params);
         List<FilteringDTO> filteringDTOList =
                 List.of(
-                        FilteringDTO.builder()
-                                .field(FIELD_ID)
-                                .operator(EQUALS)
-                                .value(user.getId().toString())
-                                .build(),
-                        FilteringDTO.builder()
-                                .field(TEST_FIELD_USERNAME)
-                                .operator(EQUALS)
-                                .value(user.getUsername())
-                                .build(),
-                        FilteringDTO.builder()
-                                .field(TEST_FIELD_CREATED_AT)
-                                .operator(EQUALS)
-                                .value(user.getCreatedAt().toString())
-                                .build(),
-                        FilteringDTO.builder()
-                                .field(TEST_FIELD_UPDATED_AT)
-                                .operator(EQUALS)
-                                .value(user.getUpdatedAt().toString())
-                                .build(),
-                        FilteringDTO.builder()
-                                .field(TEST_FIELD_CREATED_BY)
-                                .operator(EQUALS)
-                                .value(user.getCreatedBy())
-                                .build());
+                        buildFilteringDTO(TEST_FIELD_ID, EQUALS, user.getId().toString()),
+                        buildFilteringDTO(TEST_FIELD_USERNAME, EQUALS, user.getUsername()),
+                        buildFilteringDTO(
+                                TEST_FIELD_CREATED_AT, EQUALS, user.getCreatedAt().toString()),
+                        buildFilteringDTO(
+                                TEST_FIELD_UPDATED_AT, EQUALS, user.getUpdatedAt().toString()),
+                        buildFilteringDTO(TEST_FIELD_CREATED_BY, EQUALS, user.getCreatedBy()),
+                        buildFilteringDTO(
+                                TEST_FIELD_DETAILS_ID,
+                                EQUALS,
+                                user.getDetails().getId().toString()),
+                        buildFilteringDTO(TEST_FIELD_DETAILS_FIRST_NAME, EQUALS, TEST_FIRST_NAME),
+                        buildFilteringDTO(TEST_FIELD_DETAILS_LAST_NAME, EQUALS, TEST_LAST_NAME),
+                        buildFilteringDTO(
+                                TEST_FIELD_DETAILS_CREATED_AT,
+                                EQUALS,
+                                user.getDetails().getCreatedAt().toString()),
+                        buildFilteringDTO(
+                                TEST_FIELD_DETAILS_UPDATED_AT,
+                                EQUALS,
+                                user.getDetails().getUpdatedAt().toString()),
+                        buildFilteringDTO(
+                                TEST_FIELD_DETAILS_CREATED_BY,
+                                EQUALS,
+                                user.getDetails().getCreatedBy()));
 
         // When
         SuccessResponseDTO result =
@@ -208,11 +235,7 @@ public class UserControllerIT extends BaseIT {
         // Given
         List<FilteringDTO> filteringDTOList =
                 Collections.singletonList(
-                        FilteringDTO.builder()
-                                .field(TEST_FIELD_CREATED_AT)
-                                .operator(EQUALS)
-                                .value(TEST_INVALID_DATE)
-                                .build());
+                        buildFilteringDTO(TEST_FIELD_CREATED_AT, EQUALS, TEST_INVALID_DATE));
 
         // When
         ErrorResponseDTO result =
@@ -255,13 +278,23 @@ public class UserControllerIT extends BaseIT {
         // Given
         User user =
                 userRepository.save(
-                        User.builder()
-                                .username(TEST_USERNAME)
-                                .password(TEST_PASSWORD)
-                                .createdBy(TEST_USERNAME)
-                                .build());
+                        buildUser(
+                                null,
+                                TEST_USERNAME,
+                                TEST_PASSWORD,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null,
+                                null,
+                                TEST_FIRST_NAME,
+                                TEST_LAST_NAME,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null));
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().password(TEST_PASSWORD2).build();
+                buildUserUpdateRequestDTO(TEST_PASSWORD2, TEST_FIRST_NAME2, TEST_LAST_NAME2);
 
         // When
         SuccessResponseDTO result =
@@ -285,8 +318,8 @@ public class UserControllerIT extends BaseIT {
                 userResponseDTO.getId(),
                 TEST_USERNAME,
                 TEST_PASSWORD2,
-                TEST_USERNAME,
-                "unknown",
+                TEST_FIRST_NAME2,
+                TEST_LAST_NAME2,
                 user);
         assertUserProperties(user, userResponseDTO);
     }
@@ -297,7 +330,7 @@ public class UserControllerIT extends BaseIT {
     void update_UserNotFound() throws Exception {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
+                buildUserUpdateRequestDTO(TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // When
         ErrorResponseDTO result =
@@ -319,13 +352,23 @@ public class UserControllerIT extends BaseIT {
         // Given
         User user =
                 userRepository.save(
-                        User.builder()
-                                .username(TEST_USERNAME)
-                                .password(TEST_PASSWORD)
-                                .createdBy(TEST_USERNAME)
-                                .build());
+                        buildUser(
+                                null,
+                                TEST_USERNAME,
+                                TEST_PASSWORD,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null,
+                                null,
+                                TEST_FIRST_NAME,
+                                TEST_LAST_NAME,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null));
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
+                buildUserUpdateRequestDTO(TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
 
         // When
         ErrorResponseDTO result =
@@ -346,7 +389,7 @@ public class UserControllerIT extends BaseIT {
     void update_InvalidRequest() throws Exception {
         // Given
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().password(TEST_INVALID_PASSWORD).build();
+                buildUserUpdateRequestDTO(TEST_INVALID_PASSWORD, null, null);
 
         // When
         ErrorResponseDTO result =
@@ -368,11 +411,21 @@ public class UserControllerIT extends BaseIT {
         // Given
         User user =
                 userRepository.save(
-                        User.builder()
-                                .username(TEST_USERNAME)
-                                .password(TEST_PASSWORD)
-                                .createdBy(TEST_USERNAME)
-                                .build());
+                        buildUser(
+                                null,
+                                TEST_USERNAME,
+                                TEST_PASSWORD,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null,
+                                null,
+                                TEST_FIRST_NAME,
+                                TEST_LAST_NAME,
+                                null,
+                                null,
+                                TEST_USERNAME,
+                                null));
 
         // When
         BaseResponseDTO result =
@@ -406,22 +459,22 @@ public class UserControllerIT extends BaseIT {
      * @param id The expected ID
      * @param username The expected username
      * @param password The expected password
-     * @param createdBy The expected createdBy
-     * @param updatedBy The expected updatedBy
+     * @param firstName The expected first name
+     * @param lastName The expected last name
      * @param user The user to check
      */
     private void assertUserProperties(
             Long id,
             String username,
             String password,
-            String createdBy,
-            String updatedBy,
+            String firstName,
+            String lastName,
             User user) {
         assertEquals(id, user.getId());
         assertEquals(username, user.getUsername());
         assertEquals(password, user.getPassword());
-        assertEquals(createdBy, user.getCreatedBy());
-        assertEquals(updatedBy, user.getUpdatedBy());
+        assertEquals(firstName, user.getDetails().getFirstName());
+        assertEquals(lastName, user.getDetails().getLastName());
         assertNotNull(user.getCreatedAt());
         assertNotNull(user.getUpdatedAt());
     }
@@ -439,18 +492,11 @@ public class UserControllerIT extends BaseIT {
         assertEquals(user.getUpdatedBy(), dto.getUpdatedBy());
         assertEquals(user.getCreatedAt(), dto.getCreatedAt());
         assertEquals(user.getUpdatedAt(), dto.getUpdatedAt());
-    }
-
-    /**
-     * Converts the given parameters to a query string.
-     *
-     * @param params The parameters to convert
-     * @return The query string
-     */
-    private String toQueryString(Map<String, String> params) {
-        return params.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .reduce((a, b) -> a + "&" + b)
-                .orElse("");
+        assertEquals(user.getDetails().getFirstName(), dto.getDetails().getFirstName());
+        assertEquals(user.getDetails().getLastName(), dto.getDetails().getLastName());
+        assertEquals(user.getDetails().getCreatedBy(), dto.getDetails().getCreatedBy());
+        assertEquals(user.getDetails().getUpdatedBy(), dto.getDetails().getUpdatedBy());
+        assertEquals(user.getDetails().getCreatedAt(), dto.getDetails().getCreatedAt());
+        assertEquals(user.getDetails().getUpdatedAt(), dto.getDetails().getUpdatedAt());
     }
 }

@@ -35,6 +35,7 @@ public interface IUserMapper {
      * @param userDetails the entity containing the user's details
      * @return the converted entity
      */
+    @Mapping(target = "createdBy", source = "createdBy")
     @Mapping(target = "details", source = "userDetails")
     User toEntity(
             UserCreateRequestDTO userCreateRequestDTO, String createdBy, UserDetails userDetails);

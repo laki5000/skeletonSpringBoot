@@ -60,9 +60,10 @@ public class UserServiceImpl implements IUserService {
         User user =
                 userRepository.save(
                         userMapper.toEntity(userCreateRequestDTO, "unknown", userDetails));
+        UserDetailsResponseDTO userDetailsResponseDTO =
+                userDetailsService.mapToResponseDTO(user.getDetails());
 
-        return userMapper.toResponseDTO(
-                user, userDetailsService.mapToResponseDTO(user.getDetails()));
+        return userMapper.toResponseDTO(user, userDetailsResponseDTO);
     }
 
     /**
@@ -127,8 +128,10 @@ public class UserServiceImpl implements IUserService {
 
         user = userRepository.saveAndFlush(user);
 
-        return userMapper.toResponseDTO(
-                user, userDetailsService.mapToResponseDTO(user.getDetails()));
+        UserDetailsResponseDTO userDetailsResponseDTO =
+                userDetailsService.mapToResponseDTO(user.getDetails());
+
+        return userMapper.toResponseDTO(user, userDetailsResponseDTO);
     }
 
     /**

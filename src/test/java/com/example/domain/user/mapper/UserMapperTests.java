@@ -1,6 +1,7 @@
 package com.example.domain.user.mapper;
 
 import static com.example.Constants.*;
+import static com.example.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
@@ -19,30 +20,42 @@ public class UserMapperTests {
     public void toResponseDTO_Success() {
         // Given
         User user =
-                User.builder()
-                        .id(TEST_ID)
-                        .username(TEST_USERNAME)
-                        .password(TEST_PASSWORD)
-                        .createdAt(TEST_INSTANT)
-                        .updatedAt(TEST_INSTANT2)
-                        .createdBy(TEST_USERNAME2)
-                        .updatedBy(TEST_USERNAME)
-                        .build();
+                buildUser(
+                        TEST_ID,
+                        TEST_USERNAME,
+                        TEST_PASSWORD,
+                        TEST_INSTANT,
+                        TEST_INSTANT2,
+                        TEST_USERNAME2,
+                        TEST_USERNAME,
+                        TEST_ID,
+                        TEST_FIRST_NAME,
+                        TEST_LAST_NAME,
+                        TEST_INSTANT,
+                        TEST_INSTANT2,
+                        TEST_USERNAME2,
+                        TEST_USERNAME);
         UserResponseDTO expected =
-                UserResponseDTO.builder()
-                        .id(TEST_ID)
-                        .username(TEST_USERNAME)
-                        .createdAt(TEST_INSTANT)
-                        .updatedAt(TEST_INSTANT2)
-                        .createdBy(TEST_USERNAME2)
-                        .updatedBy(TEST_USERNAME)
-                        .build();
+                buildUserResponseDTO(
+                        TEST_ID,
+                        TEST_USERNAME,
+                        TEST_INSTANT,
+                        TEST_INSTANT2,
+                        TEST_USERNAME2,
+                        TEST_USERNAME,
+                        TEST_ID,
+                        TEST_FIRST_NAME,
+                        TEST_LAST_NAME,
+                        TEST_INSTANT,
+                        TEST_INSTANT2,
+                        TEST_USERNAME2,
+                        TEST_USERNAME);
 
         // When
-        UserResponseDTO result = userMapper.toResponseDTO(user);
+        UserResponseDTO result = userMapper.toResponseDTO(user, expected.getDetails());
 
         // Then
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -50,19 +63,28 @@ public class UserMapperTests {
     public void toEntity_Success() {
         // Given
         UserCreateRequestDTO userCreateRequestDTO =
-                UserCreateRequestDTO.builder()
-                        .username(TEST_USERNAME)
-                        .password(TEST_PASSWORD)
-                        .build();
+                buildUserCreateRequestDTO(
+                        TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
         User expected =
-                User.builder()
-                        .username(TEST_USERNAME)
-                        .password(TEST_PASSWORD)
-                        .createdBy(TEST_USERNAME2)
-                        .build();
+                buildUser(
+                        null,
+                        TEST_USERNAME,
+                        TEST_PASSWORD,
+                        null,
+                        null,
+                        TEST_USERNAME2,
+                        null,
+                        null,
+                        TEST_FIRST_NAME,
+                        TEST_LAST_NAME,
+                        null,
+                        null,
+                        TEST_USERNAME2,
+                        null);
 
         // When
-        User result = userMapper.toEntity(userCreateRequestDTO, TEST_USERNAME2);
+        User result =
+                userMapper.toEntity(userCreateRequestDTO, TEST_USERNAME2, expected.getDetails());
 
         // Then
         assertEquals(expected, result);

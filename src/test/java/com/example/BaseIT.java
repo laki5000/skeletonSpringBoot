@@ -144,4 +144,17 @@ public abstract class BaseIT {
                         .getContentAsString(),
                 clazz);
     }
+
+    /**
+     * Converts the given parameters to a query string.
+     *
+     * @param params The parameters to convert
+     * @return The query string
+     */
+    protected String toQueryString(Map<String, String> params) {
+        return params.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .reduce((a, b) -> a + "&" + b)
+                .orElse("");
+    }
 }

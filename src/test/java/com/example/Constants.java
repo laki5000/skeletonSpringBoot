@@ -20,17 +20,32 @@ public class Constants {
     public static final String TEST_PASSWORD = "T3stP@ssw0rd";
     public static final String TEST_PASSWORD2 = "T3stP@ssw0rd2";
     public static final String TEST_INVALID_PASSWORD = "password";
+    public static final String TEST_INVALID_SHORT_PASSWORD = "short";
+    public static final String TEST_INVALID_LONG_PASSWORD =
+            "12345678910111213141516171819202122232425262728293031323334353637";
     public static final String TEST_INVALID_DATE = "invalidDate";
+    public static final String TEST_FIRST_NAME = "Test";
+    public static final String TEST_FIRST_NAME2 = "Test2";
+    public static final String TEST_LAST_NAME = "User";
+    public static final String TEST_LAST_NAME2 = "User2";
     public static final String TEST_ORDER_BY = "id";
     public static final String TEST_ORDER_DIRECTION = "ASC";
     public static final String TEST_FIELD_PAGE = "page";
     public static final String TEST_FIELD_LIMIT = "limit";
     public static final String TEST_FIELD_ORDER_BY = "orderBy";
     public static final String TEST_FIELD_ORDER_DIRECTION = "orderDirection";
+    public static final String TEST_FIELD_ID = "id";
+    public static final String TEST_FIELD_PASSWORD = "password";
     public static final String TEST_FIELD_USERNAME = "username";
     public static final String TEST_FIELD_CREATED_AT = "createdAt";
     public static final String TEST_FIELD_UPDATED_AT = "updatedAt";
     public static final String TEST_FIELD_CREATED_BY = "createdBy";
+    public static final String TEST_FIELD_DETAILS_ID = "details.id";
+    public static final String TEST_FIELD_DETAILS_FIRST_NAME = "details.firstName";
+    public static final String TEST_FIELD_DETAILS_LAST_NAME = "details.lastName";
+    public static final String TEST_FIELD_DETAILS_CREATED_AT = "details.createdAt";
+    public static final String TEST_FIELD_DETAILS_UPDATED_AT = "details.updatedAt";
+    public static final String TEST_FIELD_DETAILS_CREATED_BY = "details.createdBy";
 
     public static final long TEST_ID = 1L;
 

@@ -5,10 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
+import com.example.domain.user.dto.request.UserDetailsRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
+import com.example.domain.user.dto.response.UserDetailsResponseDTO;
 import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
+import com.example.domain.user.model.UserDetails;
 import com.example.domain.user.repository.IUserRepository;
 import com.example.domain.user.specification.UserSpecification;
 import com.example.exception.ConflictException;
@@ -30,7 +33,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-/** Unit tests for {@link UserServiceImpl}. */
+/** T */
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
     @InjectMocks private UserServiceImpl userService;
@@ -44,15 +47,24 @@ public class UserServiceTests {
     @DisplayName("Tests the successful creation of a user.")
     void create_Success() {
         // Given
+        UserDetailsRequestDTO userDetailsRequestDTO = UserDetailsRequestDTO.builder().build();
         UserCreateRequestDTO userCreateRequestDTO =
-                UserCreateRequestDTO.builder().username(TEST_USERNAME).build();
-        User user = User.builder().build();
+                UserCreateRequestDTO.builder()
+                        .username(TEST_USERNAME)
+                        .details(userDetailsRequestDTO)
+                        .build();
+        UserDetails userDetails = UserDetails.builder().build();
+        User user = User.builder().details(userDetails).build();
+        UserDetailsResponseDTO userDetailsResponseDTO = UserDetailsResponseDTO.builder().build();
         UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
-        when(userMapper.toEntity(userCreateRequestDTO, "unknown")).thenReturn(user);
+        when(userDetailsService.mapToEntity(userDetailsRequestDTO, "unknown"))
+                .thenReturn(userDetails);
+        when(userMapper.toEntity(userCreateRequestDTO, "unknown", userDetails)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
-        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
+        when(userDetailsService.mapToResponseDTO(userDetails)).thenReturn(userDetailsResponseDTO);
+        when(userMapper.toResponseDTO(user, userDetailsResponseDTO)).thenReturn(userResponseDTO);
 
         // When
         UserResponseDTO result = userService.create(userCreateRequestDTO);
@@ -61,9 +73,11 @@ public class UserServiceTests {
         assertEquals(userResponseDTO, result);
 
         verify(userRepository).existsByUsername(TEST_USERNAME);
-        verify(userMapper).toEntity(userCreateRequestDTO, "unknown");
+        verify(userDetailsService).mapToEntity(userDetailsRequestDTO, "unknown");
+        verify(userMapper).toEntity(userCreateRequestDTO, "unknown", userDetails);
         verify(userRepository).save(user);
-        verify(userMapper).toResponseDTO(user);
+        verify(userDetailsService).mapToResponseDTO(userDetails);
+        verify(userMapper).toResponseDTO(user, userDetailsResponseDTO);
     }
 
     @Test
@@ -91,7 +105,9 @@ public class UserServiceTests {
         @SuppressWarnings("unchecked")
         Specification<User> specificationMock = mock(Specification.class);
 
-        User user = User.builder().build();
+        UserDetails userDetails = UserDetails.builder().build();
+        User user = User.builder().details(userDetails).build();
+        UserDetailsResponseDTO userDetailsResponseDTO = UserDetailsResponseDTO.builder().build();
         UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(specification.buildSpecification(
@@ -99,7 +115,8 @@ public class UserServiceTests {
                 .thenReturn(specificationMock);
         when(userRepository.findAll(specificationMock, pageable))
                 .thenReturn(new PageImpl<>(List.of(user)));
-        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
+        when(userDetailsService.mapToResponseDTO(userDetails)).thenReturn(userDetailsResponseDTO);
+        when(userMapper.toResponseDTO(user, userDetailsResponseDTO)).thenReturn(userResponseDTO);
 
         // When
         Page<UserResponseDTO> result =
@@ -116,21 +133,32 @@ public class UserServiceTests {
         verify(specification)
                 .buildSpecification(filteringDTOList, TEST_ORDER_BY, TEST_ORDER_DIRECTION);
         verify(userRepository).findAll(specificationMock, pageable);
-        verify(userMapper).toResponseDTO(user);
+        verify(userDetailsService).mapToResponseDTO(userDetails);
+        verify(userMapper).toResponseDTO(user, userDetailsResponseDTO);
     }
 
     @Test
     @DisplayName("Tests the successful update of a user.")
     void update_Success() {
         // Given
+        UserDetailsRequestDTO userDetailsRequestDTO = UserDetailsRequestDTO.builder().build();
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().password(TEST_PASSWORD2).build();
-        User user = User.builder().password(TEST_PASSWORD).build();
+                UserUpdateRequestDTO.builder()
+                        .password(TEST_PASSWORD2)
+                        .details(userDetailsRequestDTO)
+                        .build();
+        UserDetails userDetails = UserDetails.builder().build();
+        User user = User.builder().password(TEST_PASSWORD).details(userDetails).build();
         UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
+        UserDetailsResponseDTO userDetailsResponseDTO = UserDetailsResponseDTO.builder().build();
 
-        when(userRepository.findById(TEST_ID)).thenReturn(java.util.Optional.of(user));
-        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
+        when(userRepository.findById(TEST_ID)).thenReturn(Optional.of(user));
+        when(userDetailsService.updateUserDetails(userDetails, userDetailsRequestDTO))
+                .thenReturn(true);
+        doNothing().when(userDetailsService).updateAuditFields(userDetails, true);
         when(userRepository.saveAndFlush(user)).thenReturn(user);
+        when(userDetailsService.mapToResponseDTO(userDetails)).thenReturn(userDetailsResponseDTO);
+        when(userMapper.toResponseDTO(user, userDetailsResponseDTO)).thenReturn(userResponseDTO);
 
         // When
         UserResponseDTO result = userService.update(TEST_ID, userUpdateRequestDTO);
@@ -139,8 +167,11 @@ public class UserServiceTests {
         assertEquals(userResponseDTO, result);
 
         verify(userRepository).findById(TEST_ID);
-        verify(userMapper).toResponseDTO(user);
+        verify(userDetailsService).updateUserDetails(userDetails, userDetailsRequestDTO);
+        verify(userDetailsService).updateAuditFields(userDetails, true);
         verify(userRepository).saveAndFlush(user);
+        verify(userDetailsService).mapToResponseDTO(userDetails);
+        verify(userMapper).toResponseDTO(user, userDetailsResponseDTO);
     }
 
     @Test
@@ -163,11 +194,17 @@ public class UserServiceTests {
     @DisplayName("Tests the unsuccessful update of a user due to not modified.")
     void update_NotModified() {
         // Given
+        UserDetailsRequestDTO userDetailsRequestDTO = UserDetailsRequestDTO.builder().build();
         UserUpdateRequestDTO userUpdateRequestDTO =
-                UserUpdateRequestDTO.builder().password(TEST_PASSWORD).build();
+                UserUpdateRequestDTO.builder()
+                        .password(TEST_PASSWORD)
+                        .details(userDetailsRequestDTO)
+                        .build();
         User user = User.builder().password(TEST_PASSWORD).build();
 
-        when(userRepository.findById(TEST_ID)).thenReturn(java.util.Optional.of(user));
+        when(userRepository.findById(TEST_ID)).thenReturn(Optional.of(user));
+        when(userDetailsService.updateUserDetails(user.getDetails(), userDetailsRequestDTO))
+                .thenReturn(false);
 
         // When & Then
         assertThrows(
@@ -175,6 +212,7 @@ public class UserServiceTests {
                 () -> userService.update(TEST_ID, userUpdateRequestDTO));
 
         verify(userRepository).findById(TEST_ID);
+        verify(userDetailsService).updateUserDetails(user.getDetails(), userDetailsRequestDTO);
     }
 
     @Test
