@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
- * Service Interface for common operations.
+ * Service interface for common operations.
  *
  * @param <CreateDTO> the create DTO type
  * @param <UpdateDTO> the update DTO type

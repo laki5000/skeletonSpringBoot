@@ -11,7 +11,7 @@ import jakarta.validation.Payload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/** Annotation for password validation. */
+/** Annotation class for password validation. */
 @Constraint(validatedBy = PasswordValidator.class)
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)

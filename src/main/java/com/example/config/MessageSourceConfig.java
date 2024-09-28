@@ -1,7 +1,5 @@
 package com.example.config;
 
-import static com.example.constants.ConfigConstants.*;
-
 import java.util.Locale;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
@@ -30,8 +28,8 @@ public class MessageSourceConfig implements WebMvcConfigurer {
         ReloadableResourceBundleMessageSource messageSource =
                 new ReloadableResourceBundleMessageSource();
 
-        messageSource.setBasename(MESSAGES_BASE_PATH);
-        messageSource.setDefaultEncoding(MESSAGES_DEFAULT_ENCODING);
+        messageSource.setBasename("classpath:translations/messages");
+        messageSource.setDefaultEncoding("UTF-8");
 
         return messageSource;
     }
@@ -63,7 +61,7 @@ public class MessageSourceConfig implements WebMvcConfigurer {
 
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
 
-        localeChangeInterceptor.setParamName(LOCALE_CHANGE_PARAM);
+        localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
     }
 }

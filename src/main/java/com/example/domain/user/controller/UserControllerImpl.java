@@ -3,8 +3,6 @@ package com.example.domain.user.controller;
 import static com.example.constants.EndpointConstants.*;
 import static com.example.constants.FilteringConstants.*;
 import static com.example.constants.MessageConstants.*;
-import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2;
-import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
 import static org.springframework.http.HttpStatus.CREATED;
 
 import com.example.base.dto.response.BaseResponseDTO;
@@ -27,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(USER_BASE_URL)
-@SuppressFBWarnings(value = EI_EXPOSE_REP2, justification = EI_EXPOSE_REP2_JUSTIFICATION)
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2")
 public class UserControllerImpl implements IUserController {
     private final IMessageService messageService;
     private final IUserService userService;
@@ -66,8 +64,9 @@ public class UserControllerImpl implements IUserController {
     public ResponseEntity<?> get(
             @RequestParam(required = false, defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) int limit,
-            @RequestParam(required = false, defaultValue = FIELD_ID) String orderBy,
-            @RequestParam(required = false, defaultValue = ASC) String orderDirection,
+            @RequestParam(required = false, defaultValue = DEFAULT_ORDER_BY) String orderBy,
+            @RequestParam(required = false, defaultValue = DEFAULT_ORDER_DIRECTION)
+                    String orderDirection,
             @RequestBody(required = false) List<FilteringDTO> filteringDTOList) {
         log.info("get called");
 
@@ -88,7 +87,7 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @PatchMapping(ID_PATH)
+    @PatchMapping(BY_ID_PATH)
     public ResponseEntity<?> update(
             @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         log.info("update called");
@@ -107,7 +106,7 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @DeleteMapping(ID_PATH)
+    @DeleteMapping(BY_ID_PATH)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info("delete called");
 

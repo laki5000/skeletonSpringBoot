@@ -11,7 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-/** Specification for filtering users. */
+/** Specification class for filtering users. */
 @Log4j2
 @Component
 public class UserSpecification extends BaseSpecificationImpl<User> {

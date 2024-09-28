@@ -1,14 +1,12 @@
 package com.example.domain.user.model;
 
-import static com.example.constants.EntityConstants.USER_TABLE_NAME;
-import static com.example.constants.FilteringConstants.FIELD_DETAILS_ID;
-import static com.example.constants.FilteringConstants.FIELD_ID;
 import static com.example.constants.ValidationConstants.USERNAME_MAX_LENGTH;
 import static com.example.constants.ValidationConstants.USERNAME_MIN_LENGTH;
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import com.example.base.model.BaseEntity;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -17,12 +15,13 @@ import lombok.experimental.SuperBuilder;
 
 /** Entity class for users. */
 @Entity
-@Table(name = USER_TABLE_NAME)
+@Table(name = "users")
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -39,6 +38,6 @@ public class User extends BaseEntity {
 
     @NotNull
     @OneToOne(cascade = ALL)
-    @JoinColumn(name = FIELD_DETAILS_ID, referencedColumnName = FIELD_ID, nullable = false)
+    @JoinColumn(name = "detailsId", referencedColumnName = "id", nullable = false)
     private UserDetails details;
 }

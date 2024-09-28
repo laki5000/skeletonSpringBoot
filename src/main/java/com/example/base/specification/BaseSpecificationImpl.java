@@ -79,9 +79,9 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
             }
 
             if (orderBy != null && orderDirection != null) {
-                if (ASC.equalsIgnoreCase(orderDirection)) {
+                if ("asc".equalsIgnoreCase(orderDirection)) {
                     query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
-                } else if (DESC.equalsIgnoreCase(orderDirection)) {
+                } else if ("desc".equalsIgnoreCase(orderDirection)) {
                     query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
                 }
             }

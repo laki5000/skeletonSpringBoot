@@ -1,8 +1,6 @@
 package com.example.domain.user.service;
 
 import static com.example.constants.MessageConstants.*;
-import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2;
-import static com.example.constants.SuppressionConstants.EI_EXPOSE_REP2_JUSTIFICATION;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
@@ -33,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 @RequiredArgsConstructor
 @Service
-@SuppressFBWarnings(value = EI_EXPOSE_REP2, justification = EI_EXPOSE_REP2_JUSTIFICATION)
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2")
 public class UserServiceImpl implements IUserService {
     private final IMessageService messageService;
     private final IUserDetailsService userDetailsService;
