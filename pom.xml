@@ -179,6 +179,24 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<limits>
+										<limit>
+											<group>.*</group>
+											<minimum>0.7</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
