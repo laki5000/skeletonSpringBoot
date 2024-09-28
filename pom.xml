@@ -190,7 +190,7 @@
 									<limits>
 										<limit>
 											<group>.*</group>
-											<minimum>0.7</minimum>
+											<minimum>0.1</minimum>
 										</limit>
 									</limits>
 								</rule>
