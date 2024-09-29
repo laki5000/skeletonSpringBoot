@@ -52,10 +52,22 @@ public class UserMapperTests {
                         TEST_USERNAME);
 
         // When
-        UserResponseDTO result = userMapper.toResponseDTO(user, expected.getDetails());
+        UserResponseDTO result = userMapper.toResponseDTO(user);
 
         // Then
         assertEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("Tests the unsuccessful mapping of a null User to a UserResponseDTO.")
+    public void toResponseDTO_Null() {
+        // Given
+
+        // When
+        UserResponseDTO result = userMapper.toResponseDTO(null);
+
+        // Then
+        assertNull(result);
     }
 
     @Test
@@ -83,8 +95,7 @@ public class UserMapperTests {
                         null);
 
         // When
-        User result =
-                userMapper.toEntity(userCreateRequestDTO, TEST_USERNAME2, expected.getDetails());
+        User result = userMapper.toEntity(userCreateRequestDTO, TEST_USERNAME2);
 
         // Then
         assertEquals(expected, result);

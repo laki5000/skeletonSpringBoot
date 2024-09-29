@@ -4,11 +4,9 @@ import static com.example.constants.MessageConstants.*;
 
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
-import com.example.domain.user.dto.response.UserDetailsResponseDTO;
 import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
-import com.example.domain.user.model.UserDetails;
 import com.example.domain.user.repository.IUserRepository;
 import com.example.domain.user.specification.UserSpecification;
 import com.example.exception.ConflictException;
@@ -53,15 +51,9 @@ public class UserServiceImpl implements IUserService {
 
         validateUsername(userCreateRequestDTO.getUsername());
 
-        UserDetails userDetails =
-                userDetailsService.mapToEntity(userCreateRequestDTO.getDetails(), "unknown");
-        User user =
-                userRepository.save(
-                        userMapper.toEntity(userCreateRequestDTO, "unknown", userDetails));
-        UserDetailsResponseDTO userDetailsResponseDTO =
-                userDetailsService.mapToResponseDTO(user.getDetails());
+        User user = userRepository.save(userMapper.toEntity(userCreateRequestDTO, "unknown"));
 
-        return userMapper.toResponseDTO(user, userDetailsResponseDTO);
+        return userMapper.toResponseDTO(user);
     }
 
     /**
@@ -87,15 +79,7 @@ public class UserServiceImpl implements IUserService {
         Specification<User> specification =
                 userSpecification.buildSpecification(filteringDTOList, orderBy, orderDirection);
 
-        return userRepository
-                .findAll(specification, pageable)
-                .map(
-                        user -> {
-                            UserDetailsResponseDTO userDetailsResponseDTO =
-                                    userDetailsService.mapToResponseDTO(user.getDetails());
-
-                            return userMapper.toResponseDTO(user, userDetailsResponseDTO);
-                        });
+        return userRepository.findAll(specification, pageable).map(userMapper::toResponseDTO);
     }
 
     /**
@@ -126,10 +110,7 @@ public class UserServiceImpl implements IUserService {
 
         user = userRepository.saveAndFlush(user);
 
-        UserDetailsResponseDTO userDetailsResponseDTO =
-                userDetailsService.mapToResponseDTO(user.getDetails());
-
-        return userMapper.toResponseDTO(user, userDetailsResponseDTO);
+        return userMapper.toResponseDTO(user);
     }
 
     /**

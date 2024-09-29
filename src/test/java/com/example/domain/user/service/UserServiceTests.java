@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserDetailsRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
-import com.example.domain.user.dto.response.UserDetailsResponseDTO;
 import com.example.domain.user.dto.response.UserResponseDTO;
 import com.example.domain.user.mapper.IUserMapper;
 import com.example.domain.user.model.User;
@@ -55,16 +54,12 @@ public class UserServiceTests {
                         .build();
         UserDetails userDetails = UserDetails.builder().build();
         User user = User.builder().details(userDetails).build();
-        UserDetailsResponseDTO userDetailsResponseDTO = UserDetailsResponseDTO.builder().build();
         UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
-        when(userDetailsService.mapToEntity(userDetailsRequestDTO, "unknown"))
-                .thenReturn(userDetails);
-        when(userMapper.toEntity(userCreateRequestDTO, "unknown", userDetails)).thenReturn(user);
+        when(userMapper.toEntity(userCreateRequestDTO, "unknown")).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
-        when(userDetailsService.mapToResponseDTO(userDetails)).thenReturn(userDetailsResponseDTO);
-        when(userMapper.toResponseDTO(user, userDetailsResponseDTO)).thenReturn(userResponseDTO);
+        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
 
         // When
         UserResponseDTO result = userService.create(userCreateRequestDTO);
@@ -73,11 +68,9 @@ public class UserServiceTests {
         assertEquals(userResponseDTO, result);
 
         verify(userRepository).existsByUsername(TEST_USERNAME);
-        verify(userDetailsService).mapToEntity(userDetailsRequestDTO, "unknown");
-        verify(userMapper).toEntity(userCreateRequestDTO, "unknown", userDetails);
+        verify(userMapper).toEntity(userCreateRequestDTO, "unknown");
         verify(userRepository).save(user);
-        verify(userDetailsService).mapToResponseDTO(userDetails);
-        verify(userMapper).toResponseDTO(user, userDetailsResponseDTO);
+        verify(userMapper).toResponseDTO(user);
     }
 
     @Test
@@ -107,7 +100,6 @@ public class UserServiceTests {
 
         UserDetails userDetails = UserDetails.builder().build();
         User user = User.builder().details(userDetails).build();
-        UserDetailsResponseDTO userDetailsResponseDTO = UserDetailsResponseDTO.builder().build();
         UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(specification.buildSpecification(
@@ -115,8 +107,7 @@ public class UserServiceTests {
                 .thenReturn(specificationMock);
         when(userRepository.findAll(specificationMock, pageable))
                 .thenReturn(new PageImpl<>(List.of(user)));
-        when(userDetailsService.mapToResponseDTO(userDetails)).thenReturn(userDetailsResponseDTO);
-        when(userMapper.toResponseDTO(user, userDetailsResponseDTO)).thenReturn(userResponseDTO);
+        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
 
         // When
         Page<UserResponseDTO> result =
@@ -133,8 +124,7 @@ public class UserServiceTests {
         verify(specification)
                 .buildSpecification(filteringDTOList, TEST_ORDER_BY, TEST_ORDER_DIRECTION);
         verify(userRepository).findAll(specificationMock, pageable);
-        verify(userDetailsService).mapToResponseDTO(userDetails);
-        verify(userMapper).toResponseDTO(user, userDetailsResponseDTO);
+        verify(userMapper).toResponseDTO(user);
     }
 
     @Test
@@ -150,15 +140,13 @@ public class UserServiceTests {
         UserDetails userDetails = UserDetails.builder().build();
         User user = User.builder().password(TEST_PASSWORD).details(userDetails).build();
         UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
-        UserDetailsResponseDTO userDetailsResponseDTO = UserDetailsResponseDTO.builder().build();
 
         when(userRepository.findById(TEST_ID)).thenReturn(Optional.of(user));
         when(userDetailsService.updateUserDetails(userDetails, userDetailsRequestDTO))
                 .thenReturn(true);
         doNothing().when(userDetailsService).updateAuditFields(userDetails, true);
         when(userRepository.saveAndFlush(user)).thenReturn(user);
-        when(userDetailsService.mapToResponseDTO(userDetails)).thenReturn(userDetailsResponseDTO);
-        when(userMapper.toResponseDTO(user, userDetailsResponseDTO)).thenReturn(userResponseDTO);
+        when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
 
         // When
         UserResponseDTO result = userService.update(TEST_ID, userUpdateRequestDTO);
@@ -170,8 +158,7 @@ public class UserServiceTests {
         verify(userDetailsService).updateUserDetails(userDetails, userDetailsRequestDTO);
         verify(userDetailsService).updateAuditFields(userDetails, true);
         verify(userRepository).saveAndFlush(user);
-        verify(userDetailsService).mapToResponseDTO(userDetails);
-        verify(userMapper).toResponseDTO(user, userDetailsResponseDTO);
+        verify(userMapper).toResponseDTO(user);
     }
 
     @Test

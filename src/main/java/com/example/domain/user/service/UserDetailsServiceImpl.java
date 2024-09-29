@@ -1,8 +1,6 @@
 package com.example.domain.user.service;
 
 import com.example.domain.user.dto.request.UserDetailsRequestDTO;
-import com.example.domain.user.dto.response.UserDetailsResponseDTO;
-import com.example.domain.user.mapper.IUserDetailsMapper;
 import com.example.domain.user.model.UserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,34 +11,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class UserDetailsServiceImpl implements IUserDetailsService {
-    private final IUserDetailsMapper userDetailsMapper;
-
-    /**
-     * Converts a UserDetails to a UserDetailsResponseDTO.
-     *
-     * @param userDetails the entity to convert
-     * @return the converted DTO
-     */
-    @Override
-    public UserDetailsResponseDTO mapToResponseDTO(UserDetails userDetails) {
-        log.debug("mapToResponseDTO called");
-
-        return userDetailsMapper.toResponseDTO(userDetails);
-    }
-
-    /**
-     * Converts a UserDetailsRequestDTO to a UserDetails.
-     *
-     * @param userDetailsRequestDTO the DTO to convert
-     * @param createdBy the user who created the user
-     * @return the converted entity
-     */
-    @Override
-    public UserDetails mapToEntity(UserDetailsRequestDTO userDetailsRequestDTO, String createdBy) {
-        log.debug("mapToEntity called");
-
-        return userDetailsMapper.toEntity(userDetailsRequestDTO, createdBy);
-    }
 
     /**
      * Updates user details.

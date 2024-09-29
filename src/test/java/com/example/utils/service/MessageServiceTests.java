@@ -50,6 +50,19 @@ public class MessageServiceTests {
     }
 
     @Test
+    @DisplayName("Tests the unsuccessful retrieval of a message due to null attributes.")
+    public void getMessage_NullAttributes() {
+        // Given
+        when(servletRequestAttributes.getRequest()).thenReturn(null);
+
+        // When
+        String result = messageService.getMessage(TEST_KEY);
+
+        // Then
+        assertNull(result);
+    }
+
+    @Test
     @DisplayName("Tests the unsuccessful retrieval of a message due to an invalid key.")
     public void getMessage_InvalidKey() {
         // Given
