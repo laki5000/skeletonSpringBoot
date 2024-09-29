@@ -283,6 +283,7 @@ This project uses GitHub Actions for continuous integration. The workflow is def
 - **Build**: Builds the project with Maven.
 - **Unit Tests**: Runs unit tests.
 - **Integration Tests**: Runs integration tests.
+- **Coverage**: Checks code coverage with JaCoCo.
 - **SpotBugs**: Runs static code analysis with SpotBugs.
 
 ## Dependencies
@@ -310,3 +311,4 @@ This project uses the following Maven plugins:
 - SpotBugs Maven Plugin
 - Spotless Maven Plugin
 - Maven Failsafe Plugin
+- JaCoCo Maven Plugin
