@@ -277,7 +277,7 @@ If you have any questions, please feel free to connect on LinkedIn at [https://w
 
 ## Continuous Integration
 
-This project uses GitHub Actions for continuous integration. The workflow is defined in `.github/workflows/ci.yml` and includes the following steps:
+This project uses GitHub Actions for continuous integration. The workflow is defined in `.github/workflows/main.yml` and includes the following steps:
 
 - **Spotless**: Checks code formatting.
 - **Build**: Builds the project with Maven.
