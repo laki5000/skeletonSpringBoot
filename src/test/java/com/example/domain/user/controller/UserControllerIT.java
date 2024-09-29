@@ -182,31 +182,43 @@ public class UserControllerIT extends BaseIT {
         String url = USER_BASE_URL + GET_PATH + "?" + toQueryString(params);
         List<FilteringDTO> filteringDTOList =
                 List.of(
-                        buildFilteringDTO(TEST_FIELD_ID, EQUALS, user.getId().toString()),
-                        buildFilteringDTO(TEST_FIELD_USERNAME, EQUALS, user.getUsername()),
+                        buildFilteringDTO(TEST_FIELD_ID, EQUALS, user.getId().toString(), null),
+                        buildFilteringDTO(TEST_FIELD_USERNAME, EQUALS, user.getUsername(), null),
                         buildFilteringDTO(
-                                TEST_FIELD_CREATED_AT, EQUALS, user.getCreatedAt().toString()),
+                                TEST_FIELD_CREATED_AT,
+                                EQUALS,
+                                user.getCreatedAt().toString(),
+                                null),
                         buildFilteringDTO(
-                                TEST_FIELD_UPDATED_AT, EQUALS, user.getUpdatedAt().toString()),
-                        buildFilteringDTO(TEST_FIELD_CREATED_BY, EQUALS, user.getCreatedBy()),
+                                TEST_FIELD_UPDATED_AT,
+                                EQUALS,
+                                user.getUpdatedAt().toString(),
+                                null),
+                        buildFilteringDTO(TEST_FIELD_CREATED_BY, EQUALS, user.getCreatedBy(), null),
                         buildFilteringDTO(
                                 TEST_FIELD_DETAILS_ID,
                                 EQUALS,
-                                user.getDetails().getId().toString()),
-                        buildFilteringDTO(TEST_FIELD_DETAILS_FIRST_NAME, EQUALS, TEST_FIRST_NAME),
-                        buildFilteringDTO(TEST_FIELD_DETAILS_LAST_NAME, EQUALS, TEST_LAST_NAME),
+                                user.getDetails().getId().toString(),
+                                null),
+                        buildFilteringDTO(
+                                TEST_FIELD_DETAILS_FIRST_NAME, EQUALS, TEST_FIRST_NAME, null),
+                        buildFilteringDTO(
+                                TEST_FIELD_DETAILS_LAST_NAME, EQUALS, TEST_LAST_NAME, null),
                         buildFilteringDTO(
                                 TEST_FIELD_DETAILS_CREATED_AT,
                                 EQUALS,
-                                user.getDetails().getCreatedAt().toString()),
+                                user.getDetails().getCreatedAt().toString(),
+                                null),
                         buildFilteringDTO(
                                 TEST_FIELD_DETAILS_UPDATED_AT,
                                 EQUALS,
-                                user.getDetails().getUpdatedAt().toString()),
+                                user.getDetails().getUpdatedAt().toString(),
+                                null),
                         buildFilteringDTO(
                                 TEST_FIELD_DETAILS_CREATED_BY,
                                 EQUALS,
-                                user.getDetails().getCreatedBy()));
+                                user.getDetails().getCreatedBy(),
+                                null));
 
         // When
         SuccessResponseDTO result =
@@ -235,7 +247,7 @@ public class UserControllerIT extends BaseIT {
         // Given
         List<FilteringDTO> filteringDTOList =
                 Collections.singletonList(
-                        buildFilteringDTO(TEST_FIELD_CREATED_AT, EQUALS, TEST_INVALID_DATE));
+                        buildFilteringDTO(TEST_FIELD_CREATED_AT, EQUALS, TEST_INVALID_DATE, null));
 
         // When
         ErrorResponseDTO result =

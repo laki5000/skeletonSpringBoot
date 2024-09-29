@@ -54,10 +54,11 @@ public class TestUtils {
     }
 
     /**
-     * Builds a user response DTO with the given properties.
+     * Builds a user with the given properties.
      *
      * @param id The ID
      * @param username The username
+     * @param password The password
      * @param createdAt The created at
      * @param updatedAt The updated at
      * @param createdBy The created by
@@ -69,7 +70,7 @@ public class TestUtils {
      * @param detailsUpdatedAt The details updated at
      * @param detailsCreatedBy The details created by
      * @param detailsUpdatedBy The details updated by
-     * @return The user response DTO
+     * @return The user
      */
     public static User buildUser(
             Long id,
@@ -244,7 +245,12 @@ public class TestUtils {
      * @return The filtering DTO
      */
     public static FilteringDTO buildFilteringDTO(
-            String field, FilterOperator operator, String value) {
-        return FilteringDTO.builder().field(field).operator(operator).value(value).build();
+            String field, FilterOperator operator, String value, String otherValue) {
+        return FilteringDTO.builder()
+                .field(field)
+                .operator(operator)
+                .value(value)
+                .otherValue(otherValue)
+                .build();
     }
 }

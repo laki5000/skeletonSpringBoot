@@ -24,6 +24,7 @@ public class Constants {
     public static final String TEST_INVALID_LONG_PASSWORD =
             "12345678910111213141516171819202122232425262728293031323334353637";
     public static final String TEST_INVALID_DATE = "invalidDate";
+    public static final String TEST_DATE = "2024-07-16";
     public static final String TEST_FIRST_NAME = "Test";
     public static final String TEST_FIRST_NAME2 = "Test2";
     public static final String TEST_LAST_NAME = "User";
