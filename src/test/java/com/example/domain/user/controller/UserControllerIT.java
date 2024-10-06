@@ -25,11 +25,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Integration tests for {@link UserControllerImpl}. */
 public class UserControllerIT extends BaseIT {
     @Autowired private IUserRepository userRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("Tests the successful creation of a user")
@@ -484,7 +486,7 @@ public class UserControllerIT extends BaseIT {
             User user) {
         assertEquals(id, user.getId());
         assertEquals(username, user.getUsername());
-        assertEquals(password, user.getPassword());
+        assertTrue(passwordEncoder.matches(password, user.getPassword()));
         assertEquals(firstName, user.getDetails().getFirstName());
         assertEquals(lastName, user.getDetails().getLastName());
         assertNotNull(user.getCreatedAt());

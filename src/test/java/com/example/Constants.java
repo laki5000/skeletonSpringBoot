@@ -31,7 +31,6 @@ public class Constants {
     public static final String TEST_LAST_NAME2 = "User2";
     public static final String TEST_ORDER_BY = "id";
     public static final String TEST_ORDER_DIRECTION = "asc";
-    public static final String TEST_ORDER_DIRECTION2 = "desc";
     public static final String TEST_FIELD_PAGE = "page";
     public static final String TEST_FIELD_LIMIT = "limit";
     public static final String TEST_FIELD_ORDER_BY = "orderBy";

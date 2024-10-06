@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ public class UserServiceImpl implements IUserService {
     private final IUserRepository userRepository;
     private final IUserMapper userMapper;
     private final UserSpecification userSpecification;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Creates a new user.
@@ -50,6 +52,9 @@ public class UserServiceImpl implements IUserService {
         log.debug("create called");
 
         validateUsername(userCreateRequestDTO.getUsername());
+
+        userCreateRequestDTO.setPassword(
+                passwordEncoder.encode(userCreateRequestDTO.getPassword()));
 
         User user = userRepository.save(userMapper.toEntity(userCreateRequestDTO, "unknown"));
 
@@ -171,7 +176,7 @@ public class UserServiceImpl implements IUserService {
 
         if (userUpdateRequestDTO.getPassword() != null
                 && !user.getPassword().equals(userUpdateRequestDTO.getPassword())) {
-            user.setPassword(userUpdateRequestDTO.getPassword());
+            user.setPassword(passwordEncoder.encode(userUpdateRequestDTO.getPassword()));
 
             return true;
         }
