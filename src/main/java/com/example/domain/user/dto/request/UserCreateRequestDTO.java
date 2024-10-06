@@ -8,9 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 /** DTO class for user create request. */
 @Getter
+@Setter
 @Builder
 public class UserCreateRequestDTO {
     @NotNull(message = USERNAME_REQUIRED_MESSAGE)

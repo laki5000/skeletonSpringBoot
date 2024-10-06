@@ -31,6 +31,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /** Unit tests for {@link UserServiceImpl}. */
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +42,7 @@ public class UserServiceTests {
     @Mock private IUserRepository userRepository;
     @Mock private IUserMapper userMapper;
     @Mock private UserSpecification specification;
+    @Mock private PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("Tests the successful creation of a user.")
@@ -50,6 +52,7 @@ public class UserServiceTests {
         UserCreateRequestDTO userCreateRequestDTO =
                 UserCreateRequestDTO.builder()
                         .username(TEST_USERNAME)
+                        .password(TEST_PASSWORD)
                         .details(userDetailsRequestDTO)
                         .build();
         UserDetails userDetails = UserDetails.builder().build();
@@ -57,6 +60,7 @@ public class UserServiceTests {
         UserResponseDTO userResponseDTO = UserResponseDTO.builder().build();
 
         when(userRepository.existsByUsername(TEST_USERNAME)).thenReturn(false);
+        when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(TEST_PASSWORD);
         when(userMapper.toEntity(userCreateRequestDTO, "unknown")).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
@@ -68,6 +72,7 @@ public class UserServiceTests {
         assertEquals(userResponseDTO, result);
 
         verify(userRepository).existsByUsername(TEST_USERNAME);
+        verify(passwordEncoder).encode(TEST_PASSWORD);
         verify(userMapper).toEntity(userCreateRequestDTO, "unknown");
         verify(userRepository).save(user);
         verify(userMapper).toResponseDTO(user);
@@ -145,6 +150,7 @@ public class UserServiceTests {
         when(userDetailsService.updateUserDetails(userDetails, userDetailsRequestDTO))
                 .thenReturn(true);
         doNothing().when(userDetailsService).updateAuditFields(userDetails, true);
+        when(passwordEncoder.encode(TEST_PASSWORD2)).thenReturn(TEST_PASSWORD2);
         when(userRepository.saveAndFlush(user)).thenReturn(user);
         when(userMapper.toResponseDTO(user)).thenReturn(userResponseDTO);
 
@@ -157,6 +163,7 @@ public class UserServiceTests {
         verify(userRepository).findById(TEST_ID);
         verify(userDetailsService).updateUserDetails(userDetails, userDetailsRequestDTO);
         verify(userDetailsService).updateAuditFields(userDetails, true);
+        verify(passwordEncoder).encode(TEST_PASSWORD2);
         verify(userRepository).saveAndFlush(user);
         verify(userMapper).toResponseDTO(user);
     }
