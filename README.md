@@ -4,7 +4,7 @@
 
 This is a pre-configured Spring Boot skeleton application designed to streamline project setup and development. The primary focus is on establishing a robust structure through well-defined policies, utilizing interfaces and abstract classes. The project includes a message service that supports internationalization (i18n), a global exception handler with custom exceptions via RestControllerAdvice, and neatly organized constants for maintainability.
 
-Additionally, the application features a powerful filtering mechanism using specifications for complex queries, along with comprehensive unit and integration tests to ensure code quality and reliability.
+Additionally, the application features a powerful filtering mechanism using specifications for complex queries, along with comprehensive unit and integration tests to ensure code quality and reliability. The project also includes a basic Spring Security configuration with password encryption.
 
 ## Installation
 
@@ -302,6 +302,7 @@ This project uses the following dependencies:
 - Mockito
 - SpotBugs Annotations
 - Spring Boot Starter Validation
+- Spring Boot Starter Security
 
 ## Plugins
 
