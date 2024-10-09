@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     image: mysql:latest
-    container_name: db
+    container_name: db_skeletonSpringboot
     environment:
       MYSQL_ROOT_PASSWORD: rootpw
       MYSQL_DATABASE: elakatos
@@ -16,7 +16,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: pma
+    container_name: pma_skeletonSpringboot
     links:
       - db
     environment:
@@ -24,7 +24,7 @@ services:
       PMA_PORT: 3306
     restart: always
     ports:
-      - 8025:80
+      - "8025:80"
 
 volumes:
-  dbdata:
+  data:
