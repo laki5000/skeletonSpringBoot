@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   db:
     image: mysql:latest
@@ -22,6 +20,5 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
-    restart: always
     ports:
       - "80:80"
