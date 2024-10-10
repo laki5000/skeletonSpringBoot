@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'coretto'
       - name: Check code formatting with Spotless
         run: mvn spotless:check --file pom.xml
 
@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'coretto'
       - name: Build with Maven
         run: mvn -B package -DskipTests=true --file pom.xml
 
@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'coretto'
       - name: Run unit tests
         run: mvn test --file pom.xml
 
@@ -58,7 +58,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'coretto'
       - name: Run integration tests
         run: mvn failsafe:integration-test --file pom.xml
 
@@ -74,7 +74,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'coretto'
       - name: Check coverage with JaCoCo
         run: mvn clean verify --file pom.xml
 
@@ -88,7 +88,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'coretto'
       - name: Build with Maven
         run: mvn -B package -DskipTests=true --file pom.xml
       - name: Run SpotBugs
