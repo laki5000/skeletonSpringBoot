@@ -26,7 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** A service class for managing user-related operations. */
+/** Service class for managing user-related operations. */
 @Log4j2
 @RequiredArgsConstructor
 @Service
