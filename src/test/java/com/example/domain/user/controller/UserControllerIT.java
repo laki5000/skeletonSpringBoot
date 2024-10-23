@@ -2,8 +2,8 @@ package com.example.domain.user.controller;
 
 import static com.example.Constants.*;
 import static com.example.TestUtils.*;
-import static com.example.constants.EndpointConstants.GET_PATH;
-import static com.example.constants.EndpointConstants.USER_BASE_URL;
+import static com.example.constants.Constants.GET;
+import static com.example.constants.Constants.USER_BASE_URL;
 import static com.example.enums.FilterOperator.EQUALS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
@@ -181,7 +181,7 @@ public class UserControllerIT extends BaseIT {
                         TEST_ORDER_BY,
                         TEST_FIELD_ORDER_DIRECTION,
                         TEST_ORDER_DIRECTION);
-        String url = USER_BASE_URL + GET_PATH + "?" + toQueryString(params);
+        String url = USER_BASE_URL + GET + "?" + toQueryString(params);
         List<FilteringDTO> filteringDTOList =
                 List.of(
                         buildFilteringDTO(TEST_FIELD_ID, EQUALS, user.getId().toString(), null),
@@ -254,7 +254,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_BASE_URL + GET_PATH,
+                        USER_BASE_URL + GET,
                         filteringDTOList,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);
@@ -275,7 +275,7 @@ public class UserControllerIT extends BaseIT {
         // When
         ErrorResponseDTO result =
                 performPostAndExpect(
-                        USER_BASE_URL + GET_PATH,
+                        USER_BASE_URL + GET,
                         filteringDTOList,
                         BAD_REQUEST.value(),
                         ErrorResponseDTO.class);

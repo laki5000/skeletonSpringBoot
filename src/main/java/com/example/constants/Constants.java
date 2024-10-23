@@ -1,7 +1,17 @@
 package com.example.constants;
 
-/** Constants used in the application validation. */
-public class ValidationConstants {
+/** Constants used in the application endpoints. */
+public class Constants {
+    public static final String USER_BASE_URL = "/api/v1/users";
+
+    public static final String GET = "/get";
+    public static final String BY_ID = "/{id}";
+
+    public static final String DEFAULT_PAGE = "0";
+    public static final String DEFAULT_LIMIT = "10";
+    public static final String DEFAULT_ORDER_BY = "id";
+    public static final String DEFAULT_ORDER_DIRECTION = "asc";
+
     public static final String INVALID_PASSWORD_MESSAGE = "Invalid password";
     public static final String PASSWORD_MIN_LENGTH_MESSAGE =
             "Password must be at least 8 characters long";

@@ -1,6 +1,6 @@
 package com.example.domain.user.model;
 
-import static com.example.constants.ValidationConstants.*;
+import static com.example.constants.Constants.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import com.example.base.model.BaseEntity;

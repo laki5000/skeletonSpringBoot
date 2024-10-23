@@ -1,9 +1,5 @@
 package com.example.base.specification;
 
-import static com.example.constants.FilteringConstants.*;
-import static com.example.constants.MessageConstants.ERROR_INVALID_DATE_FORMAT;
-import static com.example.constants.MessageConstants.ERROR_INVALID_FILTER;
-
 import com.example.enums.FilterOperator;
 import com.example.exception.InvalidDateFormatException;
 import com.example.exception.InvalidFilterException;
@@ -16,6 +12,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +26,19 @@ import org.springframework.data.jpa.domain.Specification;
 @RequiredArgsConstructor
 public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> {
     protected final IMessageService messageService;
+
+    public static final String STRING = "String";
+    public static final String INSTANT = "Instant";
+    public static final String LONG = "Long";
+
+    public static final String DATE_REGEX = "\\d{4}-\\d{2}-\\d{2}";
+    public static final String DATE_TIME_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}";
+    public static final String DATE_TIME_WITH_MILLIS_REGEX =
+            "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z";
+    public static final String UTC = "UTC";
+
+    public static final String ERROR_INVALID_FILTER = "error.invalid_filter";
+    public static final String ERROR_INVALID_DATE_FORMAT = "error.invalid_date_format";
 
     /**
      * Build a specification.
@@ -80,9 +90,9 @@ public abstract class BaseSpecificationImpl<T> implements IBaseSpecification<T> 
 
             if (orderBy != null && orderDirection != null) {
                 if ("asc".equalsIgnoreCase(orderDirection)) {
-                    query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+                    Objects.requireNonNull(query).orderBy(criteriaBuilder.asc(root.get(orderBy)));
                 } else if ("desc".equalsIgnoreCase(orderDirection)) {
-                    query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
+                    Objects.requireNonNull(query).orderBy(criteriaBuilder.desc(root.get(orderBy)));
                 }
             }
 

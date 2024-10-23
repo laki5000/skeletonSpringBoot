@@ -1,7 +1,7 @@
 package com.example.domain.user.model;
 
-import static com.example.constants.ValidationConstants.USERNAME_MAX_LENGTH;
-import static com.example.constants.ValidationConstants.USERNAME_MIN_LENGTH;
+import static com.example.constants.Constants.USERNAME_MAX_LENGTH;
+import static com.example.constants.Constants.USERNAME_MIN_LENGTH;
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 

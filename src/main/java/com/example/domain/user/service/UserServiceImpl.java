@@ -1,7 +1,5 @@
 package com.example.domain.user.service;
 
-import static com.example.constants.MessageConstants.*;
-
 import com.example.domain.user.dto.request.UserCreateRequestDTO;
 import com.example.domain.user.dto.request.UserUpdateRequestDTO;
 import com.example.domain.user.dto.response.UserResponseDTO;
@@ -38,6 +36,10 @@ public class UserServiceImpl implements IUserService {
     private final IUserMapper userMapper;
     private final UserSpecification userSpecification;
     private final PasswordEncoder passwordEncoder;
+
+    public static final String ERROR_USER_NOT_MODIFIED = "error.user.not_modified";
+    public static final String ERROR_USER_NOT_FOUND = "error.user.not_found";
+    public static final String ERROR_USER_USERNAME_EXISTS = "error.user.username_exists";
 
     /**
      * Creates a new user.

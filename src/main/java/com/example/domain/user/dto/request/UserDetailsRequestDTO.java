@@ -1,6 +1,6 @@
 package com.example.domain.user.dto.request;
 
-import static com.example.constants.ValidationConstants.*;
+import static com.example.constants.Constants.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

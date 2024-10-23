@@ -1,8 +1,6 @@
 package com.example.domain.user.controller;
 
-import static com.example.constants.EndpointConstants.*;
-import static com.example.constants.FilteringConstants.*;
-import static com.example.constants.MessageConstants.*;
+import static com.example.constants.Constants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
 import com.example.base.dto.response.BaseResponseDTO;
@@ -29,6 +27,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserControllerImpl implements IUserController {
     private final IMessageService messageService;
     private final IUserService userService;
+
+    public static final String SUCCESS_USER_CREATED = "success.user.created";
+    public static final String SUCCESS_USER_UPDATED = "success.user.updated";
+    public static final String SUCCESS_USER_DELETED = "success.user.deleted";
+    public static final String SUCCESS_USER_GET = "success.user.get";
 
     /**
      * Creates a new user.
@@ -60,7 +63,7 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @PostMapping(GET_PATH)
+    @PostMapping(GET)
     public ResponseEntity<?> get(
             @RequestParam(required = false, defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(required = false, defaultValue = DEFAULT_LIMIT) int limit,
@@ -87,7 +90,7 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @PatchMapping(BY_ID_PATH)
+    @PatchMapping(BY_ID)
     public ResponseEntity<?> update(
             @PathVariable Long id, @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         log.info("update called");
@@ -106,7 +109,7 @@ public class UserControllerImpl implements IUserController {
      * @return the response entity
      */
     @Override
-    @DeleteMapping(BY_ID_PATH)
+    @DeleteMapping(BY_ID)
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info("delete called");
 

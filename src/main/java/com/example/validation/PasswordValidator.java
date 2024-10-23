@@ -1,6 +1,6 @@
 package com.example.validation;
 
-import static com.example.constants.ValidationConstants.*;
+import static com.example.constants.Constants.*;
 
 import com.example.annotation.IsValidPassword;
 import jakarta.validation.ConstraintValidator;

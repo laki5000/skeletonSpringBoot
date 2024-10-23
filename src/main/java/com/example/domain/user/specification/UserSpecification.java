@@ -1,7 +1,5 @@
 package com.example.domain.user.specification;
 
-import static com.example.constants.FilteringConstants.FIELD_PASSWORD;
-
 import com.example.base.specification.BaseSpecificationImpl;
 import com.example.domain.user.model.User;
 import com.example.utils.dto.request.FilteringDTO;
@@ -15,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Log4j2
 @Component
 public class UserSpecification extends BaseSpecificationImpl<User> {
+    public static final String FIELD_PASSWORD = "password";
+
     /**
      * Constructor for the UserSpecification class.
      *
